@@ -1,6 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { setLogin } from "@/actions/login";
+import { validaToken } from "@/actions/validaToken";
+import { useEffect, useState } from "react";
 
 export default function FormComponent() {
   const [error, setError] = useState({} as { message: string });
@@ -9,21 +11,9 @@ export default function FormComponent() {
     event.preventDefault();
     const email = event.currentTarget.email.value;
     const senha = event.currentTarget.senha.value;
-    const response = await fetch("/route/login", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        email,
-        senha,
-      }),
-    });
-    if (!response.ok) {
-      const message = (await response.json()) as { message: string };
-      setError(message);
-    } else {
-      window.location.href = "/home";
+    const data = await setLogin({ email, senha });
+    if (data?.message) {
+      setError({ message: data.message });
     }
   }
 

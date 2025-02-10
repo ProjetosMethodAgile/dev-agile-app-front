@@ -2,6 +2,7 @@
 
 import getUser from "@/actions/getUser";
 import logout from "@/actions/logout";
+import { validaToken } from "@/actions/validaToken";
 import { UsuarioData } from "@/types/api/apiTypes";
 import React from "react";
 
@@ -18,6 +19,12 @@ export const useUser = () => {
   return context;
 };
 const UserContext = React.createContext<IUserContext | null>(null);
+
+async function validaAuth() {
+  const data = await validaToken();
+  console.log(data);
+}
+validaAuth();
 
 export function UserContextProvider({
   children,
