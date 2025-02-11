@@ -1,7 +1,6 @@
 "use client";
 
 import { setLogin } from "@/actions/login";
-import { validaToken } from "@/actions/validaToken";
 import { useEffect, useState } from "react";
 
 export default function FormComponent() {
@@ -28,7 +27,7 @@ export default function FormComponent() {
       </div>
       <div className="w-full">
         <label htmlFor="senha">Senha:</label>
-        <input id="senha" type="text" className="w-full" name="senha" />
+        <input id="senha" type="password" className="w-full" name="senha" />
       </div>
       <button className="bg-teal-500 p-2 w-full">Entrar</button>
       <p>{error.message}</p>

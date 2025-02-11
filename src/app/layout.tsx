@@ -1,3 +1,4 @@
+// app/layout.tsx
 import type { Metadata } from "next";
 import "./globals.css";
 import { UserContextProvider } from "@/context/userContext";
@@ -10,14 +11,13 @@ export const metadata: Metadata = {
 
 export default async function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
-  const { data } = await getUser();
-  // console.log(data);
+}) {
+  const { data: user } = await getUser();
 
   return (
-    <UserContextProvider user={data}>
+    <UserContextProvider user={user}>
       <html lang="pt-BR">
         <body>{children}</body>
       </html>

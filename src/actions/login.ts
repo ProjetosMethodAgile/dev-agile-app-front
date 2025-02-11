@@ -1,19 +1,17 @@
+// actions/login.ts
 "use server";
 
-import { Login } from "@/types/api/apiTypes";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
+import { Login } from "@/types/api/apiTypes";
+import { POST_LOGIN } from "@/functions/api";
 
 export async function setLogin(dataLogin: { email: string; senha: string }) {
-  const response = await fetch("https://devagile.com.br/api/usuario/login", {
-    headers: {
-      "Content-Type": "application/json",
-    },
+  const { url } = POST_LOGIN();
+  const response = await fetch(url, {
+    headers: { "Content-Type": "application/json" },
     method: "POST",
-    body: JSON.stringify({
-      email: dataLogin.email,
-      senha: dataLogin.senha,
-    }),
+    body: JSON.stringify(dataLogin),
   });
 
   const login: Login = await response.json();

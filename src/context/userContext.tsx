@@ -2,7 +2,6 @@
 
 import getUser from "@/actions/getUser";
 import logout from "@/actions/logout";
-import { validaToken } from "@/actions/validaToken";
 import { UsuarioData } from "@/types/api/apiTypes";
 import React from "react";
 
@@ -14,17 +13,11 @@ type IUserContext = {
 export const useUser = () => {
   const context = React.useContext(UserContext);
   if (context === null) {
-    throw new Error("useContext deve estar dentro do Provider");
+    throw new Error("useUser deve ser usado dentro do Provider");
   }
   return context;
 };
 const UserContext = React.createContext<IUserContext | null>(null);
-
-async function validaAuth() {
-  const data = await validaToken();
-  console.log(data);
-}
-validaAuth();
 
 export function UserContextProvider({
   children,

@@ -1,39 +1,34 @@
 "use server";
 
+import { GET_USER_ID } from "@/functions/api";
 import apiError from "@/functions/api-error";
 import { TokenData, UsuarioData } from "@/types/api/apiTypes";
 import jwt from "jsonwebtoken";
 import { cookies } from "next/headers";
 
 export default async function getUser() {
-  const cookie = (await cookies()).get("token");
+  try {
+    const token = (await cookies()).get("token")?.value;
+    if (!token) throw new Error("Token não encontrado.");
+    const usuarioData = jwt.decode(token) as TokenData | null;
+    if (!usuarioData || !usuarioData.id) throw new Error("token invalido");
 
-  if (!cookie) {
-    return apiError("token invalido");
-  }
-  const token = cookie.value;
-
-  const usuarioData = jwt.decode(token) as TokenData | null;
-
-  if (!usuarioData || !usuarioData.id) {
-    return apiError("token invalido");
-  }
-
-  const response = await fetch(
-    `https://devagile.com.br/api/usuario/${usuarioData.id}`,
-    {
+    const { url } = GET_USER_ID(usuarioData.id);
+    const response = await fetch(url, {
+      method: "GET",
       headers: {
         Authorization: "Barrer " + token,
       },
-    }
-  );
+      next: {
+        revalidate: 60,
+      },
+    });
+    if (!response.ok) throw new Error("Erro ao pegar o usuário.");
+    const data = (await response.json()) as UsuarioData;
+    console.log(data);
 
-  if (!response.ok) {
-    const data = await response.json();
-    return apiError(data.message);
+    return { data: data, ok: true };
+  } catch (error) {
+    return apiError(error);
   }
-
-  const usuario = (await response.json()) as UsuarioData;
-
-  return { data: usuario, ok: true };
 }
