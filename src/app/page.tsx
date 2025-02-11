@@ -2,7 +2,6 @@
 import { redirect } from "next/navigation";
 import getUser from "@/actions/getUser";
 import { Form } from "@/components/form";
-import { InputPatern } from "@/components/form/Input";
 
 export default async function LoginPage() {
   const { data: user, ok } = await getUser();
@@ -15,12 +14,15 @@ export default async function LoginPage() {
     <main className="flex gap-3 justify-center items-center h-screen">
       <div>logo emp</div>
       <Form.Root>
-        <InputPatern.Root text="email">
-          <InputPatern.Input className="text-black" />
-        </InputPatern.Root>
-        <InputPatern.Root>
-          <InputPatern.Input type="submit" className="bg-red-400 " />
-        </InputPatern.Root>
+        <Form.Input text="dadsad" />
+        <Form.Button className="bg-red-400">hgasjhdagsjhd</Form.Button>
+        <Form.Button>teste2</Form.Button>
+        <Form.Input text="dadsad" />
+        <Form.Input text="dadsad" />
+      </Form.Root>
+
+      <Form.Root>
+        <Form.Input text="dadsad" />
       </Form.Root>
     </main>
   );
