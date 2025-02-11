@@ -6,7 +6,11 @@ import { redirect } from "next/navigation";
 import { Login } from "@/types/api/apiTypes";
 import { POST_LOGIN } from "@/functions/api";
 
-export async function setLogin(dataLogin: { email: string; senha: string }) {
+export async function setLogin(dataLogin: {
+  email: string;
+  senha: string;
+  empresaTag: string;
+}) {
   const { url } = POST_LOGIN();
   const response = await fetch(url, {
     headers: { "Content-Type": "application/json" },
