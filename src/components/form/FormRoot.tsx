@@ -1,9 +1,9 @@
 "use client";
 
 import { setLogin } from "@/actions/login";
-import { useState } from "react";
+import { ReactNode, useState } from "react";
 
-export default function FormComponent() {
+export default function FormComponent({ children }: { children: ReactNode }) {
   const [error, setError] = useState({} as { message: string });
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
@@ -21,16 +21,7 @@ export default function FormComponent() {
       onSubmit={handleSubmit}
       className="flex flex-wrap w-56 bg-slate-600 p-5 gap-2"
     >
-      <div className="w-full">
-        <label htmlFor="email">Email:</label>
-        <input id="email" type="text" className="w-full" name="email" />
-      </div>
-      <div className="w-full">
-        <label htmlFor="senha">Senha:</label>
-        <input id="senha" type="password" className="w-full" name="senha" />
-      </div>
-      <button className="bg-teal-500 p-2 w-full">Entrar</button>
-      <p>{error.message}</p>
+      {children}
     </form>
   );
 }
