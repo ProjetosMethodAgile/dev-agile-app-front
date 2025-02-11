@@ -1,7 +1,7 @@
 "use client";
 
 import { setLogin } from "@/actions/login";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 export default function FormComponent() {
   const [error, setError] = useState({} as { message: string });
