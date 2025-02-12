@@ -5,8 +5,9 @@ import apiError from "@/functions/api-error";
 import { TokenData, UsuarioData } from "@/types/api/apiTypes";
 import jwt from "jsonwebtoken";
 import { cookies } from "next/headers";
+import { GetUserResult } from "@/types/api/apiTypes";
 
-export default async function getUser() {
+export default async function getUser(): Promise<GetUserResult> {
   try {
     const token = (await cookies()).get("token")?.value;
     if (!token) throw new Error("Token não encontrado.");
@@ -34,8 +35,8 @@ export default async function getUser() {
       throw new Error("Usuário não pertence à empresa autenticada.");
     }
 
-    return { data: data, ok: true };
-  } catch (error) {
+    return { data: data, ok: true, empresaToken: usuarioData.empresa };
+  } catch (error: any) {
     return apiError(error);
   }
 }

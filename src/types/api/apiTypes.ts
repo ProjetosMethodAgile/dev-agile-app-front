@@ -69,3 +69,18 @@ export type PropsApiReturn = {
     body?: string | Record<string, unknown>;
   };
 };
+
+// Tipos para o retorno da função getUser
+export type GetUserSuccess = {
+  data: UsuarioData;
+  ok: true;
+  empresaToken: string;
+};
+
+export type GetUserError = {
+  data: null;
+  ok: false;
+  error: string;
+};
+
+export type GetUserResult = GetUserSuccess | GetUserError;
