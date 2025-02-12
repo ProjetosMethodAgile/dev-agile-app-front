@@ -30,7 +30,7 @@ export async function setLogin(dataLogin: {
       httpOnly: true,
       secure: true,
     });
-    redirect(`/${dataLogin.empresaTag}/home`);
+    redirect(`/${dataLogin.empresaTag}/protected/home`);
   }
 
   return { message: login.message, error: false };

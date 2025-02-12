@@ -12,7 +12,7 @@ export default async function logout(empresaTag: string) {
     (await cookies()).delete("token");
   }
   if (empresa.ok) {
-    redirect(`/${empresa.data.tag}`);
+    redirect(`/${empresa.data.tag}/login`);
   } else {
     redirect("/");
   }
