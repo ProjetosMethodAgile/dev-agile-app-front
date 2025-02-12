@@ -4,22 +4,23 @@ import getUser from "@/actions/getUser";
 import getEmpresaByTag from "@/actions/getEmpresaByTag";
 import FormComponent from "@/components/form/form";
 
-export default async function EmpresaLoginPage(props: {
-  params: { empresa: string };
+export default async function EmpresaLoginPage({
+  params,
+}: {
+  params: { empresaTag: string };
 }) {
-  // Extraímos o parâmetro 'empresa' a partir de props.params
-  const tag = props.params.empresa;
+  const { empresaTag } = await params;
 
   // Busca os dados da empresa pelo tag
-  const empresa = await getEmpresaByTag(tag);
+  const empresa = await getEmpresaByTag(empresaTag);
 
   if (!empresa.ok || !empresa.data) {
-    redirect("/404");
+    redirect("/");
   }
 
   const { data: user, ok } = await getUser();
   if (ok && user) {
-    redirect(`/${tag}/home`);
+    redirect(`/${empresaTag}/home`);
   }
 
   return (

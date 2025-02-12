@@ -1,18 +1,18 @@
 // app/[empresa]/home/page.tsx
 import { redirect } from "next/navigation";
 import getUser from "@/actions/getUser";
-import logout from "@/actions/logout";
 import getEmpresaByTag from "@/actions/getEmpresaByTag";
+import LogoutButton from "@/components/logoutButton/logoutButton";
 
 export default async function EmpresaHomePage({
   params,
 }: {
-  params: { empresa: string };
+  params: { empresaTag: string };
 }) {
-  const tag = params.empresa;
+  const { empresaTag } = await params;
 
   // Busca os dados da empresa
-  const empresa = await getEmpresaByTag(tag);
+  const empresa = await getEmpresaByTag(empresaTag);
   if (!empresa.ok || !empresa.data) {
     redirect("/404");
   }
@@ -21,7 +21,7 @@ export default async function EmpresaHomePage({
   const { data: user, ok } = await getUser();
   if (!ok || !user) {
     // Se não autenticado, redireciona de volta para o login da empresa
-    redirect(`/${tag}`);
+    redirect(`/${empresaTag}`);
   }
 
   return (
@@ -32,14 +32,7 @@ export default async function EmpresaHomePage({
       <h1 style={{ color: empresa.data?.cor_secundaria }}>
         Bem-vindo, {user.usuario.nome}
       </h1>
-      <form action={logout(tag)}>
-        <button
-          type="submit"
-          className="bg-red-500 text-white px-4 py-2 rounded"
-        >
-          Logout
-        </button>
-      </form>
+      <LogoutButton />
     </main>
   );
 }

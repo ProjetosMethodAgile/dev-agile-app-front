@@ -28,7 +28,7 @@ export default function FormComponent({ empresa }: FormComponentProps) {
     <form
       onSubmit={handleSubmit}
       className="flex flex-col gap-4 p-5 bg-slate-600"
-      // Usa a cor secundária da empresa como fundo (ou adapte conforme sua necessidade)
+      // cor secundária da empresa como fundo (ou adapte conforme sua necessidade)
       // style={{ backgroundColor: empresa.cor_secundaria }}
     >
       <div className="flex justify-center">
@@ -37,11 +37,21 @@ export default function FormComponent({ empresa }: FormComponentProps) {
       </div>
       <div>
         <label htmlFor="email">Email:</label>
-        <input id="email" name="email" type="text" className="w-full" />
+        <input
+          id="email"
+          name="email"
+          type="text"
+          className="w-full text-gray-800"
+        />
       </div>
       <div>
         <label htmlFor="senha">Senha:</label>
-        <input id="senha" name="senha" type="password" className="w-full" />
+        <input
+          id="senha"
+          name="senha"
+          type="password"
+          className="w-full  text-gray-800"
+        />
       </div>
       <button className="bg-teal-500 p-2 w-full" type="submit">
         Entrar
