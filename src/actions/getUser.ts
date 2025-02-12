@@ -10,8 +10,11 @@ export default async function getUser() {
   try {
     const token = (await cookies()).get("token")?.value;
     if (!token) throw new Error("Token não encontrado.");
-    const usuarioData = jwt.decode(token) as TokenData | null;
-    if (!usuarioData || !usuarioData.id) throw new Error("token invalido");
+
+    // Decodifica o token e espera que ele contenha o campo 'empresa'
+    const usuarioData = jwt.decode(token) as TokenData & { empresa?: string };
+    if (!usuarioData || !usuarioData.id || !usuarioData.empresa)
+      throw new Error("Token inválido");
 
     const { url } = GET_USER_ID(usuarioData.id);
     const response = await fetch(url, {
@@ -25,6 +28,11 @@ export default async function getUser() {
     });
     if (!response.ok) throw new Error("Erro ao pegar o usuário.");
     const data = (await response.json()) as UsuarioData;
+
+    // Valida se o usuário realmente pertence à empresa presente no token
+    if (!data.usuario.empresa.some((e) => e.id === usuarioData.empresa)) {
+      throw new Error("Usuário não pertence à empresa autenticada.");
+    }
 
     return { data: data, ok: true };
   } catch (error) {

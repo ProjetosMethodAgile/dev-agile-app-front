@@ -1,6 +1,10 @@
 import { JwtPayload } from "jsonwebtoken";
 
-export type TokenData = JwtPayload & { id: string };
+// Agora o token também carrega o ID da empresa na qual o usuário efetuou login
+export type TokenData = JwtPayload & {
+  id: string;
+  empresa: string; // Representa o ID da empresa para a qual o login foi realizado
+};
 
 export type Login = {
   message: string;
@@ -62,6 +66,6 @@ export type PropsApiReturn = {
       Authorization?: string;
       "Content-Type"?: string;
     };
-    body?: string | Record<string, unknown>; // Tipo para o corpo da requisição
+    body?: string | Record<string, unknown>;
   };
 };
