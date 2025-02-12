@@ -25,7 +25,6 @@ export default async function getUser() {
     });
     if (!response.ok) throw new Error("Erro ao pegar o usuário.");
     const data = (await response.json()) as UsuarioData;
-    console.log(data);
 
     return { data: data, ok: true };
   } catch (error) {

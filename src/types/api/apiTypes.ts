@@ -12,6 +12,10 @@ export type EmpresaData = {
   id: string;
   nome: string;
   cnpj: string;
+  tag: string;
+  logo: string;
+  cor_primaria: string;
+  cor_secundaria: string;
 };
 
 export type RoleData = {

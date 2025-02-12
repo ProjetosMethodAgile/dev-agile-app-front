@@ -11,3 +11,9 @@ export function POST_LOGIN() {
     url: API_URL + `/usuario/login`,
   };
 }
+
+export function GET_EMPRESA_TAG(tag: string) {
+  return {
+    url: API_URL + `/empresas/tag/${tag}`,
+  };
+}
