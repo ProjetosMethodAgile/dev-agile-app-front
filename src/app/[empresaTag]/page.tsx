@@ -7,7 +7,7 @@ import FormComponent from "@/components/form/form";
 export default async function EmpresaLoginPage({
   params,
 }: {
-  params: { empresaTag: string };
+  params: Promise<{ empresaTag: string }>;
 }) {
   const { empresaTag } = await params;
 

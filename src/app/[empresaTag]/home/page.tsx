@@ -7,7 +7,7 @@ import LogoutButton from "@/components/logoutButton/logoutButton";
 export default async function EmpresaHomePage({
   params,
 }: {
-  params: { empresaTag: string };
+  params: Promise<{ empresaTag: string }>;
 }) {
   const { empresaTag } = await params;
 
