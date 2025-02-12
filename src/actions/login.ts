@@ -10,6 +10,7 @@ export async function setLogin(dataLogin: {
   email: string;
   senha: string;
   empresaTag: string;
+  empresaId: string;
 }) {
   const { url } = POST_LOGIN();
   const response = await fetch(url, {

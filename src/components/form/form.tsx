@@ -18,7 +18,12 @@ export default function FormComponent({ empresa }: FormComponentProps) {
     const senha = event.currentTarget.senha.value;
 
     // Opcional: enviar o tag da empresa para o login, para redirecionar corretamente
-    const data = await setLogin({ email, senha, empresaTag: empresa.tag });
+    const data = await setLogin({
+      email,
+      senha,
+      empresaTag: empresa.tag,
+      empresaId: empresa.id,
+    });
     if (data?.message) {
       setError(data.message);
     }
