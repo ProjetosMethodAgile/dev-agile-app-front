@@ -35,7 +35,7 @@ export default async function getUser(): Promise<GetUserResult> {
     }
 
     return { data: data, ok: true, empresaToken: usuarioData.empresa };
-  } catch (error: any) {
+  } catch (error) {
     return apiError(error);
   }
 }
