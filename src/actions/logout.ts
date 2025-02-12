@@ -7,7 +7,10 @@ import getEmpresaByTag from "./getEmpresaByTag";
 
 export default async function logout(empresaTag: string) {
   const empresa = await getEmpresaByTag(empresaTag);
-  (await cookies()).delete("token");
+  const cookie = (await cookies()).get("token");
+  if (cookie) {
+    (await cookies()).delete("token");
+  }
   if (empresa.ok) {
     redirect(`/${empresa.data.tag}`);
   } else {

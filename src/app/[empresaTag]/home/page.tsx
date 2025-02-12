@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import getUser from "@/actions/getUser";
 import getEmpresaByTag from "@/actions/getEmpresaByTag";
 import LogoutButton from "@/components/logoutButton/logoutButton";
+import logout from "@/actions/logout";
 
 export default async function EmpresaHomePage({
   params,
@@ -21,6 +22,7 @@ export default async function EmpresaHomePage({
   const { data: user, ok } = await getUser();
   if (!ok || !user) {
     // Se não autenticado, redireciona de volta para o login da empresa
+    logout(empresaTag);
     redirect(`/${empresaTag}`);
   }
 
