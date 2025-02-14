@@ -28,7 +28,7 @@ export async function validateCompanySession(empresaTag: string) {
 
   // Compara a tag da empresa da URL com a tag presente no token
   if (empresa.data.tag !== userResult.empresaToken.tag) {
-    redirect(`/${userResult.empresaToken.tag}/protected/home`);
+    redirect(`/${userResult.empresaToken.tag}/protect/home`);
   }
 
   return { empresa: empresa.data, user: userResult.data };

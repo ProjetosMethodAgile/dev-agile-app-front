@@ -1,4 +1,3 @@
-// actions/login.ts
 "use server";
 
 import { cookies } from "next/headers";
@@ -13,13 +12,25 @@ export async function setLogin(dataLogin: {
   empresaId: string;
 }) {
   const { url } = POST_LOGIN();
+
   const response = await fetch(url, {
     headers: { "Content-Type": "application/json" },
     method: "POST",
     body: JSON.stringify(dataLogin),
   });
 
-  const login: Login = await response.json();
+  // Verifica o content-type da resposta
+  const contentType = response.headers.get("content-type");
+  let login: Login;
+
+  if (contentType && contentType.includes("application/json")) {
+    login = await response.json();
+  } else {
+    // Caso o servidor retorne HTML, captura o texto para debug
+    const text = await response.text();
+    console.error("Erro: Esperava JSON mas recebeu:", text);
+    return { message: "Erro inesperado no servidor", error: true };
+  }
 
   if (!response.ok) {
     return login;
@@ -30,7 +41,7 @@ export async function setLogin(dataLogin: {
       httpOnly: true,
       secure: true,
     });
-    redirect(`/${dataLogin.empresaTag}/protected/home`);
+    redirect(`/${dataLogin.empresaTag}/protect/home`);
   }
 
   return { message: login.message, error: false };

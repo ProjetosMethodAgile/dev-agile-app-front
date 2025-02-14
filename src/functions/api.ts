@@ -17,3 +17,9 @@ export function GET_EMPRESA_TAG(tag: string) {
     url: API_URL + `/empresas/tag/${tag}`,
   };
 }
+
+export function GET_PERMISSOES_ACOES_USER(tag: string) {
+  return {
+    url: API_URL + `/permissoes/user/${tag}`,
+  };
+}
