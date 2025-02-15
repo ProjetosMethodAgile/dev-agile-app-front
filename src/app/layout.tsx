@@ -21,7 +21,8 @@ export default async function RootLayout({
     <UserContextProvider user={user}>
       <html lang="pt-BR">
         <body className="bg-primary-900 ">
-          <BlurCircle positionX="24px" positionY="16px" />
+          <BlurCircle className="-bottom-24 -left-24" />
+          <BlurCircle className="-right-24 -top-24 " />
           {children}
         </body>
       </html>

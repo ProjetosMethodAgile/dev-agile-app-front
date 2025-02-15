@@ -2,7 +2,7 @@
 import { redirect } from "next/navigation";
 import getUser from "@/actions/getUser";
 import getEmpresaByTag from "@/actions/getEmpresaByTag";
-import FormComponent from "@/components/form/form";
+import FormWrapper from "@/components/form/FormWrapper";
 
 export default async function EmpresaLoginPage({
   params,
@@ -24,15 +24,15 @@ export default async function EmpresaLoginPage({
   }
 
   return (
-    <main
-      className="flex gap-3 justify-center items-center h-screen"
-      // Você pode usar as cores da empresa para personalizar o fundo:
-      // style={{ backgroundColor: empresa.data.cor_secundaria }}
-    >
-      <div>
-        <img src={empresa.data.logo} alt={empresa.data.nome} />
+    <main className="flex flex-wrap gap-10 mx-60 justify-between items-center h-screen ">
+      <div className="">
+        <h1 className="text-8xl font-bold">Bem vindo</h1>
+        <h1 className="text-8xl font-bold">de volta</h1>
+        <p className="text-3xl font-bold">Faça login para acessar</p>
+        <p className="text-3xl font-bold">as funcionalidades da</p>
+        <p className="text-3xl font-bold">plataforma</p>
       </div>
-      <FormComponent empresa={empresa.data} />
+      <FormWrapper empresa={empresa.data} />
     </main>
   );
 }
