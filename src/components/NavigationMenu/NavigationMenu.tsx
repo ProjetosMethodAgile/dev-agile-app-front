@@ -16,12 +16,14 @@ import {
   PanelRightClose,
   UserRound,
   LogOut,
+  Handshake,
 } from "lucide-react";
 
 // Mapeia o slug da tela com o ícone correspondente.
 const iconsMap: { [key: string]: React.ElementType } = {
   home: House,
   "gerenciar-sistema": Settings,
+  "help-desk": Handshake,
   // Adicione outros mapeamentos conforme necessário
 };
 
