@@ -7,14 +7,36 @@
   --color-primary-500: #294281;
   --color-primary-600: #14254f;
   --color-primary-900: #07122e;
-
-  /* Fontes */
+  /* Cores text*/
   --color-placeholder: #8a8e8f;
+
   /* Fontes */
   --font-poppins: "Poppins", sans-serif;
   --font-roboto: "Roboto", sans-serif;
-}
 
-body {
-  color: white;
+  /* Animation */
+  --animate-move-left-to-right: move-left-to-right 0.6s ease;
+  --animate-move-right-to-left: move-right-to-left 0.6s ease;
+
+  @keyframes move-left-to-right {
+    0% {
+      transform: translateX(25%);
+      opacity: 0;
+    }
+    100% {
+      transform: translateX(0);
+      opacity: 1;
+    }
+  }
+
+  @keyframes move-right-to-left {
+    0% {
+      transform: translateX(-25%);
+      opacity: 0;
+    }
+    100% {
+      transform: translateX(0);
+      opacity: 1;
+    }
+  }
 }

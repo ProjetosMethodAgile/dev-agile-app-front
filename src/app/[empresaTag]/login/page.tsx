@@ -14,7 +14,7 @@ export default async function EmpresaLoginPage({
   // Busca os dados da empresa pela tag
   const empresa = await getEmpresaByTag(empresaTag);
   if (!empresa.ok || !empresa.data) {
-    redirect("/404");
+    redirect("/");
   }
 
   // Se o usuário já estiver autenticado, redireciona para a área protegida
@@ -24,8 +24,8 @@ export default async function EmpresaLoginPage({
   }
 
   return (
-    <main className="flex flex-wrap gap-10 mx-60 justify-between items-center h-screen ">
-      <div className="">
+    <main className="mx-60 flex h-screen flex-wrap items-center justify-between gap-10 dark:text-white">
+      <div className="animate-move-right-to-left">
         <h1 className="text-8xl font-bold">Bem vindo</h1>
         <h1 className="text-8xl font-bold">de volta</h1>
         <p className="text-3xl font-bold">Faça login para acessar</p>

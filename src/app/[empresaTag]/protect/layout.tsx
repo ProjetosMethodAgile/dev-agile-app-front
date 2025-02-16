@@ -19,10 +19,12 @@ export default async function ProtectedEmpresaLayout({
 
   return (
     <UserContextProvider user={user} permissions={permissions}>
-      <header>
-        <NavigationMenu />
-      </header>
-      {children}
+      <div className="flex h-screen">
+        <header className="animate-move-right-to-left">
+          <NavigationMenu />
+        </header>
+        {children}
+      </div>
     </UserContextProvider>
   );
 }

@@ -1,6 +1,4 @@
 // app/[empresa]/protect/home/page.tsx
-
-import LogoutButton from "@/components/logoutButton/logoutButton";
 import NavComponent from "@/components/nav/nav";
 import ScreenValidator from "@/components/ScreenValidator/ScreenValidator";
 
@@ -12,8 +10,6 @@ export default function EmpresaHomePage() {
       <h1>Tela Home</h1>
 
       <NavComponent />
-
-      <LogoutButton />
     </main>
   );
 }

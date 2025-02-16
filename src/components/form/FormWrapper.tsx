@@ -32,7 +32,12 @@ export default function FormWrapper({ empresa }: FormWrapperProps) {
     <Form.Root onSubmit={handleSubmit}>
       <Form.Logo src={empresa.logo} alt={empresa.nome} />
       <Form.InputText icon={Mail} id="email" placeholder="email" />
-      <Form.InputText icon={KeyRound} id="senha" placeholder="senha" />
+      <Form.InputText
+        icon={KeyRound}
+        id="senha"
+        placeholder="senha"
+        type="password"
+      />
       <Form.InputSubmit />
       <Form.Error>{errortext}</Form.Error>
     </Form.Root>
