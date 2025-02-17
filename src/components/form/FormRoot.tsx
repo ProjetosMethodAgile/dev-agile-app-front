@@ -8,7 +8,7 @@ type FormRootProps = React.ComponentProps<"form"> & {
 export default function FormRoot({ children, ...props }: FormRootProps) {
   return (
     <form
-      className=" animate-move-left-to-right flex flex-col gap-5 p-5 bg-black/20  rounded-3xl border-1 border-primary-600 backdrop-blur-2xl min-h-100 min-w-90"
+      className="animate-move-left-to-right border-primary-600 flex min-h-115 min-w-100 flex-col gap-6 self-center rounded-3xl border-1 bg-black/20 p-5 backdrop-blur-2xl max-lg:mt-0 max-sm:min-w-full"
       {...props}
     >
       {children}

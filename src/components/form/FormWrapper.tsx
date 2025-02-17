@@ -38,6 +38,10 @@ export default function FormWrapper({ empresa }: FormWrapperProps) {
         placeholder="senha"
         type="password"
       />
+      <div className="flex items-center justify-between mb-2">
+        <Form.Remember />
+        <Form.ForgetPassword />
+      </div>
       <Form.InputSubmit />
       <Form.Error>{errortext}</Form.Error>
     </Form.Root>
