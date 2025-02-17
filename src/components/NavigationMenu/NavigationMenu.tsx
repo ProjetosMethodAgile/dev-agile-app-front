@@ -66,7 +66,7 @@ export default function NavigationMenu() {
     <nav
       ref={navRef}
       className={`border-primary-600 h-screen ${
-        isExpanded ? "w-40" : "w-20"
+        isExpanded ? "w-50" : "w-20"
       } relative flex flex-col gap-2 overflow-hidden rounded-r-3xl border bg-black/20 backdrop-blur-2xl transition-all duration-300`}
     >
       {/* Seção superior: conteúdo do usuário */}
@@ -82,7 +82,9 @@ export default function NavigationMenu() {
       </div>
 
       {/* Seção do meio: menu que ocupa o espaço disponível */}
-      <ul className="flex flex-1 flex-col gap-2 overflow-y-auto p-2">
+      <ul
+        className={` ${isExpanded ? "w-50" : "w-20"} flex flex-1 flex-col gap-2 overflow-x-hidden overflow-y-auto p-2`}
+      >
         {accessibleScreens?.map((screen: PermissaoCompletaData) => {
           const slug = screen.nome.trim().toLowerCase().replace(/\s+/g, "-");
           const href = `/${empresaTag}/protect/${slug}`;
