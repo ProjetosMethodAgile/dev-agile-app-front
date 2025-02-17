@@ -2,12 +2,16 @@
 @import "tailwindcss";
 
 @theme {
-  /* Cores */
+  /* Cor primaria */
   --color-primary-300: #0547a6;
   --color-primary-500: #294281;
   --color-primary-600: #14254f;
   --color-primary-900: #07122e;
+
+
+
   /* Cores text*/
+  --color-title: #D7DCE8
   --color-placeholder: #8a8e8f;
 
   /* Fontes */
@@ -17,6 +21,24 @@
   /* Animation */
   --animate-move-left-to-right: move-left-to-right 0.6s ease;
   --animate-move-right-to-left: move-right-to-left 0.6s ease;
+
+  --animate-move-low-move: low-move 9s infinite alternate ease;
+
+  /* Responsivo*/
+
+
+
+  @keyframes low-move {
+    0% {
+      transform: translateY(200px);
+   
+    }
+    100% {
+      transform: translateY(0);
+      
+    }
+    
+  }
 
   @keyframes move-left-to-right {
     0% {
