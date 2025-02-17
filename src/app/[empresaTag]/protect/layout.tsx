@@ -3,6 +3,7 @@ import { getUserPermissions } from "@/app/lib/getUserPermissions";
 import { validateCompanySession } from "@/app/lib/validateCompanySession";
 import NavigationMenu from "@/components/NavigationMenu/NavigationMenu";
 import { UserContextProvider } from "@/context/userContext";
+import { GlobalContextProvider } from "@/context/globalContext";
 
 export default async function ProtectedEmpresaLayout({
   children,
@@ -19,12 +20,14 @@ export default async function ProtectedEmpresaLayout({
 
   return (
     <UserContextProvider user={user} permissions={permissions}>
-      <div className="flex h-screen">
-        <header className="animate-move-right-to-left">
-          <NavigationMenu />
-        </header>
-        {children}
-      </div>
+      <GlobalContextProvider>
+        <div className="flex h-screen">
+          <header className="animate-move-right-to-left">
+            <NavigationMenu />
+          </header>
+          {children}
+        </div>
+      </GlobalContextProvider>
     </UserContextProvider>
   );
 }
