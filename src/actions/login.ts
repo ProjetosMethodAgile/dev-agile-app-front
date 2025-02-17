@@ -2,47 +2,42 @@
 
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
-import { Login } from "@/types/api/apiTypes";
 import { POST_LOGIN } from "@/functions/api";
 
-export async function setLogin(dataLogin: {
-  email: string;
-  senha: string;
-  empresaTag: string;
-  empresaId: string;
-}) {
+export async function setLogin(formData: FormData): Promise<void> {
+  const email = formData.get("email") as string;
+  const senha = formData.get("senha") as string;
+  const empresaTag = formData.get("empresaTag") as string;
+  const empresaId = formData.get("empresaId") as string;
+
+  if (!email || !senha || !empresaTag || !empresaId) {
+    console.error("Erro: Campos obrigatórios não preenchidos");
+    return;
+  }
+
   const { url } = POST_LOGIN();
 
   const response = await fetch(url, {
     headers: { "Content-Type": "application/json" },
     method: "POST",
-    body: JSON.stringify(dataLogin),
+    body: JSON.stringify({ email, senha, empresaTag, empresaId }),
   });
 
-  // Verifica o content-type da resposta
-  const contentType = response.headers.get("content-type");
-  let login: Login;
-
-  if (contentType && contentType.includes("application/json")) {
-    login = await response.json();
-  } else {
-    // Caso o servidor retorne HTML, captura o texto para debug
-    const text = await response.text();
-    console.error("Erro: Esperava JSON mas recebeu:", text);
-    return { message: "Erro inesperado no servidor", error: true };
-  }
-
   if (!response.ok) {
-    return login;
+    console.error("Erro ao autenticar:", response.statusText);
+    return;
   }
+
+  const login = await response.json();
 
   if (login.token) {
     (await cookies()).set("token", login.token, {
       httpOnly: true,
       secure: true,
     });
-    redirect(`/${dataLogin.empresaTag}/protect/home`);
-  }
 
-  return { message: login.message, error: false };
+    redirect(`/${empresaTag}/protect/home`);
+  } else {
+    console.error("Erro: Token de login não recebido");
+  }
 }
