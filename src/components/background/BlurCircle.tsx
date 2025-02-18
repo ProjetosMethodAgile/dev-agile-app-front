@@ -7,8 +7,8 @@ export default function BlurCircle({ ...props }: BlurCircleProps) {
   return (
     <div
       className={twMerge(
-        `bg-primary-500/50 -z-10 rounded-full size-[65vh] fixed blur-3xl  animate-move-low-move`,
-        props.className
+        `bg-primary-500/50 animate-move-low-move fixed -z-10 size-[65dvh] rounded-full blur-3xl`,
+        props.className,
       )}
     ></div>
   );

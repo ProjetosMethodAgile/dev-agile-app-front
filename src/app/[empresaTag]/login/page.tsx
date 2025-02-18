@@ -26,7 +26,7 @@ export default async function EmpresaLoginPage({
   }
 
   return (
-    <main className="mx-60 flex h-screen gap-10 max-lg:mx-6 max-lg:flex-col max-lg:items-center max-lg:gap-0 max-lg:px-2 max-sm:mx-2 max-sm:h-full max-sm:p-0 dark:text-white">
+    <main className="mx-60 flex h-dvh gap-10 max-lg:mx-6 max-lg:flex-col max-lg:items-center max-lg:gap-0 max-lg:px-2 max-sm:mx-2 max-sm:h-full max-sm:p-0 dark:text-white">
       <div className="animate-move-right-to-left mt-28 max-lg:mt-10">
         <h1 className="text-title mb-5 text-7xl font-bold max-xl:text-5xl max-lg:mb-4 max-sm:text-3xl">
           Bem&nbsp;vindo de volta
