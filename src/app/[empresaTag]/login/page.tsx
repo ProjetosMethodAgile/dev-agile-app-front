@@ -36,6 +36,7 @@ export default async function EmpresaLoginPage({
         <p className="max-w-140 text-3xl dark:text-gray-300 text-primary-500/70 max-xl:text-xl max-md:hidden">
           Faça login para acessar as funcionalidades da plataforma.
         </p>
+        <ToggleTheme />
       </div>
       <Form.Root action={setLogin}>
         <input type="hidden" name="empresaTag" value={empresa.data.tag} />
@@ -61,7 +62,7 @@ export default async function EmpresaLoginPage({
         </div>
         <Form.InputSubmit />
       </Form.Root>
-      <ToggleTheme />
+      
     </main>
   );
 }
