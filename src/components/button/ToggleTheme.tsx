@@ -1,7 +1,7 @@
 "use client";
 
 import { Moon, Sun } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 
 export default function ToggleTheme() {
   useEffect(() => {
@@ -18,8 +18,7 @@ export default function ToggleTheme() {
   }
 
   return (
-    <button className="border-primary-300 mt-24 flex items-center gap-4 rounded-full border-2 border-solid p-1 
-    *:size-9 *:cursor-pointer *:rounded-full *:p-1 *:transition-colors max-lg:mt-2 max-lg:justify-self-center">
+    <button className="border-primary-300 mt-24 flex items-center gap-4 rounded-full border-2 border-solid p-1 *:size-9 *:cursor-pointer *:rounded-full *:p-1 *:transition-colors max-lg:mt-2 max-lg:justify-self-center">
       <Sun
         onClick={toggleTheme}
         className="rounded-full bg-yellow-500 p-1 text-yellow-950 dark:bg-transparent dark:text-gray-400"
