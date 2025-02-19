@@ -10,7 +10,10 @@ type IUserContext = {
   setPermissions: React.Dispatch<
     React.SetStateAction<PermissaoCompletaData[] | null>
   >;
+
 };
+
+
 
 const UserContext = React.createContext<IUserContext | null>(null);
 
@@ -31,18 +34,19 @@ export function UserContextProvider({
   user: UsuarioData | null;
   permissions?: PermissaoCompletaData[] | null;
 }) {
+
   const [userState, setUser] = React.useState<UsuarioData | null>(user);
   const [permissionsState, setPermissions] = React.useState<
-    PermissaoCompletaData[] | null
-  >(permissions ? permissions : null);
 
+    PermissaoCompletaData[] | null
+    >(permissions ? permissions : null);
   return (
     <UserContext.Provider
       value={{
         user: userState,
         permissions: permissionsState,
         setUser,
-        setPermissions,
+        setPermissions
       }}
     >
       {children}

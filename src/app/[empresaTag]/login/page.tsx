@@ -59,7 +59,8 @@ export default async function EmpresaLoginPage({
           <Form.Remember />
           <Form.ForgetPassword />
         </div>
-        <Form.InputSubmit />
+        <Form.InputSubmit  name="action" value="entrar" type="submit">Entrar</Form.InputSubmit>
+        <Form.InputSubmit  name="action"  value="openTicket" type="submit" className="bg-primary-300/10 dark:text-gray-300 text-primary-300 dark:border-gray-300/50  border-primary-300 border-1 ">Abrir chamado</Form.InputSubmit>
       </Form.Root>
     </main>
   );
