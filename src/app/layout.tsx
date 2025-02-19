@@ -20,10 +20,11 @@ export default async function RootLayout({
   return (
     <UserContextProvider user={user}>
       <html lang="pt-BR">
-        <body className="bg-primary-900 text-black dark:text-white">
+        <body className="dark:bg-primary-900 bg-blue-100 text-black dark:text-white transition-colors">
           <BlurCircle className="-bottom-24 -left-24" />
           <BlurCircle className="-top-24 -right-24" />
           {children}
+
         </body>
       </html>
     </UserContextProvider>

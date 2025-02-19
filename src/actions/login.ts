@@ -4,6 +4,7 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { POST_LOGIN } from "@/functions/api";
 
+
 export async function setLogin(formData: FormData): Promise<void> {
   const email = formData.get("email") as string;
   const senha = formData.get("senha") as string;
@@ -29,6 +30,7 @@ export async function setLogin(formData: FormData): Promise<void> {
   }
 
   const login = await response.json();
+
 
   if (login.token) {
     (await cookies()).set("token", login.token, {
