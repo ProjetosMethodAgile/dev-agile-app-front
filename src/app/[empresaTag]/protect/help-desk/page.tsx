@@ -4,7 +4,7 @@ import ScreenValidator from "@/components/ScreenValidator/ScreenValidator";
 
 export default function EmpresaHomePage() {
   return (
-    <main className="h-screen overflow-hidden p-6">
+    <main className="h-dvh overflow-hidden p-6">
       {/* Valida se o usuário tem acesso à tela "Help Desk" */}
       <ScreenValidator screenName="Help Desk" />
       <div className="">
