@@ -2,8 +2,10 @@
 
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
-import { POST_LOGIN } from "@/functions/api";
+import { GET_VERIFYPARAMETROS_EMPRESA, POST_LOGIN } from "@/functions/api";
 import { useUser } from "@/context/userContext";
+
+
 
 export async function setLogin( formData: FormData,): Promise<void> {
   const action = formData.get("action") as string;
@@ -47,7 +49,14 @@ export async function setLogin( formData: FormData,): Promise<void> {
     console.error("Erro: Token de login não recebido");
   }
 }else{
+  const { url } = GET_VERIFYPARAMETROS_EMPRESA();
+  const response = await fetch(url);
+console.log(response);
+if (!response.ok) {
+  return redirect(`/${empresaTag}/login`);
+}
 
-  redirect(`/${empresaTag}/chamadosSemLogin`);
+
+  redirect(`/${empresaTag}/chamados-nao-login`);
 }
 }

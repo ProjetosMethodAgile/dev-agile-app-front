@@ -23,3 +23,9 @@ export function GET_PERMISSOES_ACOES_USER(tag: string) {
     url: API_URL + `/permissoes/user/${tag}`,
   };
 }
+
+export function GET_VERIFYPARAMETROS_EMPRESA() {
+  return {
+    url:"http://localhost:3000"+`/api/parametros`,
+  };
+}
