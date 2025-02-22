@@ -3,14 +3,15 @@
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { GET_VERIFYPARAMETROS_EMPRESA, POST_LOGIN } from "@/functions/api";
-import { useUser } from "@/context/userContext";
+import VALIDA_EMPRESA_POR_ID from "./getEmpresaById";
+
 
 
 
 export async function setLogin( formData: FormData,): Promise<void> {
   const action = formData.get("action") as string;
   const empresaTag = formData.get("empresaTag") as string;
- if (action === "entrar") {
+  if (action === "entrar") {
 
    const email = formData.get("email") as string;
    const senha = formData.get("senha") as string;
@@ -49,14 +50,18 @@ export async function setLogin( formData: FormData,): Promise<void> {
     console.error("Erro: Token de login não recebido");
   }
 }else{
-  const { url } = GET_VERIFYPARAMETROS_EMPRESA();
-  const response = await fetch(url);
-console.log(response);
-if (!response.ok) {
+  const empresaId = formData.get("empresaId") as string;
+  console.log(empresaId);
+  
+   const response = await VALIDA_EMPRESA_POR_ID(empresaId)
+
+
+if (response !== 200) {
   return redirect(`/${empresaTag}/login`);
 }
+redirect(`/${empresaTag}/chamados-nao-login`);
 
 
-  redirect(`/${empresaTag}/chamados-nao-login`);
+
 }
 }

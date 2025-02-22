@@ -6,6 +6,8 @@ import { Form } from "@/components/form";
 import { setLogin } from "@/actions/login";
 import { KeyRound, Mail } from "lucide-react";
 import ToggleTheme from "@/components/button/ToggleTheme";
+import VALIDA_EMPRESA_POR_ID from "@/actions/getEmpresaById";
+
 
 export default async function EmpresaLoginPage({
   params,
@@ -16,9 +18,16 @@ export default async function EmpresaLoginPage({
 
   // Busca os dados da empresa pela tag
   const empresa = await getEmpresaByTag(empresaTag);
+
+  
   if (!empresa.ok || !empresa.data) {
     redirect("/");
   }
+  const validaEmp = empresa.data.id;
+  const statusEmp = await VALIDA_EMPRESA_POR_ID(validaEmp);
+
+ 
+  const showOpenTicketButton = statusEmp === 200;
 
   // Se o usuário já estiver autenticado, redireciona para a área protegida
   const userResult = await getUser();
@@ -60,7 +69,16 @@ export default async function EmpresaLoginPage({
           <Form.ForgetPassword />
         </div>
         <Form.InputSubmit  name="action" value="entrar" type="submit">Entrar</Form.InputSubmit>
-        <Form.InputSubmit  name="action"  value="openTicket" type="submit" className="bg-primary-300/10 dark:text-gray-300 text-primary-300 dark:border-gray-300/50  border-primary-300 border-1 ">Abrir chamado</Form.InputSubmit>
+        {showOpenTicketButton && (
+          <Form.InputSubmit
+            name="action"
+            value="openTicket"
+            type="submit"
+            className="bg-primary-300/10 dark:text-gray-300 text-primary-300 dark:border-gray-300/50 border-primary-300 border-1"
+          >
+            Abrir chamado
+          </Form.InputSubmit>
+        )}
       </Form.Root>
     </main>
   );
