@@ -24,6 +24,7 @@ export default function Chatbot() {
     const handleMessage = (e: React.MouseEvent<HTMLButtonElement>) => {
         e.preventDefault();
         const message = e.target.value
+        setMessageUser(message)
         sendMessage(message, 'user');
         setTimeout(() => sendMessage("Resposta do bot!", 'bot'), 1000);
     };
