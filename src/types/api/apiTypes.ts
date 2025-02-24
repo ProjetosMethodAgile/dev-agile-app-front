@@ -31,9 +31,17 @@ export type RoleData = {
   descricao: string;
 };
 
+// Novo: Tipo para representar um tipo de permissão (ex: "CRUD", "Visualização")
+export type TipoPermissaoData = {
+  id: string;
+  nome: string;
+  descricao: string;
+  createdAt: string;
+  updatedAt: string;
+};
+
 // Para as permissões diretas (UserPermissionAccess)
 export type PermissoesData = {
-  // Pode ser usado tanto para o registro de acesso quanto para definir a estrutura de cada permissão
   permissao_id?: string;
   id?: string;
   can_create: boolean;
@@ -61,23 +69,25 @@ export type AcaoTelaData = {
   id: string;
   nome: string;
   descricao: string;
-  // Retorna os registros de acesso (UserAcaoTela) se disponíveis
-  user_acoes?: UserAcaoTela[];
+  user_acoes?: UserAcaoTela[]; // Registros de acesso (UserAcaoTela), se disponíveis
 };
 
-// Novo: Tipo completo para uma Permissão (Tela) retornada pelo endpoint,
-// incluindo a lista de acessos (UserPermissionAccess) e as ações (AcaoTela)
+// 🔥 Novo: Tipo completo para uma Permissão (Tela), incluindo parent_id e tipo_permissao_id
 export type PermissaoCompletaData = {
   id: string;
   nome: string;
   descricao: string;
+  parent_id?: string | null; // Permissão pai (se houver)
+  tipo_permissao_id?: string | null; // Tipo da permissão (CRUD, Visualização, etc.)
   createdAt: string;
   updatedAt: string;
   user_permissions_access: PermissoesData[];
   acoes: AcaoTelaData[];
+  tipo_permissao?: TipoPermissaoData; // Relacionamento com o tipo de permissão
+  subpermissoes?: PermissaoCompletaData[]; // 🔥 Novo: Lista de subtelas (hierarquia)
 };
 
-// Tipo de usuário – conforme o endpoint "pegaUsuarioPorId" (separado da consulta de permissões completas)
+// Tipo de usuário – conforme o endpoint "pegaUsuarioPorId"
 export type UsuarioData = {
   status: boolean;
   usuario: {
@@ -88,12 +98,14 @@ export type UsuarioData = {
     empresa: EmpresaData[];
     usuario_roles: RoleData[];
     usuario_permissoes_por_tela: PermissoesUserData[];
-    acoesTela: string[]; // array de IDs das ações unitárias (quando usado no endpoint de usuário)
+    acoesTela: string[]; // Array de IDs das ações unitárias
+    permissoes_completas?: PermissaoCompletaData[];
     createdAt: string;
     updatedAt: string;
   };
 };
 
+// Tipo para fazer chamadas para API
 export type PropsApiReturn = {
   url: string;
   options?: {
@@ -111,7 +123,7 @@ export type PropsApiReturn = {
 export type GetUserSuccess = {
   data: UsuarioData;
   ok: true;
-  empresaToken: { id: string; tag: string }; // Objeto com o ID e a tag da empresa contidos no token
+  empresaToken: { id: string; tag: string };
 };
 
 export type GetUserError = {
