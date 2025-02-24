@@ -3,19 +3,20 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
+
+
   /* Cor primaria dark*/
   --color-primary-300: #0547a6;
   --color-primary-500: #294281;
   --color-primary-600: #14254f;
   --color-primary-900: #07122e;
+  --color-primary-100: #0547A6;
+  --color-primary-150: #021B40;
 
   /* Cor primaria ligth*/
-  --color-primary-l-100: #9BF2FF
-
-
 
   /* Cores text*/
-  --color-title: #D7DCE8
+  --color-title: #D7DCE8;
   --color-placeholder: #8a8e8f;
 
   /* Fontes */
@@ -26,7 +27,12 @@
   --animate-move-left-to-right: move-left-to-right 0.6s ease;
   --animate-move-right-to-left: move-right-to-left 0.6s ease;
 
+  --animate-expandir: expandir 1s alternate ease;
   --animate-move-low-move: low-move 5s infinite alternate ease;
+
+
+
+
 
   /* Responsivo*/
 
@@ -64,6 +70,14 @@
     100% {
       transform: translateX(0);
       opacity: 1;
+    }
+  }
+  @keyframes expandir {
+    0% {
+      width: 0;
+    }
+    100% {
+     width: 80%;
     }
   }
 }

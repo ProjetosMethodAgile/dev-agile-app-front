@@ -5,6 +5,7 @@ import FormInputText from "./InputText";
 import FormError from "./FormError";
 import FormForgetPassword from "./FormForgetPassword";
 import FormRemember from "./FormRemember";
+import FormsParagrafo from "./FormsParagrafo";
 
 export const Form = {
   Root: FormRoot,
@@ -14,4 +15,5 @@ export const Form = {
   Error: FormError,
   ForgetPassword: FormForgetPassword,
   Remember: FormRemember,
+  Paragrafo:FormsParagrafo
 };
