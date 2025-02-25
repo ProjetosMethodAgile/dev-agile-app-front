@@ -1,7 +1,6 @@
 // app/[empresa]/protect/home/page.tsx
 import { validateScreenAccess } from "@/actions/validateScreenAccess";
 import KanbanRoot from "@/components/HelpDesk/Kanban";
-import ScreenValidator from "@/components/ScreenValidator/ScreenValidator";
 
 export default async function EmpresaHomePage() {
   await validateScreenAccess("Help Desk");
