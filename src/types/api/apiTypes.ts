@@ -31,7 +31,7 @@ export type RoleData = {
   descricao: string;
 };
 
-// Novo: Tipo para representar um tipo de permissão (ex: "CRUD", "Visualização")
+// Tipo para representar um tipo de permissão (ex: "CRUD", "Visualização")
 export type TipoPermissaoData = {
   id: string;
   nome: string;
@@ -40,20 +40,21 @@ export type TipoPermissaoData = {
   updatedAt: string;
 };
 
-// Para as permissões diretas (UserPermissionAccess)
+// Para os acessos CRUD de uma permissão
 export type PermissoesData = {
-  permissao_id?: string;
-  id?: string;
   can_create: boolean;
   can_read: boolean;
   can_update: boolean;
   can_delete: boolean;
 };
 
-// Caso precise agrupar as permissões por tela (como na consulta "pegaUsuarioPorId")
-export type PermissoesUserData = {
-  tela: string;
-  permissoes: PermissoesData[];
+// Tipo para a ação unitária (AcaoTela)
+export type AcaoTelaData = {
+  id: string;
+  nome: string;
+  descricao: string;
+  // Caso seja necessário armazenar os registros de acesso, pode ser opcional:
+  user_acoes?: UserAcaoTela[];
 };
 
 export type UserAcaoTela = {
@@ -64,30 +65,28 @@ export type UserAcaoTela = {
   updatedAt: string;
 };
 
-// Tipo para a ação unitária (AcaoTela)
-export type AcaoTelaData = {
-  id: string;
-  nome: string;
-  descricao: string;
-  user_acoes?: UserAcaoTela[]; // Registros de acesso (UserAcaoTela), se disponíveis
-};
-
-// 🔥 Novo: Tipo completo para uma Permissão (Tela), incluindo parent_id e tipo_permissao_id
+// 🔥 Novo: Tipo completo para uma Permissão (Tela ou Subtela)
+// Cada permissão possui os acessos (CRUD), suas ações e, opcionalmente, subtelas (subpermissoes)
 export type PermissaoCompletaData = {
   id: string;
   nome: string;
   descricao: string;
-  parent_id?: string | null; // Permissão pai (se houver)
-  tipo_permissao_id?: string | null; // Tipo da permissão (CRUD, Visualização, etc.)
-  createdAt: string;
-  updatedAt: string;
-  user_permissions_access: PermissoesData[];
+  // A propriedade "acessos" representa os flags CRUD para essa permissão
+  acessos: PermissoesData;
+  // Ações vinculadas à permissão
   acoes: AcaoTelaData[];
-  tipo_permissao?: TipoPermissaoData; // Relacionamento com o tipo de permissão
-  subpermissoes?: PermissaoCompletaData[]; // 🔥 Novo: Lista de subtelas (hierarquia)
+  // Hierarquia: subtelas associadas
+  subpermissoes?: PermissaoCompletaData[];
+  // Caso necessário, os campos de relacionamento também podem ser mantidos como opcionais:
+  parent_id?: string | null;
+  tipo_permissao_id?: string | null;
+  tipo_permissao?: TipoPermissaoData;
+  createdAt?: string;
+  updatedAt?: string;
 };
 
 // Tipo de usuário – conforme o endpoint "pegaUsuarioPorId"
+// Agora o retorno agrupa as permissões em "permissoes"
 export type UsuarioData = {
   status: boolean;
   usuario: {
@@ -97,9 +96,8 @@ export type UsuarioData = {
     contato: string;
     empresa: EmpresaData[];
     usuario_roles: RoleData[];
-    usuario_permissoes_por_tela: PermissoesUserData[];
-    acoesTela: string[]; // Array de IDs das ações unitárias
-    permissoes_completas?: PermissaoCompletaData[];
+    // As permissões agora vêm agrupadas e completas (com acessos, ações e subtelas)
+    permissoes: PermissaoCompletaData[];
     createdAt: string;
     updatedAt: string;
   };

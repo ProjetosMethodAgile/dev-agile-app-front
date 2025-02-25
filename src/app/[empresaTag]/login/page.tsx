@@ -5,8 +5,8 @@ import getEmpresaByTag from "@/actions/getEmpresaByTag";
 import { Form } from "@/components/form";
 import { setLogin } from "@/actions/login";
 import { KeyRound, Mail } from "lucide-react";
-import { EventHandler } from "react";
-import ToggleTheme from "@/components/button/ToggleTheme";
+import VALIDA_EMPRESA_POR_ID from "@/actions/getEmpresaById";
+import ToggleTheme from "@/components/ui/button/ToggleTheme";
 
 export default async function EmpresaLoginPage({
   params,
@@ -18,14 +18,12 @@ export default async function EmpresaLoginPage({
   // Busca os dados da empresa pela tag
   const empresa = await getEmpresaByTag(empresaTag);
 
-  
   if (!empresa.ok || !empresa.data) {
-    redirect("/");
+    redirect("/asd");
   }
   const validaEmp = empresa.data.id;
   const statusEmp = await VALIDA_EMPRESA_POR_ID(validaEmp);
 
- 
   const showOpenTicketButton = statusEmp === 200;
 
   // Se o usuário já estiver autenticado, redireciona para a área protegida
@@ -35,9 +33,9 @@ export default async function EmpresaLoginPage({
   }
 
   return (
-    <main className="m-auto max-w-3xl flex h-screen items-center justify-center gap-10 max-lg:mx-6 max-lg:flex-col max-lg:items-center max-lg:gap-0 max-lg:px-2 max-sm:mx-2 max-sm:h-full max-sm:p-0 dark:text-white">
-      <div className="animate-move-right-to-left mb-4 max-lg:mt-10 ">
-        <h1 className=" text-primary-300 mb-5 text-7xl font-bold max-xl:text-5xl max-lg:mb-4 max-sm:text-3xl">
+    <main className="m-auto flex h-screen max-w-3xl items-center justify-center gap-10 max-lg:mx-6 max-lg:flex-col max-lg:items-center max-lg:gap-0 max-lg:px-2 max-sm:mx-2 max-sm:h-full max-sm:p-0 dark:text-white">
+      <div className="animate-move-right-to-left mb-4 max-lg:mt-10">
+        <h1 className="text-primary-300 mb-5 text-7xl font-bold max-xl:text-5xl max-lg:mb-4 max-sm:text-3xl">
           Bem&nbsp;vindo de volta
         </h1>
         <p className="text-primary-500/70 max-w-140 text-2xl max-xl:text-xl max-md:hidden dark:text-gray-300">
@@ -67,13 +65,15 @@ export default async function EmpresaLoginPage({
           <Form.Remember />
           <Form.ForgetPassword />
         </div>
-        <Form.InputSubmit  name="action" value="entrar" type="submit">Entrar</Form.InputSubmit>
+        <Form.InputSubmit name="action" value="entrar" type="submit">
+          Entrar
+        </Form.InputSubmit>
         {showOpenTicketButton && (
           <Form.InputSubmit
             name="action"
             value="openTicket"
             type="submit"
-            className="bg-primary-300/10 dark:text-gray-300 text-primary-300 dark:border-gray-300/50 border-primary-300 border-1"
+            className="bg-primary-300/10 text-primary-300 border-primary-300 border-1 dark:border-gray-300/50 dark:text-gray-300"
           >
             Abrir chamado
           </Form.InputSubmit>

@@ -1,12 +1,12 @@
 // app/[empresa]/protect/home/page.tsx
+import { validateScreenAccess } from "@/actions/validateScreenAccess";
 import NavComponent from "@/components/nav/nav";
-import ScreenValidator from "@/components/ScreenValidator/ScreenValidator";
 
-export default function EmpresaHomePage() {
+export default async function EmpresaHomePage() {
+  await validateScreenAccess("Help Desk");
+
   return (
     <main className="p-6">
-      {/* Valida se o usuário tem acesso à tela "Home" */}
-      <ScreenValidator screenName="Home" />
       <h1>Tela Home</h1>
 
       <NavComponent />

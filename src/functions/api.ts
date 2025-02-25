@@ -1,4 +1,5 @@
-export const API_URL = "https://devagile.com.br/api";
+// export const API_URL = "https://devagile.com.br/api";
+export const API_URL = "http://localhost:3001/api";
 
 export function GET_USER_ID(userId: string) {
   return {
