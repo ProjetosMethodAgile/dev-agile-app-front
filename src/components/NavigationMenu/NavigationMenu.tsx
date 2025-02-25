@@ -18,6 +18,7 @@ import {
   LogOut,
   Handshake,
 } from "lucide-react";
+import ToggleTheme from "../button/ToggleTheme";
 
 // Mapeia o slug da tela com o ícone correspondente.
 const iconsMap: { [key: string]: React.ElementType } = {

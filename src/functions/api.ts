@@ -24,8 +24,8 @@ export function GET_PERMISSOES_ACOES_USER(tag: string) {
   };
 }
 
-export function GET_VERIFYPARAMETROS_EMPRESA(empresaId:string){
+export function GET_VERIFYPARAMETROS_EMPRESA(empresaId: string) {
   return {
-    url:`http://localhost:3000/api/parametros/verifica/${empresaId}`,
+    url: API_URL + `/parametros/verifica/${empresaId}`,
   };
 }
