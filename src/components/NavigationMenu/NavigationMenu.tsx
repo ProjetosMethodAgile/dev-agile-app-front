@@ -65,7 +65,7 @@ export default function NavigationMenu() {
   return (
     <nav
       ref={navRef}
-      className={`border-primary-600 h-screen ${
+      className={`border-primary-600 h-dvh ${
         isExpanded ? "w-50" : "w-20"
       } relative flex flex-col gap-2 overflow-hidden rounded-r-3xl border bg-black/20 backdrop-blur-2xl transition-all duration-300`}
     >
