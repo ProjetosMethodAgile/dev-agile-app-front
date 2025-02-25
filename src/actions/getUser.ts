@@ -20,7 +20,7 @@ export default async function getUser(): Promise<GetUserResult> {
     const response = await fetch(url, {
       method: "GET",
       headers: {
-        Authorization: "Barrer " + token,
+        Authorization: "Bearer " + token,
       },
       next: {
         revalidate: 60,
@@ -34,7 +34,7 @@ export default async function getUser(): Promise<GetUserResult> {
       throw new Error("Usuário não pertence à empresa autenticada.");
     }
 
-    return { data: data, ok: true, empresaToken: usuarioData.empresa };
+    return { data, ok: true, empresaToken: usuarioData.empresa };
   } catch (error) {
     return apiError(error);
   }
