@@ -5,6 +5,8 @@ import FormInputText from "./InputText";
 import FormError from "./FormError";
 import FormForgetPassword from "./FormForgetPassword";
 import FormRemember from "./FormRemember";
+import FormSection from "./FormSection";
+import FormButtonNav from "./FormButtonNav";
 
 export const Form = {
   Root: FormRoot,
@@ -14,4 +16,6 @@ export const Form = {
   Error: FormError,
   ForgetPassword: FormForgetPassword,
   Remember: FormRemember,
+  Section: FormSection,
+  ButtonNav: FormButtonNav
 };
