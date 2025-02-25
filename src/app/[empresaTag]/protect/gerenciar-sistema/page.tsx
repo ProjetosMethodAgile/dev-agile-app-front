@@ -10,9 +10,9 @@ import { redirect } from "next/navigation";
 export default async function EmpresaHomePage({
   params,
 }: {
-  params: { empresaTag: string };
+  params: Promise<{ empresaTag: string }>;
 }) {
-  const { empresaTag } = params;
+  const { empresaTag } = await params;
 
   // Valida o acesso à tela "Gerenciar Sistema"
   await validateScreenAccess("Gerenciar Sistema");
