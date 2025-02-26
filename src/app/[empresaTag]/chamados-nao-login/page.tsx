@@ -1,11 +1,25 @@
 
-import Chatbot from "@/components/Chatbot/Chatbot";
+import { Chat } from "@/components/Chatbot";
+import { GlobalContextProvider } from "@/context/globalContext";
+
 
 export default function chamadosSemLogin(){
+    
     return(
-        <div className="m-auto flex h-screen items-center justify-center gap-10 max-lg:mx-6 max-lg:flex-col max-lg:items-center max-lg:gap-0 max-lg:px-2 max-sm:mx-2 max-sm:h-full max-sm:p-0 dark:text-white" >
-  
-            <Chatbot />
+        <GlobalContextProvider>
+
+        <div className="flex items-center justify-center h-dvh flex-col " >
+        <Chat.Root className="w-1/2 flex-col min-h-115 " >
+          <div className="flex  max-h-[500px]">
+          <Chat.NavBar className="w-1/3"/>
+
+          <Chat.Menssagem/>
+          </div>
+            <Chat.InputChat className="flex items-center"/>
+          
+        </Chat.Root>
+     
         </div>
+      </GlobalContextProvider>
     )
 }
