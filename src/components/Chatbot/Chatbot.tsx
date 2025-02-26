@@ -32,6 +32,9 @@ export default function Chatbot() {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const [formDataChamados, setFormDataChamados] = useState<any>({});
   const [countdown, setCountdown] = useState<number | null>(null);
+  
+  // Variável para armazenar as mensagens enviadas pelo usuário
+  const [dataUserChamados, setDataUserChamados] = useState<string[]>([]);
 
   const sendMessage = (newMessage: string, type: 'user' | 'bot', loading = false) => {
     setMessages(prevMessages => [
@@ -51,7 +54,8 @@ export default function Chatbot() {
 
   useEffect(() => {
     console.log(formDataChamados);
-  }, [formDataChamados]);
+    console.log("Dados enviados pelo usuário:", dataUserChamados);
+  }, [formDataChamados, dataUserChamados]);
 
   // Efeito para a contagem regressiva
   useEffect(() => {
@@ -68,20 +72,19 @@ export default function Chatbot() {
   // Quando a etapaAtual for igual a 5, salva os dados e inicia a contagem
   useEffect(() => {
     if (etapaAtual === 5 && countdown === null) {
-
-        setTimeout(()=>{
-
-            const dadosChamado = {
-                messages,
-                setor: setorSelecionado,
-                title
-            };
-            setFormDataChamados(dadosChamado);
-            sendMessage("Finalizando...", 'bot');
-            setCountdown(5);
-        },3500)
-        }
-  }, [etapaAtual, countdown, messages, setorSelecionado, title]);
+      setTimeout(() => {
+        const dadosChamado = {
+          messages,
+          setor: setorSelecionado,
+          title,
+          dataUserChamados // Aqui você inclui os dados enviados pelo usuário
+        };
+        setFormDataChamados(dadosChamado);
+        sendMessage("Finalizando...", 'bot');
+        setCountdown(5);
+      }, 3500);
+    }
+  }, [etapaAtual, countdown, messages, setorSelecionado, title, dataUserChamados]);
 
   // Função genérica para enviar mensagem com tratamento especial para "Voltar"
   const handleSendMessage = (text?: string) => {
@@ -119,7 +122,10 @@ export default function Chatbot() {
       return;
     }
 
-    // Fluxo normal
+    // Fluxo normal:
+    // Salva a mensagem enviada pelo usuário em dataUserChamados
+    setDataUserChamados(prevData => [...prevData, messageToSend]);
+
     sendMessage(messageToSend, 'user');
     setMessageUser("");
 
@@ -259,6 +265,11 @@ export default function Chatbot() {
                         className="bg-green-500 p-3 rounded-[15px] w-[100px]"
                         value="Finalizar"
                         onClick={(e) => handleSendMessage(e.currentTarget.value)}
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter") {
+                            handleSendMessage();
+                          }
+                        }}
                       >
                         Finalizar
                       </button>
@@ -282,10 +293,22 @@ export default function Chatbot() {
                   type="text"
                   placeholder="Digite sua mensagem"
                   onChange={(e) => setMessageUser(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") {
+                      handleSendMessage();
+                    }
+                  }}
+                  required
                 />
                 <Send
+                  tabIndex={0}
                   className="bg-primary-100 dark:bg-primary-200 w-[50px] h-[35px] p-1 rounded-[10px] cursor-pointer"
                   onClick={() => handleSendMessage()}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") {
+                      handleSendMessage();
+                    }
+                  }}
                 />
               </div>
             </div>
@@ -298,6 +321,11 @@ export default function Chatbot() {
                   value={messageUser}
                   placeholder="Digite sua mensagem"
                   onChange={(e) => setMessageUser(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") {
+                      handleSendMessage();
+                    }
+                  }}
                 />
                 <Send
                   className="bg-primary-100 dark:bg-primary-200 w-[50px] h-[35px] p-1 rounded-[10px] cursor-pointer"
