@@ -12,6 +12,10 @@
   --color-primary-500: #294281;
   --color-primary-600: #14254f;
   --color-primary-900: #07122e;
+  --color-primary-100: #0547A6;
+  --color-primary-150: #021B40;
+  --color-primary-170: #07122E;
+
 
   --color-primary-l-100: #9BF2FF;
 
@@ -28,13 +32,14 @@
   /* Animações */
   --animate-move-left-to-right: move-left-to-right 0.6s ease;
   --animate-move-right-to-left: move-right-to-left 0.6s ease;
+  --animate-expandir: expandir 1s alternate ease;
   --animate-move-low-move: low-move 5s infinite alternate ease;
 }
 
+  /* Responsivo*/
 /* ================== Container ================== */
 @utility container {
   padding: 2rem;
-
 }
 
 /* ================== Keyframes ================== */
@@ -67,6 +72,14 @@
   100% {
     transform: translateX(0);
     opacity: 1;
+  }
+  @keyframes expandir {
+    0% {
+      width: 0;
+    }
+    100% {
+     width: 80%;
+    }
   }
 }
 
