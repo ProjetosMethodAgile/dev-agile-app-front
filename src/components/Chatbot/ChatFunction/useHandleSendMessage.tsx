@@ -1,9 +1,8 @@
 import { useGlobalContext } from "@/context/globalContext";
 import { fluxo, setores } from "../setores";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { validateChat } from "./validateMessage";
-import { redirect } from "next/navigation";
-import { useParams } from "next/navigation";
+
 type Message = {
   text: string;
   time: string;
@@ -13,9 +12,8 @@ type Message = {
 
 export const useHandleSendMessage = () => {
   // Resolve o parâmetro assíncrono e armazena em um estado
-  const {empresaTag} = useParams()
-  
-  
+  // const {empresaTag} = useParams()
+
   const {
     messages,
     setMessages,
@@ -47,7 +45,7 @@ export const useHandleSendMessage = () => {
 
   useEffect(() => {
     // Garante que a etapa 5 só será processada se a empresaTag já estiver disponível
-    if (etapaAtual === 5 && countdown === null ) {
+    if (etapaAtual === 5 && countdown === null) {
       setTimeout(() => {
         const dadosChamado = {
           messages,
@@ -59,7 +57,6 @@ export const useHandleSendMessage = () => {
         setFormDataChamados(dadosChamado);
         setCountdown(5);
       }, 3500);
-
     }
   }, [
     etapaAtual,
@@ -74,7 +71,7 @@ export const useHandleSendMessage = () => {
   const sendMessage = (
     newMessage: string,
     type: "user" | "bot",
-    loading = false
+    loading = false,
   ) => {
     setMessages((prev: Message[]) => [
       ...prev,
@@ -133,7 +130,7 @@ export const useHandleSendMessage = () => {
       if (!validateChat(messageToSend)) {
         sendMessage(
           "A descrição precisa ter no mínimo 50 caracteres, por favor tente novamente.",
-          "bot"
+          "bot",
         );
         // Se a validação não for atendida, interrompe o fluxo e mantém o usuário na etapa 3.
         return;
