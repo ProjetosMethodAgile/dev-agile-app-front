@@ -9,7 +9,6 @@ import FormsParagrafo from "./FormsParagrafo";
 import FormSection from "./FormSection";
 import FormButtonNav from "./FormButtonNav";
 
-
 export const Form = {
   Root: FormRoot,
   Logo: FormLogo,
@@ -18,7 +17,7 @@ export const Form = {
   Error: FormError,
   ForgetPassword: FormForgetPassword,
   Remember: FormRemember,
-  Paragrafo:FormsParagrafo
+  Paragrafo: FormsParagrafo,
   Section: FormSection,
-  ButtonNav: FormButtonNav
+  ButtonNav: FormButtonNav,
 };
