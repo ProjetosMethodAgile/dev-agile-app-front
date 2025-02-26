@@ -1,7 +1,6 @@
 import getEmpresaByTag from "@/actions/getEmpresaByTag";
 import { validateScreenAccess } from "@/actions/validateScreenAccess";
 import ScreenTitle from "@/components/titles/ScreenTitle";
-import { Settings } from "lucide-react";
 import { redirect } from "next/navigation";
 import GerenciarContainer from "@/components/gerenciarComponents/GerenciarContainer";
 import iconsMap from "@/utils/iconsMap";

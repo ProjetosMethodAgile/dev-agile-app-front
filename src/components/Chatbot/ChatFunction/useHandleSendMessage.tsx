@@ -1,9 +1,9 @@
+"use client";
 import { useGlobalContext } from "@/context/globalContext";
 import { fluxo, setores } from "../setores";
-import { useEffect, useState } from "react";
+import { useEffect, useCallback } from "react";
 import { validateChat } from "./validateMessage";
-import { redirect } from "next/navigation";
-import { useParams } from "next/navigation";
+
 type Message = {
   text: string;
   time: string;
@@ -12,10 +12,6 @@ type Message = {
 };
 
 export const useHandleSendMessage = () => {
-  // Resolve o parâmetro assíncrono e armazena em um estado
-  const {empresaTag} = useParams()
-  
-  
   const {
     messages,
     setMessages,
@@ -43,11 +39,34 @@ export const useHandleSendMessage = () => {
       // Ao chegar a 0, recarrega a página
       window.location.reload();
     }
-  }, [countdown]);
+  }, [countdown, setCountdown]);
+
+  // Envolvemos a função sendMessage em useCallback para que ela seja estável
+  const sendMessage = useCallback(
+    (
+      newMessage: string,
+      type: "user" | "bot",
+      loading = false
+    ) => {
+      setMessages((prev: Message[]) => [
+        ...prev,
+        {
+          text: newMessage,
+          time: new Date().toLocaleTimeString("pt-BR", {
+            hour: "2-digit",
+            minute: "2-digit",
+            second: "2-digit",
+          }),
+          type,
+          loading,
+        },
+      ]);
+    },
+    [setMessages]
+  );
 
   useEffect(() => {
-    // Garante que a etapa 5 só será processada se a empresaTag já estiver disponível
-    if (etapaAtual === 5 && countdown === null ) {
+    if (etapaAtual === 5 && countdown === null) {
       setTimeout(() => {
         const dadosChamado = {
           messages,
@@ -59,7 +78,6 @@ export const useHandleSendMessage = () => {
         setFormDataChamados(dadosChamado);
         setCountdown(5);
       }, 3500);
-
     }
   }, [
     etapaAtual,
@@ -68,28 +86,10 @@ export const useHandleSendMessage = () => {
     setorSelecionado,
     title,
     dataUserChamados,
+    sendMessage,
+    setCountdown,
+    setFormDataChamados,
   ]);
-
-  // Função auxiliar para adicionar uma nova mensagem
-  const sendMessage = (
-    newMessage: string,
-    type: "user" | "bot",
-    loading = false
-  ) => {
-    setMessages((prev: Message[]) => [
-      ...prev,
-      {
-        text: newMessage,
-        time: new Date().toLocaleTimeString("pt-BR", {
-          hour: "2-digit",
-          minute: "2-digit",
-          second: "2-digit",
-        }),
-        type,
-        loading,
-      },
-    ]);
-  };
 
   // Função principal para tratar o envio de mensagens
   const handleSendMessage = (text?: string) => {

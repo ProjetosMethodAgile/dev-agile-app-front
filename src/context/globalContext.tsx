@@ -8,10 +8,19 @@ type Message = {
   type: "user" | "bot";
   loading?: boolean;
 };
+
 type Setor = {
   nome: string;
   motivo: string[];
 };
+
+// Defina o tipo para os dados dos chamados
+export interface FormDataChamados {
+  messages: Message[];
+  setor: Setor | null;
+  title: string;
+  dataUserChamados: string[];
+}
 
 type IGlobalContext = {
   card: HTMLDivElement | null;
@@ -30,10 +39,9 @@ type IGlobalContext = {
   setDataUserChamados: React.Dispatch<React.SetStateAction<string[]>>;
   countdown: number | null;
   setCountdown: React.Dispatch<React.SetStateAction<number | null>>;
-  formDataChamados: any;
-  setFormDataChamados: React.Dispatch<React.SetStateAction<any>>;
+  formDataChamados: FormDataChamados | null;
+  setFormDataChamados: React.Dispatch<React.SetStateAction<FormDataChamados | null>>;
 };
-
 
 const GlobalContext = React.createContext<IGlobalContext | null>(null);
 
@@ -52,7 +60,7 @@ export function GlobalContextProvider({
 }: {
   children: React.ReactNode;
 }) {
-  const [formDataChamados, setFormDataChamados] = useState<any>({});
+  const [formDataChamados, setFormDataChamados] = useState<FormDataChamados | null>(null);
   const [countdown, setCountdown] = useState<number | null>(null);
   const [dataUserChamados, setDataUserChamados] = useState<string[]>([]);
   const [title, setTitle] = useState<string>(fluxo[0].title);
