@@ -7,6 +7,7 @@ import FormForgetPassword from "./FormForgetPassword";
 import FormRemember from "./FormRemember";
 import FormsParagrafo from "./FormsParagrafo";
 
+
 export const Form = {
   Root: FormRoot,
   Logo: FormLogo,
