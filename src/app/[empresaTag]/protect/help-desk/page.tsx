@@ -1,12 +1,12 @@
 // app/[empresa]/protect/home/page.tsx
+import { validateScreenAccess } from "@/actions/validateScreenAccess";
 import KanbanRoot from "@/components/HelpDesk/Kanban";
-import ScreenValidator from "@/components/ScreenValidator/ScreenValidator";
 
-export default function EmpresaHomePage() {
+export default async function EmpresaHomePage() {
+  await validateScreenAccess("Help Desk");
+
   return (
     <main className="h-dvh overflow-hidden p-6">
-      {/* Valida se o usuário tem acesso à tela "Help Desk" */}
-      <ScreenValidator screenName="Help Desk" />
       <div className="">
         <h1>Help Desk</h1>
         <KanbanRoot />
