@@ -1,11 +1,10 @@
-// app/[empresa]/protect/home/page.tsx
 import getEmpresaByTag from "@/actions/getEmpresaByTag";
 import { validateScreenAccess } from "@/actions/validateScreenAccess";
-import { Form } from "@/components/form";
-import ListGerenciar from "@/components/gerenciarComponents/ListGerenciar";
 import ScreenTitle from "@/components/titles/ScreenTitle";
-import { Search, Settings } from "lucide-react";
+import { Settings } from "lucide-react";
 import { redirect } from "next/navigation";
+import GerenciarContainer from "@/components/gerenciarComponents/GerenciarContainer";
+import iconsMap from "@/utils/iconsMap";
 
 export default async function EmpresaHomePage({
   params,
@@ -27,19 +26,10 @@ export default async function EmpresaHomePage({
     <main className="container p-6">
       <ScreenTitle
         title="Configurações do sistema"
-        icon={Settings}
-        className=""
+        icon={iconsMap["gerenciar-sistema"]}
       />
       <div className="animate-move-left-to-right dark:border-primary-600/70 border-primary-300 h-[90dvh] rounded-3xl border-2 bg-transparent p-5 backdrop-blur-2xl dark:border-1 dark:bg-black/20 dark:backdrop-blur-2xl">
-        <Form.Section title={empresa.data.nome}>
-          <Form.InputText
-            id="search"
-            name="search"
-            icon={Search}
-            placeholder="busque a configuração"
-          />
-        </Form.Section>
-        <ListGerenciar />
+        <GerenciarContainer empresaName={empresa.data.nome} />
       </div>
     </main>
   );

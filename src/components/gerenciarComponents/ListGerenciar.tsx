@@ -1,19 +1,32 @@
 "use client";
 import { useUser } from "@/context/userContext";
+import { PermissaoCompletaData } from "@/types/api/apiTypes";
 import iconsMap from "@/utils/iconsMap";
 import { redirect, usePathname } from "next/navigation";
-export type ListGerenciarProps = React.ComponentProps<"ul"> & {};
 
-export default function ListGerenciar({ ...props }: ListGerenciarProps) {
-  const { permissions, user } = useUser();
+export type ListGerenciarProps = React.ComponentProps<"ul"> & {
+  search?: string;
+};
+
+export default function ListGerenciar({
+  search = "",
+  ...props
+}: ListGerenciarProps) {
+  const { permissions } = useUser();
 
   if (!permissions) redirect("/");
   const pathAtual = usePathname();
-  console.log(user);
+
+  // Filtra as subtelas com base no ID e no valor de busca (usando lowercase para comparação)
+  const accessibleSubScreens = permissions?.filter(
+    (screen: PermissaoCompletaData) =>
+      screen.parent_id === process.env.NEXT_PUBLIC_ID_SCRENN_GEREN_SIST &&
+      screen.nome.toLowerCase().includes(search.toLowerCase()),
+  );
 
   return (
     <ul {...props} className="flex flex-wrap gap-4">
-      {permissions.map((screen) => {
+      {accessibleSubScreens.map((screen) => {
         const slug = screen.nome.trim().toLowerCase().replace(/\s+/g, "-");
         const IconComponent = iconsMap[slug] || "House";
 
