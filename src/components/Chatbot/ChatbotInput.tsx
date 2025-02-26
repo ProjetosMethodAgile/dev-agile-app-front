@@ -4,15 +4,14 @@ import { twMerge } from "tailwind-merge";
 import { useGlobalContext } from "@/context/globalContext";
 import { useHandleSendMessage } from "./ChatFunction/useHandleSendMessage";
 import { Send } from "lucide-react";
-interface ChatbotInputProps extends React.ComponentProps<"div"> {}
 
 export default function ChatbotInput({
   className,
   ...props
-}: ChatbotInputProps) {
+}: React.ComponentProps<"div">) {
   const { setMessageUser, messageUser, etapaAtual } = useGlobalContext();
   const handleSendMessage = useHandleSendMessage();
-  if (etapaAtual == 1 || etapaAtual === 2) {
+  if (etapaAtual === 1 || etapaAtual === 2) {
     return null;
   }
   return (
@@ -22,7 +21,7 @@ export default function ChatbotInput({
         type="text"
         value={messageUser}
         placeholder="Digite sua mensagem"
-        onChange={(e) => setMessageUser((e.target as HTMLInputElement).value)}
+        onChange={(e) => setMessageUser(e.target.value)}
         onKeyDown={(e) => {
           if (e.key === "Enter") {
             handleSendMessage();

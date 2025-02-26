@@ -3,15 +3,21 @@ import { useEffect, useRef } from "react";
 import { twMerge } from "tailwind-merge";
 import { useGlobalContext } from "@/context/globalContext";
 import { useHandleSendMessage } from "./ChatFunction/useHandleSendMessage";
-
+import Image from "next/image";
 // Se quiser tipar melhor as props, renomeie a interface abaixo
 // e/ou importe o tipo de mensagem diretamente do contexto
-interface ChatMessagesProps extends React.ComponentProps<"nav"> {}
+interface ChatMessagesProps extends React.ComponentProps<"nav"> {
+  someProp?: string; // Adicione um campo se for necessário
+}
+
 
 export default function ChatMessages({ className, ...props }: ChatMessagesProps) {
   const { messages,etapaAtual,countdown } = useGlobalContext();
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const handleSendMessage = useHandleSendMessage();
+  const amalfiszinho = "/image/chatAmalfis/amalfiszinho.png";
+
+
 
   useEffect(() => {
     // Usar um pequeno delay para garantir que o DOM esteja atualizado
@@ -67,11 +73,14 @@ return (
         }
       >
         {msg.type === "bot" && !msg.loading && (
-          <img
-            className="absolute -top-2 -left-0 h-14 w-14 rounded-full border-2 border-amber-50"
-            src="/image/chatAmalfis/amalfiszinho.png"
-            alt="amalfiszinho"
-          />
+         <Image
+         src={amalfiszinho}
+         alt="amalfiszinho"
+         width={70}
+         height={70}
+         className="absolute -top-2 -left-1 h-14 w-14 rounded-full border-2 border-amber-50"
+       />
+        
         )}
         <span className={msg.loading ? "animate-pulse" : "max-w-[350px] text-wrap"}>
           {msg.text}
