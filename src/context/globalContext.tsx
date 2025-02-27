@@ -1,6 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import { fluxo } from "@/components/Chatbot/setores";
+import Modal from "@/components/modal/Modal";
 
 type Message = {
   text: string;
@@ -40,7 +41,11 @@ type IGlobalContext = {
   countdown: number | null;
   setCountdown: React.Dispatch<React.SetStateAction<number | null>>;
   formDataChamados: FormDataChamados | null;
-  setFormDataChamados: React.Dispatch<React.SetStateAction<FormDataChamados | null>>;
+  setFormDataChamados: React.Dispatch<
+    React.SetStateAction<FormDataChamados | null>
+  >;
+  openGlobalModal: (content: React.ReactNode) => void;
+  closeGlobalModal: () => void;
 };
 
 const GlobalContext = React.createContext<IGlobalContext | null>(null);
@@ -49,7 +54,7 @@ export const useGlobalContext = () => {
   const context = React.useContext(GlobalContext);
   if (!context) {
     throw new Error(
-      "useGlobalContext must be used within a GlobalContextProvider"
+      "useGlobalContext must be used within a GlobalContextProvider",
     );
   }
   return context;
@@ -60,7 +65,8 @@ export function GlobalContextProvider({
 }: {
   children: React.ReactNode;
 }) {
-  const [formDataChamados, setFormDataChamados] = useState<FormDataChamados | null>(null);
+  const [formDataChamados, setFormDataChamados] =
+    useState<FormDataChamados | null>(null);
   const [countdown, setCountdown] = useState<number | null>(null);
   const [dataUserChamados, setDataUserChamados] = useState<string[]>([]);
   const [title, setTitle] = useState<string>(fluxo[0].title);
@@ -80,7 +86,18 @@ export function GlobalContextProvider({
   ]);
   const [etapaAtual, setEtapaAtual] = useState<number>(0);
   const [messageUser, setMessageUser] = useState("");
+  const [globalModalContent, setGlobalModalContent] =
+    useState<React.ReactNode | null>(null);
 
+  // Função para abrir o modal e passar seu conteúdo
+  const openGlobalModal = (content: React.ReactNode) => {
+    setGlobalModalContent(content);
+  };
+
+  // Função para fechar o modal
+  const closeGlobalModal = () => {
+    setGlobalModalContent(null);
+  };
   return (
     <GlobalContext.Provider
       value={{
@@ -102,9 +119,16 @@ export function GlobalContextProvider({
         setCountdown,
         formDataChamados,
         setFormDataChamados,
+        openGlobalModal,
+        closeGlobalModal,
       }}
     >
       {children}
+      {globalModalContent && (
+        <Modal className="bg-opacity-70 fixed inset-0 z-50 flex items-center justify-center bg-black/40">
+          {globalModalContent}
+        </Modal>
+      )}
     </GlobalContext.Provider>
   );
 }
