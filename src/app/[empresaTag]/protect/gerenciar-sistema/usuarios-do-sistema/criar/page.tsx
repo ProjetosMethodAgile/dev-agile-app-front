@@ -13,7 +13,7 @@ import {
 } from "lucide-react";
 import React from "react";
 
-const GerenciarUsuariosPage = () => {
+const CriarUsuarioPage = () => {
   const [activeTab, setActiveTab] = React.useState("informacoes");
 
   return (
@@ -77,4 +77,4 @@ const GerenciarUsuariosPage = () => {
   );
 };
 
-export default GerenciarUsuariosPage;
+export default CriarUsuarioPage;

@@ -33,11 +33,13 @@ export default function ListGerenciar({
         return (
           <li
             key={screen.nome}
-            className="dark:border-primary-600/70 border-primary-300 flex h-40 w-50 cursor-pointer flex-col items-center justify-center rounded-3xl border-2 bg-transparent p-5 backdrop-blur-2xl hover:scale-105 dark:border-1 dark:bg-black/20 dark:backdrop-blur-2xl"
+            className="dark:border-primary-600/70 border-primary-300 gap-2 justify-between flex  h-35 w-60 cursor-pointer flex-col items-center 
+           rounded-3xl border-2 bg-transparent p-5 backdrop-blur-2xl hover:scale-103 dark:border-1 transition-all
+             dark:bg-black/20 dark:backdrop-blur-2xl"
             onClick={() => redirect(pathAtual + "/" + slug)}
           >
-            <IconComponent className="size-15" />
-            <span>{screen.nome}</span>
+            <IconComponent className="size-16 text-primary-900 dark:text-primary-50" />
+            <span className="font-semibold text-primary-900/80 dark:text-primary-50">{screen.nome}</span>
           </li>
         );
       })}
