@@ -1,9 +1,9 @@
 // app/[empresa]/protect/layout.tsx
 import { getUserPermissions } from "@/app/lib/getUserPermissions";
 import { validateCompanySession } from "@/app/lib/validateCompanySession";
-import NavigationMenu from "@/components/navigationMenu/NavigationMenu";
 import { UserContextProvider } from "@/context/userContext";
 import { GlobalContextProvider } from "@/context/globalContext";
+import NavigationMenu from "@/components/NavigationMenu/NavigationMenu";
 
 export default async function ProtectedEmpresaLayout({
   children,
