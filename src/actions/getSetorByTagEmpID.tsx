@@ -1,32 +1,32 @@
-"use server";
-import getEmpresaByTag from "@/actions/getEmpresaByTag";
 import { GET_SETORES } from "@/functions/api";
-import { SetorHelpDesk } from "@/types/api/apiTypes";
+import getEmpresaByTag from "./getEmpresaByTag";
 
-export const getSetorByTagEmpID = async (empresaTag:string) => {
+export const getSetorByTagEmpID = async (empresaTag: string) => {
+  const empresaResult = await getEmpresaByTag(empresaTag);
 
+  if (!empresaResult) {
+    throw new Error("Erro ao obter dados da empresa");
+  }
 
-    const empresaResult = await getEmpresaByTag(empresaTag);
+  const empresaId = empresaResult.data?.id;
+  if (empresaId) {
+    const { url } = await GET_SETORES(empresaId);
+    const response = await fetch(url, {
+      method: "GET",
+      next: {
+        revalidate: 60,
+      },
+    });
 
-    if (!empresaResult) {
-      throw new Error("Erro ao obter dados da empresa");
+    if (!response.ok) {
+      const errorDetails = await response.text();
+      console.error("Detalhes do erro:", errorDetails);
+      throw new Error("Erro ao pegar o setor.");
     }
 
-    const empresaId = empresaResult.data?.id;
-    if (empresaId) {
-      const {url} = await GET_SETORES(empresaId);
-        console.log(url);
-
-
-      const response = await fetch(url, {
-        method: "GET",
-        next: {
-          revalidate: 60,
-        },
-      });
-      if (!response.ok) throw new Error("Erro ao pegar o setor.");
-      const data = (await response.json()) as SetorHelpDesk;
-      return data
-    }
-  
+    const data = await response.json();
+    return data; // Retorna os dados obtidos
+  } else {
+    throw new Error("ID da empresa não encontrado.");
+  }
 };

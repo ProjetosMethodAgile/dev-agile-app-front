@@ -3,6 +3,8 @@ import { useGlobalContext } from "@/context/globalContext";
 import { fluxo, setores } from "../setores";
 import { useEffect, useCallback } from "react";
 import { validateChat } from "./validateMessage";
+import { SetorHelpDesk } from "@/types/api/apiTypes";
+import { GET_MOTIVO } from "@/functions/api";
 
 type Message = {
   text: string;
@@ -28,26 +30,23 @@ export const useHandleSendMessage = () => {
     setFormDataChamados,
     countdown,
     setCountdown,
+    setMotivo
   } = useGlobalContext();
 
+  // Tratamento de contagem regressiva para recarregar a página
   useEffect(() => {
     if (countdown === null) return;
     if (countdown > 0) {
       const timer = setTimeout(() => setCountdown(countdown - 1), 1000);
       return () => clearTimeout(timer);
     } else {
-      // Ao chegar a 0, recarrega a página
       window.location.reload();
     }
   }, [countdown, setCountdown]);
 
-  // Envolvemos a função sendMessage em useCallback para que ela seja estável
+  // Função sendMessage estável com useCallback
   const sendMessage = useCallback(
-    (
-      newMessage: string,
-      type: "user" | "bot",
-      loading = false
-    ) => {
+    (newMessage: string, type: "user" | "bot", loading = false) => {
       setMessages((prev: Message[]) => [
         ...prev,
         {
@@ -65,6 +64,7 @@ export const useHandleSendMessage = () => {
     [setMessages]
   );
 
+  // Efetua ação quando a etapa é 5
   useEffect(() => {
     if (etapaAtual === 5 && countdown === null) {
       setTimeout(() => {
@@ -72,7 +72,7 @@ export const useHandleSendMessage = () => {
           messages,
           setor: setorSelecionado,
           title,
-          dataUserChamados, // Dados enviados pelo usuário
+          dataUserChamados,
         };
         sendMessage("Finalizando...", "bot");
         setFormDataChamados(dadosChamado);
@@ -89,13 +89,29 @@ export const useHandleSendMessage = () => {
     sendMessage,
     setCountdown,
     setFormDataChamados,
+  
   ]);
 
-  // Função principal para tratar o envio de mensagens
-  const handleSendMessage = (text?: string) => {
-    const messageToSend = text !== undefined ? text : messageUser;
-    if (!messageToSend.trim()) return;
+  /**
+   * Função principal para tratar o envio de mensagens.
+   * @param text - Texto a ser enviado. Se não fornecido, utiliza o estado messageUser.
+   * @param e - Evento de clique opcional, utilizado para capturar o id do botão.
+   */
+  const handleSendMessage = (
+    text: string = messageUser,
+    e?: React.MouseEvent<HTMLButtonElement>
+  ) => {
+    // Se o evento for fornecido, captura e exibe o id do botão clicado
+    if (e) {
+      const setorMotivo = e.currentTarget.id;
+  
+    :::::::::::::::::::::::::::::::::::::::: parei aqui
+       
+     
+    }
 
+    const messageToSend = text;
+    if (!messageToSend.trim()) return;
 
     // Caso especial: "Descrição" – volta ao início do fluxo
     if (messageToSend === "Descrição") {
@@ -129,33 +145,27 @@ export const useHandleSendMessage = () => {
       return;
     }
 
-    // Validação específica para a etapa 3:
+    // Validação específica para a etapa 3
     if (etapaAtual === 3) {
       if (!validateChat(messageToSend)) {
-        const contador = messageToSend.length
-        
+        const contador = messageToSend.length;
         sendMessage(
           `A descrição precisa ter no mínimo 50 caracteres, você só escreveu ${contador} por favor tente novamente.`,
-          "bot",
+          "bot"
         );
-        
-        
-   
-        // Se a validação não for atendida, interrompe o fluxo e mantém o usuário na etapa 3.
         return;
       }
     }
 
     // Se estivermos na etapa 1, define o setorSelecionado com o objeto completo
     if (etapaAtual === 1) {
-      const setorObj = setores.find((setor) => setor.nome === messageToSend);
+      const setorObj = setores.find((s) => s.nome === messageToSend);
       if (setorObj) {
         setSetorSelecionado(setorObj);
       }
     }
 
-    // Fluxo normal:
-    // Armazena a mensagem enviada pelo usuário e a exibe
+    // Fluxo normal: armazena a mensagem enviada e atualiza os estados
     setDataUserChamados((prevData: string[]) => [...prevData, messageToSend]);
     sendMessage(messageToSend, "user");
     setMessageUser("");
@@ -170,29 +180,19 @@ export const useHandleSendMessage = () => {
         const updated = [...prev];
         const indexLoading = updated.findIndex((msg) => msg.loading);
         if (indexLoading !== -1) {
-          if (proximaEtapa !== null) {
-            updated[indexLoading] = {
-              ...updated[indexLoading],
-              text: fluxo[proximaEtapa].pergunta,
-              loading: false,
-              time: new Date().toLocaleTimeString("pt-BR", {
-                hour: "2-digit",
-                minute: "2-digit",
-                second: "2-digit",
-              }),
-            };
-          } else {
-            updated[indexLoading] = {
-              ...updated[indexLoading],
-              text: "Obrigado pelas informações!",
-              loading: false,
-              time: new Date().toLocaleTimeString("pt-BR", {
-                hour: "2-digit",
-                minute: "2-digit",
-                second: "2-digit",
-              }),
-            };
-          }
+          updated[indexLoading] = {
+            ...updated[indexLoading],
+            text:
+              proximaEtapa !== null
+                ? fluxo[proximaEtapa].pergunta
+                : "Obrigado pelas informações!",
+            loading: false,
+            time: new Date().toLocaleTimeString("pt-BR", {
+              hour: "2-digit",
+              minute: "2-digit",
+              second: "2-digit",
+            }),
+          };
         }
         return updated;
       });

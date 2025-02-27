@@ -12,7 +12,7 @@ interface ChatMessagesProps extends React.ComponentProps<"nav"> {
 }
 
 
-export default async function ChatMessages({ className, ...props }: ChatMessagesProps) {
+export default  function ChatMessages({ className, ...props }: ChatMessagesProps) {
   const { messages,etapaAtual,countdown } = useGlobalContext();
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const handleSendMessage = useHandleSendMessage();

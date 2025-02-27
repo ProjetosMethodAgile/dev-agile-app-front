@@ -40,3 +40,8 @@ export function GET_SETORES(empresaId: string) {
     url: API_URL + `/helpdesk/setores/empresa/${empresaId}`,
   };
 }
+export function GET_MOTIVO(setorId:string) {
+  return {
+    url: API_URL + `/api/kanban/motivos${setorId}`,
+  };
+}

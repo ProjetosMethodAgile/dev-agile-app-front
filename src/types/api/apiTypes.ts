@@ -136,5 +136,13 @@ export type SetorHelpDesk ={
   nome: string,
 
 }
+export type MotivoHelpDesk ={
+  
+    id: string,
+    setor_id: string,
+    descricao: string,
+    src_img: string,
+
+}
 
 export type GetUserResult = GetUserSuccess | GetUserError;
