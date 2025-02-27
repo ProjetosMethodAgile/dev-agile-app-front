@@ -73,7 +73,7 @@ export default async function EmpresaLoginPage({
             name="action"
             value="openTicket"
             type="submit"
-            className="bg-primary-300/10 text-primary-300 border-primary-300 border-1 dark:border-gray-300/50 dark:text-gray-300"
+            className="bg-transparent text-primary-50 dark:text-primary-50 border-primary-300 border-1 dark:hover:border-transparent dark:border-primary-50 dark:text-gray-300"
           >
             Abrir chamado
           </Form.InputSubmit>

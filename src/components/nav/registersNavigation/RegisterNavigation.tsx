@@ -24,7 +24,7 @@ export default function RegisterNavigation({setActiveTab, activeTab}: RegisterNa
 
   return (
     <ul className="flex flex-col gap-2 *:flex *:cursor-pointer *:items-center *:gap-2 
-    *:rounded-2xl *:px-5 *:py-2">
+    *:rounded-2xl *:px-5 *:py-2 ">
       {tabs.map((tab) => (
         <li
           key={tab.id}

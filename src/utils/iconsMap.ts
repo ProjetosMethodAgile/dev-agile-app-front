@@ -1,11 +1,11 @@
 import {
-  Atom,
   Handshake,
   House,
   Search,
   Settings,
   User,
   Send,
+  MonitorCog,
 } from "lucide-react";
 
 // Mapeia o slug da tela com o ícone correspondente.
@@ -13,8 +13,8 @@ const iconsMap: { [key: string]: React.ElementType } = {
   home: House,
   "gerenciar-sistema": Settings,
   "help-desk": Handshake,
-  usuarios: User,
-  "parametros-do-sistema": Atom,
+  "usuarios-do-sistema": User,
+  "parametros-do-sistema": MonitorCog,
   search: Search,
   sendMessage: Send,
 
