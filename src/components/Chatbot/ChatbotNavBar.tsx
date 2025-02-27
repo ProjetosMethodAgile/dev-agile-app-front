@@ -6,13 +6,17 @@ import { useGlobalContext } from "@/context/globalContext";
 import { Form } from "../form";
 import { useHandleSendMessage } from "./ChatFunction/useHandleSendMessage";
 
+
 type NavBarProps = React.ComponentProps<"nav">;
 
 export default function ChatbotNavBar({ className, ...props }: NavBarProps) {
-  const { etapaAtual, setorSelecionado } = useGlobalContext();
+  const { etapaAtual, setorSelecionado,title } = useGlobalContext();
   const handleSendMessage = useHandleSendMessage();
-
+ 
   if (etapaAtual == 1 || etapaAtual === 2) {
+
+
+
     return (
       <nav
         className={twMerge(
@@ -21,8 +25,8 @@ export default function ChatbotNavBar({ className, ...props }: NavBarProps) {
         )}
         {...props}
       >
-        <h1 className="p-3 text-center text-lg text-[1.5rem] font-semibold text-gray-900 dark:text-gray-100">
-          {/* Optionally display a title here */}
+        <h1 className="p-5 text-center text-lg text-[1.2rem] font-semibold text-gray-900 dark:text-gray-100">
+        {title}
         </h1>
         {etapaAtual === 1 && (
           <div className="flex flex-col gap-1.5">

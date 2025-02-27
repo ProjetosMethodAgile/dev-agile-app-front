@@ -96,6 +96,7 @@ export const useHandleSendMessage = () => {
     const messageToSend = text !== undefined ? text : messageUser;
     if (!messageToSend.trim()) return;
 
+
     // Caso especial: "Descrição" – volta ao início do fluxo
     if (messageToSend === "Descrição") {
       sendMessage(messageToSend, "user");
@@ -131,10 +132,15 @@ export const useHandleSendMessage = () => {
     // Validação específica para a etapa 3:
     if (etapaAtual === 3) {
       if (!validateChat(messageToSend)) {
+        const contador = messageToSend.length
+        
         sendMessage(
-          "A descrição precisa ter no mínimo 50 caracteres, por favor tente novamente.",
-          "bot"
+          `A descrição precisa ter no mínimo 50 caracteres, você só escreveu ${contador} por favor tente novamente.`,
+          "bot",
         );
+        
+        
+   
         // Se a validação não for atendida, interrompe o fluxo e mantém o usuário na etapa 3.
         return;
       }

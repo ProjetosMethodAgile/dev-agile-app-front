@@ -130,4 +130,11 @@ export type GetUserError = {
   error: string;
 };
 
+export type SetorHelpDesk ={
+  id: string,
+  empresa_id: string,
+  nome: string,
+
+}
+
 export type GetUserResult = GetUserSuccess | GetUserError;

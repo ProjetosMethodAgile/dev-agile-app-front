@@ -1,10 +1,18 @@
 
+import { getSetorByTagEmpID } from "@/actions/getSetorByTagEmpID";
 import { Chat } from "@/components/Chatbot";
 import { GlobalContextProvider } from "@/context/globalContext";
 
+export default async function chamadosSemLogin({
+  params,
+}: {
+  params: Promise<{ empresaTag: string }>;
+}) {
+  const { empresaTag } = await params;
 
-export default function chamadosSemLogin(){
-    
+  const result = await getSetorByTagEmpID(empresaTag) 
+  console.log(result);
+
     return(
         <GlobalContextProvider>
 

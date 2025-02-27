@@ -4,6 +4,7 @@ import { twMerge } from "tailwind-merge";
 import { useGlobalContext } from "@/context/globalContext";
 import { useHandleSendMessage } from "./ChatFunction/useHandleSendMessage";
 import Image from "next/image";
+
 // Se quiser tipar melhor as props, renomeie a interface abaixo
 // e/ou importe o tipo de mensagem diretamente do contexto
 interface ChatMessagesProps extends React.ComponentProps<"nav"> {
@@ -11,12 +12,11 @@ interface ChatMessagesProps extends React.ComponentProps<"nav"> {
 }
 
 
-export default function ChatMessages({ className, ...props }: ChatMessagesProps) {
+export default async function ChatMessages({ className, ...props }: ChatMessagesProps) {
   const { messages,etapaAtual,countdown } = useGlobalContext();
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const handleSendMessage = useHandleSendMessage();
   const amalfiszinho = "/image/chatAmalfis/amalfiszinho.png";
-
 
 
   useEffect(() => {

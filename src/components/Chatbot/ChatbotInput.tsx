@@ -5,6 +5,7 @@ import { useGlobalContext } from "@/context/globalContext";
 import { useHandleSendMessage } from "./ChatFunction/useHandleSendMessage";
 import { Send } from "lucide-react";
 
+
 export default function ChatbotInput({
   className,
   ...props
@@ -14,6 +15,9 @@ export default function ChatbotInput({
   if (etapaAtual === 1 || etapaAtual === 2) {
     return null;
   }
+
+
+
   return (
     <div className={twMerge("mt-2", className)} {...props}>
       <input
