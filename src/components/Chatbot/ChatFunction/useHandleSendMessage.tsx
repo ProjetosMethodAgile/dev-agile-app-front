@@ -3,8 +3,7 @@ import { useGlobalContext } from "@/context/globalContext";
 import { fluxo, setores } from "../setores";
 import { useEffect, useCallback } from "react";
 import { validateChat } from "./validateMessage";
-import { SetorHelpDesk } from "@/types/api/apiTypes";
-import { GET_MOTIVO } from "@/functions/api";
+
 import getMotivoSetor from "@/actions/getMotivoSetor";
 
 type Message = {
@@ -105,10 +104,13 @@ export const useHandleSendMessage = () => {
     // Se o evento for fornecido, captura e exibe o id do botão clicado
     if (e) {
       const setorMotivo = e.currentTarget.id;
-console.log(setorMotivo);
-
-      const response =  await getMotivoSetor(setorMotivo)
-      console.log(response);
+      const response = await getMotivoSetor(setorMotivo);
+      if (Array.isArray(response.data)) {
+        const motivoPorSetor = response.data.map((motivo) => motivo.descricao);
+        setMotivo(motivoPorSetor);
+      }
+      
+   
      
     }
 

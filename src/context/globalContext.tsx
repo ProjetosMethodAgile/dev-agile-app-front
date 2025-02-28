@@ -41,8 +41,8 @@ type IGlobalContext = {
   setCountdown: React.Dispatch<React.SetStateAction<number | null>>;
   formDataChamados: FormDataChamados | null;
   setFormDataChamados: React.Dispatch<React.SetStateAction<FormDataChamados | null>>;
-  motivo:string;
-  setMotivo:React.Dispatch<React.SetStateAction<string>>;
+  motivo:string[]|null;
+  setMotivo:React.Dispatch<React.SetStateAction<string[]|null>>;
 };
 
 const GlobalContext = React.createContext<IGlobalContext | null>(null);
@@ -82,7 +82,7 @@ export function GlobalContextProvider({
   ]);
   const [etapaAtual, setEtapaAtual] = useState<number>(0);
   const [messageUser, setMessageUser] = useState("");
-  const [motivo, setMotivo] = useState("");
+  const [motivo, setMotivo] = useState<string[] | null>(null);
 
   return (
     <GlobalContext.Provider

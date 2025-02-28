@@ -1,7 +1,4 @@
 
-
-
-import { useParams } from "next/navigation";
 export const setores = [
   {
     nome: "ti",

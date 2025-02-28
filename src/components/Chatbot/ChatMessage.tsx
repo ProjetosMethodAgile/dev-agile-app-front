@@ -4,11 +4,8 @@ import { twMerge } from "tailwind-merge";
 import { useGlobalContext } from "@/context/globalContext";
 import { useHandleSendMessage } from "./ChatFunction/useHandleSendMessage";
 import Image from "next/image";
-
-// Se quiser tipar melhor as props, renomeie a interface abaixo
-// e/ou importe o tipo de mensagem diretamente do contexto
 interface ChatMessagesProps extends React.ComponentProps<"nav"> {
-  someProp?: string; // Adicione um campo se for necessário
+  someProp?: string; 
 }
 
 
@@ -20,7 +17,7 @@ export default  function ChatMessages({ className, ...props }: ChatMessagesProps
 
 
   useEffect(() => {
-    // Usar um pequeno delay para garantir que o DOM esteja atualizado
+ 
     const timeout = setTimeout(() => {
       messagesEndRef.current?.scrollIntoView({ behavior: "smooth", block: "end" });
     }, 100);
