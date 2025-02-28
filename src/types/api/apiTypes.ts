@@ -130,4 +130,19 @@ export type GetUserError = {
   error: string;
 };
 
+export type SetorHelpDesk ={
+  id: string,
+  empresa_id: string,
+  nome: string,
+
+}
+export type MotivoHelpDesk ={
+  
+    id: string,
+    setor_id: string,
+    descricao: string,
+    src_img: string,
+
+}
+
 export type GetUserResult = GetUserSuccess | GetUserError;
