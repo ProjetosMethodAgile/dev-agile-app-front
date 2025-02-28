@@ -3,7 +3,7 @@ import { useGlobalContext } from "@/context/globalContext";
 import { fluxo, setores } from "../setores";
 import { useEffect, useCallback } from "react";
 import { validateChat } from "./validateMessage";
-
+import GerenciaChat_Controller from "@/components/Chatbot/ChatFunction/GerenciaChat_Controller";
 import getMotivoSetor from "@/actions/getMotivoSetor";
 
 type Message = {
@@ -33,6 +33,8 @@ export const useHandleSendMessage = () => {
     setMotivo
   } = useGlobalContext();
 
+  const gerenciaChat_controller = new GerenciaChat_Controller();
+
   // Tratamento de contagem regressiva para recarregar a página
   useEffect(() => {
     if (countdown === null) return;
@@ -45,6 +47,7 @@ export const useHandleSendMessage = () => {
   }, [countdown, setCountdown]);
 
   // Função sendMessage estável com useCallback
+
   const sendMessage = useCallback(
     (newMessage: string, type: "user" | "bot", loading = false) => {
       setMessages((prev: Message[]) => [
@@ -65,6 +68,7 @@ export const useHandleSendMessage = () => {
   );
 
   // Efetua ação quando a etapa é 5
+  
   useEffect(() => {
     if (etapaAtual === 5 && countdown === null) {
       setTimeout(() => {
@@ -101,28 +105,13 @@ export const useHandleSendMessage = () => {
     text: string = messageUser,
     e?: React.MouseEvent<HTMLButtonElement>
   ) => {
-    // Se o evento for fornecido, captura e exibe o id do botão clicado
+
     if (e) {
       const setorMotivo = e.currentTarget.id;
-      const response = await getMotivoSetor(setorMotivo);
-      if (Array.isArray(response.data)) {
-        const motivoPorSetor = response.data.map((motivo) => motivo.descricao);
-        setMotivo(motivoPorSetor);
-      }
-      
-   
-     
+      gerenciaChat_controller.pegaMotivoPorID(setorMotivo,setMotivo)
     }
-
-    const messageToSend = text;
-    if (!messageToSend.trim()) return;
-
-    // Caso especial: "Descrição" – volta ao início do fluxo
-    if (messageToSend === "Descrição") {
-      sendMessage(messageToSend, "user");
-      setMessageUser("");
-      sendMessage("Escrevendo...", "bot", true);
-
+    gerenciaChat_controller.enviaMensagem(sendMessage)
+    
       setTimeout(() => {
         setMessages((prev: Message[]) => {
           const updated = [...prev];
@@ -151,7 +140,11 @@ export const useHandleSendMessage = () => {
 
     // Validação específica para a etapa 3
     if (etapaAtual === 3) {
-      if (!validateChat(messageToSend)) {
+      const contCharacter =  await gerenciaChat_controller.validaMensagem(messageToSend)
+      
+      console.log("teste",contCharacter);
+      
+      if (!contCharacter) {
         const contador = messageToSend.length;
         sendMessage(
           `A descrição precisa ter no mínimo 50 caracteres, você só escreveu ${contador} por favor tente novamente.`,
@@ -171,6 +164,24 @@ export const useHandleSendMessage = () => {
 
     // Fluxo normal: armazena a mensagem enviada e atualiza os estados
     setDataUserChamados((prevData: string[]) => [...prevData, messageToSend]);
+     
+    
+    console.log(dataUserChamados);
+
+
+
+/* 
+
+
+implementar conexão com a rota do banco
+
+*/
+
+
+
+
+
+    
     sendMessage(messageToSend, "user");
     setMessageUser("");
 

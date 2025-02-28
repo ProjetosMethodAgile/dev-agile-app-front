@@ -12,11 +12,12 @@ export default function ChatbotInput({
   const { setMessageUser, messageUser, etapaAtual, motivo } = useGlobalContext();
   const handleSendMessage = useHandleSendMessage();
 
+console.log(motivo);
 
   
   if (etapaAtual === 1 || (etapaAtual === 2)) {
     if (motivo) {
-      if ( motivo.length > 0) {
+      if ( motivo.length > 0 ||motivo.length !== null ) {
         return null;
         
       }
