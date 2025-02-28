@@ -2,7 +2,7 @@
 
 import { GET_USER_ALL } from "@/functions/api";
 import apiError from "@/functions/api-error";
-import { UsuarioData } from "@/types/api/apiTypes";
+import { UsuarioData, UsuariosData } from "@/types/api/apiTypes";
 import { cookies } from "next/headers";
 
 //Busca todos os usuarios do sistema
@@ -23,9 +23,11 @@ export default async function getUserAll() {
     });
 
     if (!response.ok) throw new Error("Erro ao pegar o usuários.");
-    const data = (await response.json()) as UsuarioData;
+    const data = (await response.json()) as UsuariosData;
 
-    return { data, ok: true, error: null };
+
+
+    return { data: data.usuarios, ok: true, error: null };
   } catch (error) {
     return apiError(error);
   }

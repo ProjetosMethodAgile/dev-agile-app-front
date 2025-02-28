@@ -14,7 +14,7 @@ export default function ScreenTitle({
   return (
     <h1
       className={twMerge(
-        "dark:text-general animate-slide-down mb-6 flex items-center gap-2 text-4xl font-semibold",
+        "dark:text-general text-primary-500 animate-slide-down mb-6 flex items-center gap-2 text-4xl font-semibold",
         className,
       )}
       {...props}
