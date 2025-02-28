@@ -43,7 +43,7 @@ export default async function EmpresaLoginPage({
         </p>
         <ToggleTheme />
       </div>
-      <Form.Root action={setLogin}>
+      <Form.Root action={setLogin} className="gap-8">
         <input type="hidden" name="empresaTag" value={empresa.data.tag} />
         <input type="hidden" name="empresaId" value={empresa.data.id} />
 
@@ -73,7 +73,7 @@ export default async function EmpresaLoginPage({
             name="action"
             value="openTicket"
             type="submit"
-            className="bg-transparent text-primary-300 dark:text-primary-50 border-primary-300 border-1 dark:hover:border-transparent dark:border-primary-50 "
+            className="text-primary-50 dark:text-primary-50 border-primary-300 dark:border-primary-50 border-1 bg-transparent dark:text-gray-300 dark:hover:border-transparent"
           >
             Abrir chamado
           </Form.InputSubmit>

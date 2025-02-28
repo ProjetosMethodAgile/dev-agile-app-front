@@ -1,4 +1,5 @@
 export const API_URL = "https://devagile.com.br/api";
+// export const API_URL = "http://localhost3001/api";
 
 
 export function GET_USER_ALL(){
@@ -34,5 +35,26 @@ export function GET_PERMISSOES_ACOES_USER(tag: string) {
 export function GET_VERIFYPARAMETROS_EMPRESA(empresaId: string) {
   return {
     url: API_URL + `/parametros/verifica/${empresaId}`,
+  };
+}
+
+//=================HELP-DESK=====================================/
+
+export function GET_SETOR_HELPDESK_BY_EMPRESA_ID(id: string) {
+  return {
+    url: API_URL + `/helpdesk/setores/empresa/${id}`,
+  };
+}
+
+export function POST_SETOR_HELPDESK() {
+  return {
+    url: API_URL + "/helpdesk/setores",
+  }
+}
+
+export function GET_MOTIVO(setorId:string) {
+  return {
+    url: API_URL + `/kanban/motivos/setor/${setorId}`,
+
   };
 }
