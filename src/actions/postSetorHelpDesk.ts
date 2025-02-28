@@ -16,7 +16,7 @@ export async function postSetorHelpDesk(
 ): Promise<{ errors: string[]; msg_success: string; success: boolean }> {
   const nomeSetor = formData.get("nome") as string;
   const empTag = formData.get("emptag") as string;
-  let errors: string[] = [];
+  const errors: string[] = [];
 
   if (!nomeSetor || nomeSetor.trim().length <= 2) {
     errors.push("Insira no mínimo 3 caracteres");

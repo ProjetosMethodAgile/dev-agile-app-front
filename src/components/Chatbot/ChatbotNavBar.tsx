@@ -11,18 +11,20 @@ type NavBarProps = React.ComponentProps<"nav"> & {
   setores: SetorHelpDesk[];
 };
 
-export default function ChatbotNavBar({ setores, className, ...props }: NavBarProps) {
-  const { etapaAtual, setorSelecionado, title, motivo } = useGlobalContext();
+export default function ChatbotNavBar({
+  setores,
+  className,
+  ...props
+}: NavBarProps) {
+  const { etapaAtual, title, motivo } = useGlobalContext();
   const handleSendMessage = useHandleSendMessage();
-
-
 
   if (etapaAtual === 1 || etapaAtual === 2) {
     return (
       <nav
         className={twMerge(
-          "animate-move-left-to-right dark:border-primary-600/70 border-primary-300 bg-transparent flex min-h-115 flex-col gap-6 rounded-3xl border-2 p-5 backdrop-blur-2xl max-lg:mt-0 max-sm:min-w-full dark:border-1 dark:bg-black/20 dark:backdrop-blur-2xl ",
-          className
+          "animate-move-left-to-right dark:border-primary-600/70 border-primary-300 flex min-h-115 flex-col gap-6 rounded-3xl border-2 bg-transparent p-5 backdrop-blur-2xl max-lg:mt-0 max-sm:min-w-full dark:border-1 dark:bg-black/20 dark:backdrop-blur-2xl",
+          className,
         )}
         {...props}
       >
@@ -37,15 +39,15 @@ export default function ChatbotNavBar({ setores, className, ...props }: NavBarPr
                 key={setor.nome}
                 value={setor.nome}
                 onClick={(e) => handleSendMessage(setor.nome, e)}
-                className="p-2 h-10 flex items-center justify-center rounded-[5px]"
+                className="flex h-10 items-center justify-center rounded-[5px] p-2"
               >
                 {setor.nome}
               </Form.InputSubmit>
             ))}
           </div>
         )}
-      {etapaAtual === 2 && (
-          <div className="flex flex-col h-full gap-5">
+        {etapaAtual === 2 && (
+          <div className="flex h-full flex-col gap-5">
             {motivo && motivo.length > 0 ? (
               motivo.map((motivoItem: string, index: number) => (
                 <Form.InputSubmit
@@ -53,24 +55,19 @@ export default function ChatbotNavBar({ setores, className, ...props }: NavBarPr
                   key={index}
                   value={motivoItem}
                   onClick={(e) => handleSendMessage(motivoItem, e)}
-                  className="h-15 p-5 text-[15px] flex items-center justify-center rounded-[5px] overflow-hidden"
+                  className="flex h-15 items-center justify-center overflow-hidden rounded-[5px] p-5 text-[15px]"
                 >
                   {motivoItem}
                 </Form.InputSubmit>
               ))
             ) : (
-              <p
-              
-                className=" text-[15px] flex items-center justify-center rounded-[5px] overflow-hidden"
-              >
-                Aviso!
-                Nenhum motivo cadastrado pelo gestor use o campo a baixo para digitar o motivo
+              <p className="flex items-center justify-center overflow-hidden rounded-[5px] text-[15px]">
+                Aviso! Nenhum motivo cadastrado pelo gestor use o campo a baixo
+                para digitar o motivo
               </p>
             )}
           </div>
         )}
-  
-
       </nav>
     );
   }
