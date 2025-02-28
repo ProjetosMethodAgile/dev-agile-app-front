@@ -31,17 +31,23 @@ export function GET_VERIFYPARAMETROS_EMPRESA(empresaId: string) {
   };
 }
 
+//=================HELP-DESK=====================================/
 
-/*Setores - motivo */ 
-
-
-export function GET_SETORES(empresaId: string) {
+export function GET_SETOR_HELPDESK_BY_EMPRESA_ID(id: string) {
   return {
-    url: API_URL + `/helpdesk/setores/empresa/${empresaId}`,
+    url: API_URL + `/helpdesk/setores/empresa/${id}`,
   };
 }
+
+export function POST_SETOR_HELPDESK() {
+  return {
+    url: API_URL + "/helpdesk/setores",
+  }
+}
+
 export function GET_MOTIVO(setorId:string) {
   return {
     url: API_URL + `/kanban/motivos/setor/${setorId}`,
+
   };
 }

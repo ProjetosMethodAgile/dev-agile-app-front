@@ -6,6 +6,10 @@ import {
   User,
   Send,
   MonitorCog,
+  Pencil,
+  Trash2,
+  Plus,
+  CircleChevronLeft,
 } from "lucide-react";
 
 // Mapeia o slug da tela com o ícone correspondente.
@@ -17,7 +21,10 @@ const iconsMap: { [key: string]: React.ElementType } = {
   "parametros-do-sistema": MonitorCog,
   search: Search,
   sendMessage: Send,
-
+  editBtn: Pencil,
+  delete: Trash2,
+  add: Plus,
+  voltar: CircleChevronLeft,
   //gerenciar usuarios
   "configurar-help-desk": Handshake,
 
