@@ -1,10 +1,8 @@
-
+// src/components/Chatbot/ChatFunction/useHandleSendMessage.tsx
 import { useGlobalContext } from "@/context/globalContext";
 import { fluxo, setores } from "../setores";
 import { useEffect, useCallback } from "react";
-import { validateChat } from "./validateMessage";
-
-import getMotivoSetor from "@/actions/getMotivoSetor";
+import GerenciaChat_Controller from "@/components/Chatbot/ChatFunction/GerenciaChat_Controller";
 
 type Message = {
   text: string;
@@ -30,10 +28,12 @@ export const useHandleSendMessage = () => {
     setFormDataChamados,
     countdown,
     setCountdown,
-    setMotivo
+    setMotivo,
   } = useGlobalContext();
 
-  // Tratamento de contagem regressiva para recarregar a página
+  const gerenciaChat_controller = new GerenciaChat_Controller();
+
+  // Contagem regressiva para recarregar a página
   useEffect(() => {
     if (countdown === null) return;
     if (countdown > 0) {
@@ -44,7 +44,7 @@ export const useHandleSendMessage = () => {
     }
   }, [countdown, setCountdown]);
 
-  // Função sendMessage estável com useCallback
+  // Função sendMessage para criar e adicionar mensagens
   const sendMessage = useCallback(
     (newMessage: string, type: "user" | "bot", loading = false) => {
       setMessages((prev: Message[]) => [
@@ -64,7 +64,7 @@ export const useHandleSendMessage = () => {
     [setMessages]
   );
 
-  // Efetua ação quando a etapa é 5
+  // Quando a etapa é 5, finaliza o fluxo de atendimento
   useEffect(() => {
     if (etapaAtual === 5 && countdown === null) {
       setTimeout(() => {
@@ -89,40 +89,43 @@ export const useHandleSendMessage = () => {
     sendMessage,
     setCountdown,
     setFormDataChamados,
-  
   ]);
 
   /**
    * Função principal para tratar o envio de mensagens.
-   * @param text - Texto a ser enviado. Se não fornecido, utiliza o estado messageUser.
+   * @param text - Texto a ser enviado. Se não informado, utiliza o estado messageUser.
    * @param e - Evento de clique opcional, utilizado para capturar o id do botão.
    */
   const handleSendMessage = async (
     text: string = messageUser,
     e?: React.MouseEvent<HTMLButtonElement>
   ) => {
-    // Se o evento for fornecido, captura e exibe o id do botão clicado
-    if (e) {
-      const setorMotivo = e.currentTarget.id;
-      const response = await getMotivoSetor(setorMotivo);
-      if (Array.isArray(response.data)) {
-        const motivoPorSetor = response.data.map((motivo) => motivo.descricao);
-        setMotivo(motivoPorSetor);
+
+    if (etapaAtual === 1 && e) {
+      // Etapa 1: Seleção de setor
+      const setorId = e.currentTarget.id; // geralmente o id do setor
+      // Busca os motivos para o setor e atualiza o global context
+      await gerenciaChat_controller.pegaMotivoPorID(setorId, setMotivo);
+
+      // Atualiza o setor selecionado com base no setor escolhido
+      const setorObj = setores.find((s) => s.nome === text);
+      if (setorObj) {
+        setSetorSelecionado(setorObj);
       }
-      
-   
-     
+      // Após selecionar o setor, muda para a etapa 2 para escolher o motivo
+      setEtapaAtual(2);
+      return;
     }
 
-    const messageToSend = text;
-    if (!messageToSend.trim()) return;
+    if (etapaAtual === 2 && e) {
+      // Etapa 2: Seleção de motivo
+      // Aqui, o usuário clica em um motivo já carregado. Processa a mensagem normalmente.
+      // Opcionalmente, você pode definir alguma lógica extra para motivo, se necessário.
+    }
 
-    // Caso especial: "Descrição" – volta ao início do fluxo
-    if (messageToSend === "Descrição") {
-      sendMessage(messageToSend, "user");
-      setMessageUser("");
-      sendMessage("Escrevendo...", "bot", true);
-
+    if (text === "Descrição") {
+      await gerenciaChat_controller.enviaMensagem(sendMessage, setMessageUser, text);
+      // Reseta a interface: atualiza a pergunta inicial, limpa o setor selecionado, etc.
       setTimeout(() => {
         setMessages((prev: Message[]) => {
           const updated = [...prev];
@@ -141,7 +144,6 @@ export const useHandleSendMessage = () => {
           }
           return updated;
         });
-        // Reseta os estados para o início do fluxo
         setEtapaAtual(0);
         setTitle(fluxo[0].title);
         setSetorSelecionado(null);
@@ -149,32 +151,36 @@ export const useHandleSendMessage = () => {
       return;
     }
 
-    // Validação específica para a etapa 3
+    // Etapa 3: Validação do tamanho da mensagem (por exemplo, descrição longa)
     if (etapaAtual === 3) {
-      if (!validateChat(messageToSend)) {
-        const contador = messageToSend.length;
+      const isValid = await gerenciaChat_controller.validaMensagem(text);
+      if (!isValid) {
+        const contador = text.length;
         sendMessage(
-          `A descrição precisa ter no mínimo 50 caracteres, você só escreveu ${contador} por favor tente novamente.`,
+          `A descrição precisa ter no mínimo 50 caracteres, você só escreveu ${contador} - por favor, tente novamente.`,
           "bot"
         );
         return;
       }
     }
 
-    // Se estivermos na etapa 1, define o setorSelecionado com o objeto completo
+    // Se estivermos na etapa 1 e não houve clique (por exemplo, input manual), tenta definir o setor
     if (etapaAtual === 1) {
-      const setorObj = setores.find((s) => s.nome === messageToSend);
+      const setorObj = setores.find((s) => s.nome === text);
       if (setorObj) {
         setSetorSelecionado(setorObj);
       }
     }
 
-    // Fluxo normal: armazena a mensagem enviada e atualiza os estados
-    setDataUserChamados((prevData: string[]) => [...prevData, messageToSend]);
-    sendMessage(messageToSend, "user");
+    // Atualiza os dados do chamado com a mensagem do usuário
+    setDataUserChamados((prevData: string[]) => [...prevData, text]);
+    console.log(dataUserChamados);
+
+    // Fluxo normal de envio da mensagem
+    sendMessage(text, "user");
     setMessageUser("");
 
-    const respostaUsuario = messageToSend;
+    const respostaUsuario = text;
     const proximaEtapa = fluxo[etapaAtual].next(respostaUsuario);
 
     sendMessage("Escrevendo...", "bot", true);
@@ -201,7 +207,6 @@ export const useHandleSendMessage = () => {
         return updated;
       });
 
-      // Atualiza os estados conforme a próxima etapa do fluxo
       if (proximaEtapa !== null) {
         setEtapaAtual(proximaEtapa);
         setTitle(fluxo[proximaEtapa].title);
