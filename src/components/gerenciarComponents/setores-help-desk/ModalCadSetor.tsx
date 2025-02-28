@@ -10,7 +10,7 @@ type stateProps = {
 
 type ModalCadSetorProps = {
   state: stateProps | void; // ou tipar corretamente de acordo com useActionState
-  formAction: any;
+  formAction: (payload: FormData) => void;
   empresaTag: string;
   closeModal: () => void;
 };

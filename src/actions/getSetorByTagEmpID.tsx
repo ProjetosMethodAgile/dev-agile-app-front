@@ -1,4 +1,4 @@
-import { GET_SETORES } from "@/functions/api";
+import { GET_SETOR_HELPDESK_BY_EMPRESA_ID } from "@/functions/api";
 import getEmpresaByTag from "./getEmpresaByTag";
 
 export const getSetorByTagEmpID = async (empresaTag: string) => {
@@ -10,11 +10,12 @@ export const getSetorByTagEmpID = async (empresaTag: string) => {
 
   const empresaId = empresaResult.data?.id;
   if (empresaId) {
-    const { url } = await GET_SETORES(empresaId);
+    const { url } = await GET_SETOR_HELPDESK_BY_EMPRESA_ID(empresaId);
     const response = await fetch(url, {
       method: "GET",
       next: {
         revalidate: 60,
+        tags: ["setor-helpdesk"],
       },
     });
 
