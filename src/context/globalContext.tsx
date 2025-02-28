@@ -42,11 +42,11 @@ type IGlobalContext = {
   countdown: number | null;
   setCountdown: React.Dispatch<React.SetStateAction<number | null>>;
   formDataChamados: FormDataChamados | null;
-  setFormDataChamados: React.Dispatch<
-    React.SetStateAction<FormDataChamados | null>
-  >;
   openGlobalModal: (content: React.ReactNode) => void;
   closeGlobalModal: () => void;
+  setFormDataChamados: React.Dispatch<React.SetStateAction<FormDataChamados | null>>;
+  motivo:string[]|null;
+  setMotivo:React.Dispatch<React.SetStateAction<string[]|null>>;
 };
 
 const GlobalContext = React.createContext<IGlobalContext | null>(null);
@@ -86,16 +86,16 @@ export function GlobalContextProvider({
   ]);
   const [etapaAtual, setEtapaAtual] = useState<number>(0);
   const [messageUser, setMessageUser] = useState("");
+
   const [globalModalContent, setGlobalModalContent] =
     useState<React.ReactNode | null>(null);
-
   const openGlobalModal = (content: React.ReactNode) => {
     setGlobalModalContent(content);
   };
-
   const closeGlobalModal = () => {
     setGlobalModalContent(null);
   };
+  const [motivo, setMotivo] = useState<string[] | null>(null);
 
   return (
     <GlobalContext.Provider
@@ -118,8 +118,12 @@ export function GlobalContextProvider({
         setCountdown,
         formDataChamados,
         setFormDataChamados,
+
         openGlobalModal,
         closeGlobalModal,
+
+        motivo, setMotivo
+
       }}
     >
       {children}
