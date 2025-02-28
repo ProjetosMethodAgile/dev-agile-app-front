@@ -18,7 +18,7 @@ export default function ToggleTheme() {
   }
 
   return (
-    <button className="border-primary-300 mt-24 flex items-center gap-4 rounded-full border-2 border-solid p-1 *:size-9 *:cursor-pointer *:rounded-full *:p-1 *:transition-colors max-lg:mt-2 max-lg:justify-self-center">
+    <button className="border-primary-300  fixed right-10 z-10 top-8 flex items-center gap-4 rounded-full border-2 border-solid p-1 *:size-8 *:cursor-pointer *:rounded-full *:p-1 *:transition-colors max-lg:mt-2 max-lg:justify-self-center">
       <Sun
         onClick={toggleTheme}
         className="rounded-full bg-yellow-500 p-1 text-yellow-950 dark:bg-transparent dark:text-gray-400"

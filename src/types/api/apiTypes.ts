@@ -65,7 +65,7 @@ export type UserAcaoTela = {
   updatedAt: string;
 };
 
-// Novo: Tipo completo para uma Permissão (Tela ou Subtela)
+
 // Cada permissão possui os acessos (CRUD), suas ações e, opcionalmente, subtelas (subpermissoes)
 export type PermissaoCompletaData = {
   id: string;
@@ -83,6 +83,35 @@ export type PermissaoCompletaData = {
   tipo_permissao?: TipoPermissaoData;
   createdAt?: string;
   updatedAt?: string;
+};
+
+export type User = {
+  id: string;
+  nome: string;
+  email: string;
+  contato: string;
+  empresa: EmpresaData[];
+  usuario_roles: RoleData[];
+  // As permissões agora vêm agrupadas e completas (com acessos, ações e subtelas)
+  permissoes: PermissaoCompletaData[];
+  createdAt: string;
+  updatedAt: string;
+};
+
+export type UsuariosData = {
+  status: boolean;
+  usuarios: {
+    id: string;
+    nome: string;
+    email: string;
+    contato: string;
+    empresa: EmpresaData[];
+    usuario_roles: RoleData[];
+    // As permissões agora vêm agrupadas e completas (com acessos, ações e subtelas)
+    permissoes: PermissaoCompletaData[];
+    createdAt: string;
+    updatedAt: string;
+  }[];
 };
 
 // Tipo de usuário – conforme o endpoint "pegaUsuarioPorId"

@@ -84,7 +84,7 @@ export default function NavigationMenu() {
         })}
       </ul>
 
-      <ToggleTheme />
+     
 
       {/* Seção inferior: toggle da sidebar e logout */}
       <div className="flex flex-col gap-2 overflow-y-auto p-2">

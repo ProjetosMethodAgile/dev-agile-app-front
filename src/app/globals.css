@@ -17,11 +17,15 @@
   --color-primary-170: #07122e;
 
   --color-primary-l-100: #9bf2ff;
+  --color-custom-green-100: #CEE7D1;
+  --color-custom-green-700: #1D7B40;
+  --color-custom-green-800: #10622F;
 
   /* Cores de Texto */
   --color-general: #afbad4;
   --color-title: #d7dce8;
   --color-placeholder: #8a8e8f;
+
 
   /* Fontes */
   --font-poppins: "Poppins", sans-serif;
