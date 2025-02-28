@@ -65,6 +65,10 @@ export type UserAcaoTela = {
   updatedAt: string;
 };
 
+export type Usuario = {
+  
+}
+
 // 🔥 Novo: Tipo completo para uma Permissão (Tela ou Subtela)
 // Cada permissão possui os acessos (CRUD), suas ações e, opcionalmente, subtelas (subpermissoes)
 export type PermissaoCompletaData = {
