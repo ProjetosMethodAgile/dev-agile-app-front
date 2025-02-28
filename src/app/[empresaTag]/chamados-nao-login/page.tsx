@@ -1,4 +1,4 @@
-import getMotivoSetor from "@/actions/getMotivoSetor";
+
 import { getSetorByTagEmpID } from "@/actions/getSetorByTagEmpID";
 import { Chat } from "@/components/Chatbot";
 import { GlobalContextProvider } from "@/context/globalContext";
@@ -12,6 +12,7 @@ export default async function chamadosSemLogin({
     const { empresaTag } = await params;
     const setores = await getSetorByTagEmpID(empresaTag);
 
+    
     return (
       <GlobalContextProvider>
         <div className="flex items-center justify-center h-dvh flex-col">

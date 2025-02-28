@@ -1,10 +1,11 @@
-"use client";
+
 import { useGlobalContext } from "@/context/globalContext";
 import { fluxo, setores } from "../setores";
 import { useEffect, useCallback } from "react";
 import { validateChat } from "./validateMessage";
 import { SetorHelpDesk } from "@/types/api/apiTypes";
 import { GET_MOTIVO } from "@/functions/api";
+import getMotivoSetor from "@/actions/getMotivoSetor";
 
 type Message = {
   text: string;
@@ -97,16 +98,17 @@ export const useHandleSendMessage = () => {
    * @param text - Texto a ser enviado. Se não fornecido, utiliza o estado messageUser.
    * @param e - Evento de clique opcional, utilizado para capturar o id do botão.
    */
-  const handleSendMessage = (
+  const handleSendMessage = async (
     text: string = messageUser,
     e?: React.MouseEvent<HTMLButtonElement>
   ) => {
     // Se o evento for fornecido, captura e exibe o id do botão clicado
     if (e) {
       const setorMotivo = e.currentTarget.id;
-  
-    :::::::::::::::::::::::::::::::::::::::: parei aqui
-       
+console.log(setorMotivo);
+
+      const response =  await getMotivoSetor(setorMotivo)
+      console.log(response);
      
     }
 
