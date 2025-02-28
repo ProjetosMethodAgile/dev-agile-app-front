@@ -4,9 +4,12 @@ import iconsMap from "@/utils/iconsMap";
 import { twMerge } from "tailwind-merge";
 import { Setor } from ".";
 import { useGlobalContext } from "@/context/globalContext";
-import { useState } from "react";
-import SectionTitle from "@/components/titles/SectionTitle";
+import { useEffect, useState } from "react";
 import { postSetorHelpDesk } from "@/actions/postSetorHelpDesk";
+import { redirect, useParams } from "next/navigation";
+import { useActionState } from "react";
+import { toast } from "react-toastify";
+import { ModalCadSetor } from "./ModalCadSetor"; // importe o componente criado
 
 export type SetorContainerProps = React.ComponentProps<"div">;
 
@@ -18,30 +21,37 @@ export default function SetorContainer({
   const AddSetorBtn = iconsMap["add"];
 
   const { openGlobalModal, closeGlobalModal } = useGlobalContext();
+  const { empresaTag } = useParams();
+  const [state, formAction] = useActionState(postSetorHelpDesk, {
+    errors: [],
+    msg_success: "",
+    success: false,
+  });
+
+  useEffect(() => {
+    if (state?.errors.length) {
+      state.errors.forEach((erro: string) => {
+        toast.error(erro);
+      });
+    }
+    if (state?.success) {
+      toast.success(state.msg_success);
+      closeGlobalModal();
+      redirect("/devagile/protect/gerenciar-sistema/configurar-help-desk");
+    }
+  }, [state]);
 
   const openModal = () => {
-    const Voltar = iconsMap["voltar"];
-    const Add = iconsMap["add"];
-    openGlobalModal(
-      <Form.Root action={postSetorHelpDesk} className="">
-        <Voltar
-          className="size-10 cursor-pointer active:scale-95"
-          aria-label="Fechar Modal"
-          onClick={closeGlobalModal}
-        />
-        <SectionTitle title="Cadastrar Setor" className="block text-center" />
-        <Form.InputText
-          label="Nome"
-          name="nome"
-          placeholder="Comercial"
-          className="my-5"
-        />
-        <Form.InputSubmit className="flex items-center justify-center gap-1 bg-green-500 text-white hover:bg-green-600 focus:bg-green-600 active:scale-95 active:bg-green-600">
-          <Add />
-          <span className="text-2xl">Cadastrar</span>
-        </Form.InputSubmit>
-      </Form.Root>,
-    );
+    if (typeof empresaTag === "string") {
+      openGlobalModal(
+        <ModalCadSetor
+          state={state}
+          formAction={formAction}
+          empresaTag={empresaTag}
+          closeModal={closeGlobalModal}
+        />,
+      );
+    }
   };
 
   return (

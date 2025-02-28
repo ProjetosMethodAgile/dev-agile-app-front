@@ -20,6 +20,7 @@ export default async function getSetoresHelpDesk() {
       },
       next: {
         revalidate: 60,
+        tags: ["setor-helpdesk"],
       },
     });
     if (!response.ok) throw new Error("Erro ao pegar o usuário.");

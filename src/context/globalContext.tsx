@@ -1,7 +1,9 @@
 "use client";
 import React, { useState } from "react";
-import { fluxo } from "@/components/Chatbot/setores";
 import Modal from "@/components/modal/Modal";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { fluxo } from "@/components/Chatbot/setores";
 
 type Message = {
   text: string;
@@ -15,7 +17,6 @@ type Setor = {
   motivo: string[];
 };
 
-// Defina o tipo para os dados dos chamados
 export interface FormDataChamados {
   messages: Message[];
   setor: Setor | null;
@@ -71,7 +72,6 @@ export function GlobalContextProvider({
   const [dataUserChamados, setDataUserChamados] = useState<string[]>([]);
   const [title, setTitle] = useState<string>(fluxo[0].title);
   const [card, setCard] = useState<HTMLDivElement | null>(null);
-  // Inicialize setorSelecionado como null e tipado como Setor ou null:
   const [setorSelecionado, setSetorSelecionado] = useState<Setor | null>(null);
   const [messages, setMessages] = useState<Message[]>([
     {
@@ -89,15 +89,14 @@ export function GlobalContextProvider({
   const [globalModalContent, setGlobalModalContent] =
     useState<React.ReactNode | null>(null);
 
-  // Função para abrir o modal e passar seu conteúdo
   const openGlobalModal = (content: React.ReactNode) => {
     setGlobalModalContent(content);
   };
 
-  // Função para fechar o modal
   const closeGlobalModal = () => {
     setGlobalModalContent(null);
   };
+
   return (
     <GlobalContext.Provider
       value={{
@@ -129,6 +128,18 @@ export function GlobalContextProvider({
           {globalModalContent}
         </Modal>
       )}
+      {/* ToastContainer ficará disponível em toda a aplicação */}
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
     </GlobalContext.Provider>
   );
 }
