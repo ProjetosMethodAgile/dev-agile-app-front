@@ -29,6 +29,9 @@ export const useHandleSendMessage = () => {
     countdown,
     setCountdown,
     setMotivo,
+    setorHelpDesk, 
+    SetSetorHelpdesk
+
   } = useGlobalContext();
 
   const chatController = new ChatController();
@@ -98,17 +101,10 @@ export const useHandleSendMessage = () => {
   ) => {
   
 
-   let setorIDselecionado:string = ""
     
     if (etapaAtual === 1 && e) {
-      
-      
       const setorId = e.currentTarget.id;
-      if (setorIDselecionado.length >0 ) {
-       return  setorIDselecionado = setorId 
-      }
-
-      await chatController.handleSectorSelection(setorId, setMotivo, setEtapaAtual);
+      await chatController.handleSectorSelection(setorId, setMotivo, setEtapaAtual, SetSetorHelpdesk);
       return;
     }
 
@@ -118,8 +114,10 @@ export const useHandleSendMessage = () => {
       return;
     }
     if (text === "Finalizar") {
-      const returnValue =  chatController.buscaColunaKanbam(setorIDselecionado)
+      const returnValue =  chatController.buscaColunaKanbam(setorHelpDesk)
       console.log(returnValue);
+      console.log(setorHelpDesk);
+      
       await chatController.handleFinalize(
           setCountdown,
           setDataUserChamados, 

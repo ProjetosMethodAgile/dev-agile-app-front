@@ -1,6 +1,7 @@
 // ChatController.ts
+import GET_KANBAN_COLUNA_POR_SETOR_ID from "@/actions/getKanbanColunaBySetorId";
 import getMotivoSetor from "@/actions/getMotivoSetor";
-import { GET_KANBAN_COLUNA } from "@/functions/api";
+import React from "react";
 
 
 export default class ChatController {
@@ -10,12 +11,14 @@ export default class ChatController {
   async handleSectorSelection(
     setorId: string,
     setMotivo: (motivos: string[] | null) => void,
-    setEtapaAtual: (etapa: number) => void
+    setEtapaAtual: (etapa: number) => void,
+    SetSetorHelpdesk:React.Dispatch<React.SetStateAction<string>>,
   ): Promise<void> {
     const response = await getMotivoSetor(setorId);
     if (Array.isArray(response.data)) {
       const motivos = response.data.map((motivo: any) => motivo.descricao);
       setMotivo(motivos);
+      SetSetorHelpdesk(setorId)
     }
     setEtapaAtual(2);
   }
@@ -101,7 +104,8 @@ export default class ChatController {
 
   }
   async buscaColunaKanbam(setor_id:string){
-    const response = await GET_KANBAN_COLUNA(setor_id)
+    const response = await GET_KANBAN_COLUNA_POR_SETOR_ID(setor_id)
+
     console.log(response);
     
   }

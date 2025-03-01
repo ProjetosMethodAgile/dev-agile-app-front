@@ -1,13 +1,10 @@
 import { GET_KANBAN_COLUNA as getKanbanColunaAPI } from "@/functions/api";
 import { GetKanbanColunaResponse } from "@/types/api/apiTypes";
 
-
-
-export default async function GET_KANBAN_COLUNA(
+export default async function GET_KANBAN_COLUNA_POR_SETOR_ID(
   id: string
 ): Promise<GetKanbanColunaResponse> {
   try {
-  
     const { url } = await getKanbanColunaAPI(id);
     const response = await fetch(url);
     if (!response.ok) {
@@ -17,7 +14,6 @@ export default async function GET_KANBAN_COLUNA(
     return data;
   } catch (error) {
     console.error("Erro ao validar a empresa:", error);
-  
     return { columns: [] };
   }
 }
