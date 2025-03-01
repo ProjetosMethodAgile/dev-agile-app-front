@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import Modal from "@/components/modal/Modal";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { fluxo } from "@/components/Chatbot/setores";
+import { fluxo } from "@/components/Chatbot/Fluxo";
 
 type Message = {
   text: string;
