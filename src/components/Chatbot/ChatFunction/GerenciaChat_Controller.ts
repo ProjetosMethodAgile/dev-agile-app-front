@@ -97,10 +97,10 @@ export default class ChatController {
   ): Promise<void> {
     setDataUserChamados(dataUserChamados)
     console.log(dataUserChamados);
-    setCountdown(5);
-    setTimeout(() => {
-      resetInterface();
-    }, 5000);
+    // setCountdown(5);
+    // setTimeout(() => {
+    //   resetInterface();
+    // }, 5000);
 
   }
   async buscaColunaKanbam(setor_id:string){

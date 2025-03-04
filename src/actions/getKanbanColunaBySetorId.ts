@@ -7,6 +7,7 @@ export default async function GET_KANBAN_COLUNA_POR_SETOR_ID(
   try {
     const { url } = await getKanbanColunaAPI(id);
     const response = await fetch(url);
+    console.log(response)
     if (!response.ok) {
       throw new Error(`Erro na requisição: ${response.status}`);
     }
