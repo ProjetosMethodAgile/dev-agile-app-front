@@ -11,7 +11,12 @@ export default async function GET_KANBAN_COLUNA_POR_SETOR_ID(
       headers: {
         "Content-Type": "application/json",
       },
+      next: {
+        revalidate: 60,
+        tags: ["setor-helpdesk"],
+      },
     });
+
     console.log(response);
     if (!response.ok) {
       throw new Error(`Erro na requisição: ${response.status}`);
