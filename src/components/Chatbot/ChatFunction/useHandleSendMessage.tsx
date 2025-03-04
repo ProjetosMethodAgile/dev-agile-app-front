@@ -3,6 +3,7 @@ import { useGlobalContext } from "@/context/globalContext";
 import { fluxo } from "../Fluxo";
 import { useEffect, useCallback } from "react";
 import ChatController from "@/components/Chatbot/ChatFunction/GerenciaChat_Controller";
+import { log } from "util";
 
 type Message = {
   text: string;
@@ -31,7 +32,6 @@ export const useHandleSendMessage = () => {
     setMotivo,
     setorHelpDesk, 
     SetSetorHelpdesk
-
   } = useGlobalContext();
 
   const chatController = new ChatController();
@@ -114,16 +114,18 @@ export const useHandleSendMessage = () => {
       return;
     }
     if (text === "Finalizar") {
-      const returnValue =  chatController.buscaColunaKanbam(setorHelpDesk)
-      console.log(returnValue);
-      console.log(setorHelpDesk);
-      
-      await chatController.handleFinalize(
+      const returnValue =  await chatController.buscaColunaKanbam(setorHelpDesk)
+      const idKanbanInitial = returnValue.id
+      console.log(idKanbanInitial);
+
+    await chatController.handleFinalize(
           setCountdown,
           setDataUserChamados, 
          dataUserChamados,
           resetInterface
         );
+
+      
       return;
     }
 

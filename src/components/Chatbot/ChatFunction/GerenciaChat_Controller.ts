@@ -105,8 +105,8 @@ export default class ChatController {
   }
   async buscaColunaKanbam(setor_id:string){
     const response = await GET_KANBAN_COLUNA_POR_SETOR_ID(setor_id)
-
-    console.log(response);
+    const primeiraColuna = response.columns[0];
+    return primeiraColuna
     
   }
 
