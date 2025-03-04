@@ -58,7 +58,7 @@ export default function SetorContainer({
     <div className={twMerge("w-full", className)} {...props}>
       <div className="mb-4 flex flex-col items-center gap-2 sm:flex-row">
         <Form.InputText
-          id="search"
+          inputId="search"
           name="search"
           icon={iconsMap["search"]}
           placeholder="Busque o setor"

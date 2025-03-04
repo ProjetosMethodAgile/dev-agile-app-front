@@ -17,15 +17,14 @@
   --color-primary-170: #07122e;
 
   --color-primary-l-100: #9bf2ff;
-  --color-custom-green-100: #CEE7D1;
-  --color-custom-green-700: #1D7B40;
-  --color-custom-green-800: #10622F;
+  --color-custom-green-100: #cee7d1;
+  --color-custom-green-700: #1d7b40;
+  --color-custom-green-800: #10622f;
 
   /* Cores de Texto */
   --color-general: #afbad4;
   --color-title: #d7dce8;
   --color-placeholder: #8a8e8f;
-
 
   /* Fontes */
   --font-poppins: "Poppins", sans-serif;
@@ -41,7 +40,7 @@
 }
 
 .mirror-container {
-  @apply animate-move-left-to-right dark:border-primary-600/70 border-primary-300 flex min-h-80 min-w-100 flex-col rounded-3xl border-2 bg-transparent p-5 backdrop-blur-2xl max-lg:mt-0 max-sm:min-w-full dark:bg-black/20;
+  @apply animate-move-left-to-right  dark:border-primary-600/70 border-primary-300 flex min-w-100 flex-col rounded-3xl border-2 bg-transparent p-5 backdrop-blur-2xl max-lg:mt-0 max-sm:min-w-full dark:bg-black/20;
 }
 
 /* Responsivo*/
@@ -104,15 +103,15 @@
 }
 @keyframes pulseBord {
   0% {
-   border:1px;
-   border-color: red;
+    border: 1px;
+    border-color: red;
   }
   50% {
     border: 2px;
   }
   100% {
-    border-color:white;
-border: 1px;
+    border-color: white;
+    border: 1px;
   }
 }
 
