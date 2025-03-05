@@ -1,14 +1,13 @@
-import getUser from "@/actions/getUser";
+// import getUser from "@/actions/getUser";
 
 type UserParams = {
-    params: {
-        id: string;
-    }
-}
+  params: Promise<{ id: string }>;
+};
 
-export default async  function UsuarioSistemaPage({params}: UserParams){
-    const usuario = await getUser()
+export default async function UsuarioSistemaPage({ params }: UserParams) {
+  const { id } = await params;
 
+  // const usuario = await getUser()
 
-    return <div>{params.id}</div>
+  return <div>{id}</div>;
 }

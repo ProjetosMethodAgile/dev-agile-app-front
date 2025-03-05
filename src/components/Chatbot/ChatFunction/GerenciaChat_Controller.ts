@@ -1,8 +1,8 @@
 // ChatController.ts
 import GET_KANBAN_COLUNA_POR_SETOR_ID from "@/actions/getKanbanColunaBySetorId";
 import getMotivoSetor from "@/actions/getMotivoSetor";
+import { MotivoHelpDesk } from "@/types/api/apiTypes";
 import React from "react";
-
 
 export default class ChatController {
   /**
@@ -12,13 +12,15 @@ export default class ChatController {
     setorId: string,
     setMotivo: (motivos: string[] | null) => void,
     setEtapaAtual: (etapa: number) => void,
-    SetSetorHelpdesk:React.Dispatch<React.SetStateAction<string>>,
+    SetSetorHelpdesk: React.Dispatch<React.SetStateAction<string>>,
   ): Promise<void> {
     const response = await getMotivoSetor(setorId);
     if (Array.isArray(response.data)) {
-      const motivos = response.data.map((motivo: any) => motivo.descricao);
+      const motivos = response.data.map(
+        (motivo: MotivoHelpDesk) => motivo.descricao,
+      );
       setMotivo(motivos);
-      SetSetorHelpdesk(setorId)
+      SetSetorHelpdesk(setorId);
     }
     setEtapaAtual(2);
   }
@@ -26,7 +28,6 @@ export default class ChatController {
   /**
    * Valida o input do usuario
    */
-
 
   /**
    * Valida o comprimento e conteúdo da mensagem.
@@ -56,8 +57,12 @@ export default class ChatController {
    */
   sendUserMessage(
     text: string,
-    sendMessage: (newMessage: string, type: "user" | "bot", loading?: boolean) => void,
-    setMessageUser: React.Dispatch<React.SetStateAction<string>>
+    sendMessage: (
+      newMessage: string,
+      type: "user" | "bot",
+      loading?: boolean,
+    ) => void,
+    setMessageUser: React.Dispatch<React.SetStateAction<string>>,
   ): void {
     if (!text.trim()) return;
     sendMessage(text, "user");
@@ -72,10 +77,14 @@ export default class ChatController {
    * - Ativa o contador de 5 segundos e, após esse tempo, reseta a interface.
    */
   async handleBackAction(
-    sendMessage: (newMessage: string, type: "user" | "bot", loading?: boolean) => void,
+    sendMessage: (
+      newMessage: string,
+      type: "user" | "bot",
+      loading?: boolean,
+    ) => void,
     setMessageUser: React.Dispatch<React.SetStateAction<string>>,
     setCountdown: (value: number | null) => void,
-    resetInterface: () => void
+    resetInterface: () => void,
   ): Promise<void> {
     sendMessage("voltar", "user");
     setMessageUser("");
@@ -89,28 +98,20 @@ export default class ChatController {
   }
   async handleFinalize(
     setCountdown: (value: number | null) => void,
-    setDataUserChamados:React.Dispatch<React.SetStateAction<string[]>>,
-    dataUserChamados:string[],
-    resetInterface: () => void
-    
-
+    setDataUserChamados: React.Dispatch<React.SetStateAction<string[]>>,
+    dataUserChamados: string[],
+    resetInterface: () => void,
   ): Promise<void> {
-    setDataUserChamados(dataUserChamados)
+    setDataUserChamados(dataUserChamados);
     console.log(dataUserChamados);
-    // setCountdown(5);
-    // setTimeout(() => {
-    //   resetInterface();
-    // }, 5000);
-
+    setCountdown(5);
+    setTimeout(() => {
+      resetInterface();
+    }, 5000);
   }
-  async buscaColunaKanbam(setor_id:string){
-    const response = await GET_KANBAN_COLUNA_POR_SETOR_ID(setor_id)
+  async buscaColunaKanbam(setor_id: string) {
+    const response = await GET_KANBAN_COLUNA_POR_SETOR_ID(setor_id);
     const primeiraColuna = response.columns[0];
-    return primeiraColuna
-    
+    return primeiraColuna;
   }
-
-
-
-  
 }
