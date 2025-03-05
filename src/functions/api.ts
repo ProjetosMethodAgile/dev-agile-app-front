@@ -59,7 +59,7 @@ export function GET_MOTIVO(setorId:string) {
   };
 }
 export function GET_KANBAN_COLUNA(){
-  return{
-    url: API_URL + `/api/helpdesk/columnsBySetor`
-  }
+  return {
+    url: "http://localhost:3001/api/helpdesk/columnsBySetor"
+}
 }

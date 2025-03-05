@@ -46,7 +46,6 @@ export async function setLogin(formData: FormData): Promise<void> {
     }
   } else {
     const empresaId = formData.get("empresaId") as string;
-    console.log(empresaId);
 
     const response = await VALIDA_EMPRESA_POR_ID(empresaId);
 

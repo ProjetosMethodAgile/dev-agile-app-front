@@ -87,9 +87,13 @@ export const useHandleSendMessage = () => {
     });
     setDataUserChamados([]);
     setEtapaAtual(0);
-    setTitle(fluxo[0].title);
+    setTitle(fluxo[etapaAtual].title);
     setSetorSelecionado(null);
+    
   };
+  
+
+  
 
   /**
    * Função principal para tratar o envio de mensagens.
@@ -100,12 +104,15 @@ export const useHandleSendMessage = () => {
   ) => {
     if (etapaAtual === 1 && e) {
       const setorId = e.currentTarget.id;
+      const setorNome = e.currentTarget.value;
       await chatController.handleSectorSelection(
         setorId,
         setMotivo,
         setEtapaAtual,
         SetSetorHelpdesk,
       );
+      sendMessage(setorNome, "user")
+      sendMessage(fluxo[2].pergunta, "bot")
       return;
     }
 
@@ -133,6 +140,8 @@ export const useHandleSendMessage = () => {
 
       return;
     }
+
+    
 
     if (etapaAtual === 3) {
       const validation = chatController.validateMessage(text);
