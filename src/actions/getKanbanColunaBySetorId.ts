@@ -2,7 +2,7 @@ import { GET_KANBAN_COLUNA } from "@/functions/api";
 import { GetKanbanColunaResponse } from "@/types/api/apiTypes";
 
 export default async function GET_KANBAN_COLUNA_POR_SETOR_ID(
-  id: string
+  id: string,
 ): Promise<GetKanbanColunaResponse> {
   try {
     const { url } = await GET_KANBAN_COLUNA();
@@ -23,7 +23,7 @@ export default async function GET_KANBAN_COLUNA_POR_SETOR_ID(
     }
     const data = (await response.json()) as GetKanbanColunaResponse;
     return data;
-  } catch (error: any) {
+  } catch (error) {
     console.error("Erro ao buscar a coluna do Kanban:", error);
     return { columns: [] };
   }

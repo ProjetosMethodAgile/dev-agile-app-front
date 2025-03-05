@@ -3,7 +3,6 @@ import { useGlobalContext } from "@/context/globalContext";
 import { fluxo } from "../Fluxo";
 import { useEffect, useCallback } from "react";
 import ChatController from "@/components/Chatbot/ChatFunction/GerenciaChat_Controller";
-import { log } from "util";
 
 type Message = {
   text: string;
@@ -30,8 +29,8 @@ export const useHandleSendMessage = () => {
     countdown,
     setCountdown,
     setMotivo,
-    setorHelpDesk, 
-    SetSetorHelpdesk
+    setorHelpDesk,
+    SetSetorHelpdesk,
   } = useGlobalContext();
 
   const chatController = new ChatController();
@@ -64,7 +63,7 @@ export const useHandleSendMessage = () => {
         },
       ]);
     },
-    [setMessages]
+    [setMessages],
   );
 
   // Função para resetar a interface
@@ -97,35 +96,41 @@ export const useHandleSendMessage = () => {
    */
   const handleSendMessage = async (
     text: string = messageUser,
-    e?: React.MouseEvent<HTMLButtonElement>
+    e?: React.MouseEvent<HTMLButtonElement>,
   ) => {
-  
-
-    
     if (etapaAtual === 1 && e) {
       const setorId = e.currentTarget.id;
-      await chatController.handleSectorSelection(setorId, setMotivo, setEtapaAtual, SetSetorHelpdesk);
+      await chatController.handleSectorSelection(
+        setorId,
+        setMotivo,
+        setEtapaAtual,
+        SetSetorHelpdesk,
+      );
       return;
     }
 
     // Ação de voltar: inicia o countdown de 5 segundos e reseta a interface após esse tempo
     if (text === "voltar") {
-      await chatController.handleBackAction(sendMessage, setMessageUser, setCountdown, resetInterface);
+      await chatController.handleBackAction(
+        sendMessage,
+        setMessageUser,
+        setCountdown,
+        resetInterface,
+      );
       return;
     }
     if (text === "Finalizar") {
-      const returnValue =  await chatController.buscaColunaKanbam(setorHelpDesk)
-      const idKanbanInitial = returnValue.id
+      const returnValue = await chatController.buscaColunaKanbam(setorHelpDesk);
+      const idKanbanInitial = returnValue.id;
       console.log(idKanbanInitial);
 
-    await chatController.handleFinalize(
-          setCountdown,
-          setDataUserChamados, 
-         dataUserChamados,
-          resetInterface
-        );
+      await chatController.handleFinalize(
+        setCountdown,
+        setDataUserChamados,
+        dataUserChamados,
+        resetInterface,
+      );
 
-      
       return;
     }
 
@@ -181,8 +186,6 @@ export const useHandleSendMessage = () => {
         setCountdown(5);
       }
     }, 1000);
- 
-    
   };
 
   return handleSendMessage;

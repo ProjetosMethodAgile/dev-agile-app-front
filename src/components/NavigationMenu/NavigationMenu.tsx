@@ -7,7 +7,6 @@ import { usePathname } from "next/navigation";
 import { PermissaoCompletaData } from "@/types/api/apiTypes";
 import { House, PanelRightClose, UserRound, LogOut } from "lucide-react";
 import iconsMap from "@/utils/iconsMap";
-import ToggleTheme from "../ui/button/ToggleTheme";
 
 export default function NavigationMenu() {
   const { user, permissions } = useUser();
@@ -40,9 +39,9 @@ export default function NavigationMenu() {
       {/* Seção superior: informações do usuário */}
       <div
         id="user"
-        className="flex min-h-20 flex-col items-center justify-center text-primary-900 dark:text-primary-50"
+        className="text-primary-900 dark:text-primary-50 flex min-h-20 flex-col items-center justify-center"
       >
-        <UserRound className="bg-primary-500 text-primary-50  size-10 rounded-full p-2" />
+        <UserRound className="bg-primary-500 text-primary-50 size-10 rounded-full p-2" />
         {isExpanded && (
           <p className="mt-1 w-40 text-center">{user.usuario.nome}</p>
         )}
@@ -53,7 +52,7 @@ export default function NavigationMenu() {
       <ul
         className={`${
           isExpanded ? "w-50" : "w-20"
-        }  flex flex-1 flex-col gap-2 overflow-x-hidden overflow-y-auto p-2`}
+        } flex flex-1 flex-col gap-2 overflow-x-hidden overflow-y-auto p-2`}
       >
         {accessibleScreens?.map((screen: PermissaoCompletaData) => {
           const slug = screen.nome.trim().toLowerCase().replace(/\s+/g, "-");
@@ -64,14 +63,14 @@ export default function NavigationMenu() {
           return (
             <li key={screen.id}>
               <Link
-              title={screen.nome}
+                title={screen.nome}
                 href={href}
-                className={`dark:hover:bg-primary-500/30 hover:bg-primary-500/30 flex items-center transition-all justify-center gap-2 rounded-xl py-2 px-3 ${
+                className={`dark:hover:bg-primary-500/30 hover:bg-primary-500/30 flex items-center justify-center gap-2 rounded-xl px-3 py-2 transition-all ${
                   isActive ? "bg-primary-500/30" : ""
                 }`}
               >
                 <div className="flex w-6 flex-shrink-0 justify-center">
-                  <IconComponent className="size-6 text-primary-900 dark:text-primary-50" />
+                  <IconComponent className="text-primary-900 dark:text-primary-50 size-6" />
                 </div>
                 {isExpanded && (
                   <span className="flex-1 transition-all duration-300">
@@ -84,18 +83,15 @@ export default function NavigationMenu() {
         })}
       </ul>
 
-     
-
       {/* Seção inferior: toggle da sidebar e logout */}
       <div className="flex flex-col gap-2 overflow-y-auto p-2">
         <PanelRightClose
-          className="hover:bg-primary-500/30 size-10 w-full cursor-pointer rounded-xl p-1 dark:text-primary-50 transition-all"
+          className="hover:bg-primary-500/30 dark:text-primary-50 size-10 w-full cursor-pointer rounded-xl p-1 transition-all"
           onClick={toggleSidebar}
         />
         <div onClick={() => logout(empresaTag)}>
-          <LogOut className="size-10 w-full text-primary-50  cursor-pointer rounded-xl p-2 hover:bg-red-700 bg-red-800 transition-all" />
+          <LogOut className="text-primary-50 size-10 w-full cursor-pointer rounded-xl bg-red-800 p-2 transition-all hover:bg-red-700" />
         </div>
-
       </div>
     </nav>
   );
