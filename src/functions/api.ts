@@ -60,6 +60,6 @@ export function GET_MOTIVO(setorId:string) {
 }
 export function GET_KANBAN_COLUNA(){
   return{
-    url:"http://localhost:3001/api/helpdesk/columnsBySetor"
+    url: API_URL + `/api/helpdesk/columnsBySetor`
   }
 }
