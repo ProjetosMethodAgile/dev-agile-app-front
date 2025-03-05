@@ -173,6 +173,17 @@ export type MotivoHelpDesk ={
     descricao: string,
     src_img: string,
 }
+export type KanbanColumn = {
+  id: string;
+  setor_id: string;
+  nome: string;
+  posicao: string;
+  createdAt: string;
+  updatedAt: string;
+};
 
+export type GetKanbanColunaResponse = {
+  columns: KanbanColumn[];
+};
 
 export type GetUserResult = GetUserSuccess | GetUserError;

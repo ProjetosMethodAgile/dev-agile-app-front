@@ -55,6 +55,11 @@ export function POST_SETOR_HELPDESK() {
 export function GET_MOTIVO(setorId:string) {
   return {
     url: API_URL + `/kanban/motivos/setor/${setorId}`,
-
+    
   };
+}
+export function GET_KANBAN_COLUNA(){
+  return{
+    url: API_URL + `/api/helpdesk/columnsBySetor`
+  }
 }

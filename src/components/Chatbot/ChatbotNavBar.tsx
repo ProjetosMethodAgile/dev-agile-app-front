@@ -11,6 +11,7 @@ type NavBarProps = React.ComponentProps<"nav"> & {
   setores: SetorHelpDesk[];
 };
 
+
 export default function ChatbotNavBar({
   setores,
   className,
@@ -18,7 +19,8 @@ export default function ChatbotNavBar({
 }: NavBarProps) {
   const { etapaAtual, title, motivo } = useGlobalContext();
   const handleSendMessage = useHandleSendMessage();
-
+  console.log(motivo);
+  
   if (etapaAtual === 1 || etapaAtual === 2) {
     return (
       <nav

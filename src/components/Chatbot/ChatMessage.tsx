@@ -85,7 +85,7 @@ return (
             <div className="flex gap-2 p-5">
               <button
                 className="w-[100px] rounded-[15px] bg-red-500 p-3"
-                value="Descrição"
+                value="voltar"
                 onClick={(e) => handleSendMessage(e.currentTarget.value)}
               >
                 Voltar
