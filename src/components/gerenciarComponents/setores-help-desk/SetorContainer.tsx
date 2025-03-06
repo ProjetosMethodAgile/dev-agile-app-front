@@ -55,8 +55,8 @@ export default function SetorContainer({
   };
 
   return (
-    <div className={twMerge("w-full", className)} {...props}>
-      <div className="mb-4 flex flex-col items-center gap-2 sm:flex-row">
+    <div className="" {...props}>
+      <div className="mb-4 flex flex-wrap items-center gap-2">
         <Form.InputText
           id="search"
           name="search"
@@ -77,9 +77,7 @@ export default function SetorContainer({
           <AddSetorBtn />
         </button>
       </div>
-      <Setor.Root>
-        <Setor.List search={search} />
-      </Setor.Root>
+      <Setor.List search={search} />
     </div>
   );
 }
