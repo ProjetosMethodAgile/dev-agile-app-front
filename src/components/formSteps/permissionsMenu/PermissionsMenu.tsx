@@ -2,9 +2,9 @@ import { Form } from "@/components/form";
 import { PermissaoCompletaData } from "@/types/api/apiTypes";
 import { ArrowBigDownDash, ChevronLeft, ChevronRight } from "lucide-react";
 import React, { useEffect, useState } from "react";
-import Screens from "./PermissionsScreen";
-import PermissionsScreen from "./PermissionsScreen";
-import PermissionsSubscreen from "./PermissionsSubscreen";
+import Screens from "./screen/PermissionsScreen";
+import PermissionsScreen from "./screen/PermissionsScreen";
+import PermissionsSubscreen from "./subscreen/PermissionsSubscreen";
 import { useGlobalContext } from "@/context/globalContext";
 
 type PermissionsMenuProps = {

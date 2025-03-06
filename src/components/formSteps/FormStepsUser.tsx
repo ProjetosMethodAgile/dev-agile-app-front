@@ -57,8 +57,8 @@ export default function FormStepsUser({
     <div className="flex gap-5">
       <RegisterNavigation setActiveTab={setActiveTab} activeTab={activeTab} />
       <Form.Root action={formAction}>
-        {activeTab === "informacoes" && (
-          <div>
+      
+          <div className={`${activeTab !== 'informacoes' ? 'hidden' : ''}`}>
             <Form.Section title="Dados do usuario">
               <Form.InputText
                 icon={UserCircle}
@@ -106,9 +106,7 @@ export default function FormStepsUser({
               icon={ChevronRight}
             />
           </div>
-        )}
-        {activeTab === "permissoes" && currentRoles.length > 0 && (
-          <div>
+          <div className={`${activeTab !== 'permissoes' ? 'hidden' : ''}`}>
             <Form.Section title="Perfil">
               <Form.InputSelect
                 options={currentRoles}
@@ -137,7 +135,7 @@ export default function FormStepsUser({
               />
             </div>
           </div>
-        )}
+
       </Form.Root>
     </div>
   );

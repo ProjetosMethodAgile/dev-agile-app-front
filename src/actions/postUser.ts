@@ -29,9 +29,8 @@ export async function postUser(
   const errors: string[] = [];
   const permissions: PermissaoUserData[] = [];
   permissionsCheckbox?.map((permission) => {
-    const { id, acessos, acoes }: PermissaoCompletaData =
-      JSON.parse(permission);
-
+    const { id, acessos, acoes }: PermissaoCompletaData = JSON.parse(permission);
+    const data: PermissaoCompletaData = JSON.parse(permission);
     const newPermission = {
       permissao_id: id,
       acessos: {
@@ -44,6 +43,8 @@ export async function postUser(
     };
     permissions.push(newPermission);
   });
+
+
 
   if (errors.length > 0) {
     return { errors, msg_success: "", success: false };
@@ -64,10 +65,10 @@ export async function postUser(
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        nome: "nome",
-        email: "email",
-        contato: "contato",
-        senha: "senha",
+        nome: nome,
+        email: email,
+        contato: contato,
+        senha: senha,
         roles_id: [tipoUsuario],
         permissoes: permissions,
         empresa_id: usuarioData.empresa.id,
