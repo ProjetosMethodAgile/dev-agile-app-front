@@ -6,15 +6,13 @@ export default async function GET_KANBAN_COLUNA_POR_SETOR_ID(
 ): Promise<GetKanbanColunaResponse> {
   try {
     const { url } = await GET_KANBAN_COLUNA();
-    const response = await fetch(`${url}?setor_id=${id}`, {
-      method: "GET",
+    const response = await fetch(url, {
+      method: "POST",
       headers: {
-        "Content-Type": "application/json",
+        "Content-Type": "Application/json",
       },
-      next: {
-        revalidate: 60,
-        tags: ["setor-helpdesk"],
-      },
+      // Enviando o setor_id no body, conforme a API espera
+      body: JSON.stringify({ setor_id: id }),
     });
 
     console.log(response);
@@ -22,6 +20,8 @@ export default async function GET_KANBAN_COLUNA_POR_SETOR_ID(
       throw new Error(`Erro na requisição: ${response.status}`);
     }
     const data = (await response.json()) as GetKanbanColunaResponse;
+    console.log(data);
+    
     return data;
   } catch (error) {
     console.error("Erro ao buscar a coluna do Kanban:", error);

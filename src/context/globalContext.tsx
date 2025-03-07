@@ -33,7 +33,7 @@ type IGlobalContext = {
   setEtapaAtual: React.Dispatch<React.SetStateAction<number>>;
   setorSelecionado: Setor | null;
   setSetorSelecionado: React.Dispatch<React.SetStateAction<Setor | null>>;
-  messageUser: string;
+  messageUser: string ;
   setMessageUser: React.Dispatch<React.SetStateAction<string>>;
   title: string;
   setTitle: React.Dispatch<React.SetStateAction<string>>;
