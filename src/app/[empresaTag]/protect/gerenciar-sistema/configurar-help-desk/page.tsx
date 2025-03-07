@@ -1,4 +1,5 @@
 import { validateScreenAccess } from "@/actions/validateScreenAccess";
+import AtendenteContainer from "@/components/gerenciarComponents/setores-help-desk/AtendenteContainer";
 import SetorContainer from "@/components/gerenciarComponents/setores-help-desk/SetorContainer";
 import ScreenTitle from "@/components/titles/ScreenTitle";
 import SectionTitle from "@/components/titles/SectionTitle";
@@ -15,7 +16,11 @@ export default async function GerenciarUsuariosPage() {
       <div className="mirror-container flex flex-col p-5 backdrop-blur-2xl md:p-10">
         <div className="">
           <SectionTitle title="Setores" className="mb-5 text-center" />
-          <SetorContainer className="" />
+          <SetorContainer />
+        </div>
+        <div>
+          <SectionTitle title="Atendentes" className="mb-5 text-center" />
+          <AtendenteContainer />
         </div>
       </div>
     </div>

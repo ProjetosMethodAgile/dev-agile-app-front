@@ -1,7 +1,6 @@
 "use client";
 
 import getSetoresHelpDesk from "@/actions/getSetoresHelpDesk";
-import { Form } from "@/components/form";
 import { useGlobalContext } from "@/context/globalContext";
 import { SetorHelpDesk } from "@/types/api/apiTypes";
 import iconsMap from "@/utils/iconsMap";
@@ -35,7 +34,7 @@ export default function SetorList({ search = "", ...props }: SetorListProps) {
     : setores;
 
   return (
-    <div {...props} className="min-h-80 min-w-[600px]">
+    <div {...props} className="h-80 overflow-y-auto">
       <ul className="dark:bg-primary-600 bg-primary-500 sticky top-0 flex rounded-md text-white">
         <li className="min-w-50 text-center">Nome</li>
         <li className="min-w-50 text-center">Qtde. Func</li>

@@ -8,14 +8,14 @@ import { redirect, useParams } from "next/navigation";
 import { useActionState } from "react";
 import { toast } from "react-toastify";
 import { ModalCadSetor } from "./ModalCadSetor"; // importe o componente criado
-import SetorList from "./SetorList";
+import AtendenteList from "./AtendenteList";
 
-export type SetorContainerProps = React.ComponentProps<"div">;
+export type AtendenteContainerProps = React.ComponentProps<"div">;
 
-export default function SetorContainer({
+export default function AtendenteContainer({
   className,
   ...props
-}: SetorContainerProps) {
+}: AtendenteContainerProps) {
   const [search, setSearch] = useState("");
   const AddSetorBtn = iconsMap["add"];
 
@@ -76,7 +76,7 @@ export default function SetorContainer({
           <AddSetorBtn />
         </button>
       </div>
-      <SetorList search={search} />
+      <AtendenteList search={search} />
     </div>
   );
 }
