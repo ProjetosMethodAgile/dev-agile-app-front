@@ -1,5 +1,5 @@
 export const API_URL = "https://devagile.com.br/api";
-// export const API_URL = "http://localhost3001/api";
+// export const API_URL = "http://localhost:3001/api";
 
 
 export function GET_USER_ALL(){
@@ -58,8 +58,8 @@ export function GET_MOTIVO(setorId:string) {
     
   };
 }
-export function GET_KANBAN_COLUNA(){
-  return {
-    url: "http://localhost:3001/api/helpdesk/columnsBySetor"
-}
+export function GET_KANBAN_COLUNA(setor_id:string){
+  return{
+    url:API_URL+`/helpdesk/columnsBySetor/${setor_id}`
+  }
 }
