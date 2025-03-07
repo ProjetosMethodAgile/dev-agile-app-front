@@ -57,7 +57,6 @@ export default function FormStepsUser({
     <div className="flex gap-5">
       <RegisterNavigation setActiveTab={setActiveTab} activeTab={activeTab} />
       <Form.Root action={formAction}>
-      
           <div className={`${activeTab !== 'informacoes' ? 'hidden' : ''}`}>
             <Form.Section title="Dados do usuario">
               <Form.InputText
@@ -117,7 +116,6 @@ export default function FormStepsUser({
             <Form.Section title="Permissões">
               <PermissionsMenu permissoesData={permissoesData} />
             </Form.Section>
-
             <div className="flex justify-between">
               <Form.ButtonBack
                 type="button"
@@ -135,7 +133,6 @@ export default function FormStepsUser({
               />
             </div>
           </div>
-
       </Form.Root>
     </div>
   );

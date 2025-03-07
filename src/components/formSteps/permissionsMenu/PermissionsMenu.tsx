@@ -1,11 +1,6 @@
-import { Form } from "@/components/form";
 import { PermissaoCompletaData } from "@/types/api/apiTypes";
-import { ArrowBigDownDash, ChevronLeft, ChevronRight } from "lucide-react";
-import React, { useEffect, useState } from "react";
-import Screens from "./screen/PermissionsScreen";
+import React, { useState } from "react";
 import PermissionsScreen from "./screen/PermissionsScreen";
-import PermissionsSubscreen from "./subscreen/PermissionsSubscreen";
-import { useGlobalContext } from "@/context/globalContext";
 
 type PermissionsMenuProps = {
   permissoesData: PermissaoCompletaData[];
@@ -25,7 +20,6 @@ export default function PermissionsMenu({
   >(() => {
     return permissoesData.filter((permissao) => permissao.parent_id !== null);
   });
-
 
   return (
     <div className="col-span-full">
