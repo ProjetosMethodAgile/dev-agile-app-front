@@ -1,5 +1,5 @@
-// export const API_URL = "https://devagile.com.br/api";
-export const API_URL = "http://localhost:3001/api";
+export const API_URL = "https://devagile.com.br/api";
+// export const API_URL = "http://localhost:3001/api";
 
 export function GET_USER_ALL() {
   return {
@@ -65,5 +65,11 @@ export function GET_KANBAN_COLUNA() {
 export function GET_ALL_ATENDENTE_HELPDESK_BY_EMPRESA_ID(id: string) {
   return {
     url: API_URL + `/helpdesk/atendentes/empresa/${id}`,
+  };
+}
+
+export function GET_USUARIOS_NAO_ATENDENTE_HELPDESK(id: string) {
+  return {
+    url: API_URL + `/helpdesk/atendentes/usuario/empresa/${id}`,
   };
 }

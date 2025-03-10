@@ -7,10 +7,17 @@ import { postSetorHelpDesk } from "@/actions/postSetorHelpDesk";
 import { redirect, useParams } from "next/navigation";
 import { useActionState } from "react";
 import { toast } from "react-toastify";
-import { ModalCadSetor } from "./ModalCadSetor"; // importe o componente criado
 import AtendenteList from "./AtendenteList";
+import { ModalCadAtendente } from "./ModalCadAtendente";
+import getUsuariosNaoAtendenteHelpDesk from "@/actions/getUsuariosNaoAtendenteHelpDesk";
+import { usuariosDisponiveisHelpDesk } from "@/types/api/apiTypes";
 
 export type AtendenteContainerProps = React.ComponentProps<"div">;
+
+type usuariosResponse = {
+  usuarios: usuariosDisponiveisHelpDesk[];
+  error: string;
+};
 
 export default function AtendenteContainer({
   className,
@@ -26,6 +33,7 @@ export default function AtendenteContainer({
     msg_success: "",
     success: false,
   });
+  const [usersAvaliables, setUsersAvaliables] = useState<usuariosResponse>();
 
   useEffect(() => {
     if (state?.errors.length) {
@@ -40,14 +48,25 @@ export default function AtendenteContainer({
     }
   }, [state]);
 
+  useEffect(() => {
+    async function GetUsersAvaliables() {
+      const usuarios = await getUsuariosNaoAtendenteHelpDesk();
+      if (usuarios.data) {
+        setUsersAvaliables(usuarios.data);
+      }
+    }
+    GetUsersAvaliables();
+  }, []);
+
   const openModal = () => {
     if (typeof empresaTag === "string") {
       openGlobalModal(
-        <ModalCadSetor
+        <ModalCadAtendente
           state={state}
           formAction={formAction}
           empresaTag={empresaTag}
           closeModal={closeGlobalModal}
+          usersAvaliables={usersAvaliables}
         />,
       );
     }

@@ -91,7 +91,6 @@ export type User = {
   contato: string;
   empresa: EmpresaData[];
   usuario_roles: RoleData[];
-  // As permissões agora vêm agrupadas e completas (com acessos, ações e subtelas)
   permissoes: PermissaoCompletaData[];
   createdAt: string;
   updatedAt: string;
@@ -191,6 +190,19 @@ export type AtendentesHelpDesk = {
   updatedAt: string;
   Setores: SetorHelpDesk[];
   UsuarioAtendente: {
+    id: string;
+    nome: string;
+    email: string;
+    contato: string;
+  };
+};
+
+export type usuariosDisponiveisHelpDesk = {
+  usuario_id: string;
+  empresa_id: string;
+  createdAt: string;
+  updatedAt: string;
+  usuario: {
     id: string;
     nome: string;
     email: string;
