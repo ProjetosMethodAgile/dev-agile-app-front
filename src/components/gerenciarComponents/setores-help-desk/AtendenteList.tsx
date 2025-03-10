@@ -1,11 +1,12 @@
 "use client";
 
-import getSetoresHelpDesk from "@/actions/getSetoresHelpDesk";
 import { useGlobalContext } from "@/context/globalContext";
-import { SetorHelpDesk } from "@/types/api/apiTypes";
+
 import iconsMap from "@/utils/iconsMap";
 import { useEffect, useState } from "react";
 import { ModalEditSetor } from "./ModalEditSetor";
+import getAtendentesHelpDesk from "@/actions/getAtendentesHelpDesk";
+import { AtendentesHelpDesk } from "@/types/api/apiTypes";
 
 export type AtendenteListProps = React.ComponentProps<"div"> & {
   search?: string;
@@ -15,44 +16,49 @@ export default function AtendenteList({
   search = "",
   ...props
 }: AtendenteListProps) {
-  const [setores, setSetores] = useState<SetorHelpDesk[]>([]);
+  const [atendentes, setAtendentes] = useState<AtendentesHelpDesk[]>([]);
   const { openGlobalModal, closeGlobalModal } = useGlobalContext();
 
   useEffect(() => {
-    async function getSetores() {
-      const response = await getSetoresHelpDesk();
+    async function getAtendentes() {
+      const response = await getAtendentesHelpDesk();
+      console.log(response);
       if (response.ok && response.data) {
-        setSetores(response.data);
+        setAtendentes(response.data.atendentes);
       }
     }
-    getSetores();
+    getAtendentes();
   }, []);
 
   const openModal = () => {
     openGlobalModal(<ModalEditSetor closeModal={closeGlobalModal} />);
   };
 
-  const filteredSetores = search
-    ? setores.filter((s) => s.nome.toLowerCase().includes(search.toLowerCase()))
-    : setores;
+  const filteredAtendentes = search
+    ? atendentes.filter((s) =>
+        s.UsuarioAtendente.nome.toLowerCase().includes(search.toLowerCase()),
+      )
+    : atendentes;
 
   return (
     <div {...props} className="h-80 overflow-y-auto">
       <ul className="dark:bg-primary-600 bg-primary-500 sticky top-0 flex rounded-md text-white">
         <li className="min-w-50 text-center">Nome</li>
-        <li className="min-w-50 text-center">Qtde. Func</li>
+        <li className="min-w-50 text-center">Qtde. Setores</li>
         <li className="min-w-50 text-center">Ações</li>
       </ul>
-      {filteredSetores.length ? (
-        filteredSetores.map((setor) => {
+      {filteredAtendentes.length ? (
+        filteredAtendentes.map((atendente) => {
           const IconEdit = iconsMap["editBtn"];
           const IconDelete = iconsMap["delete"];
           return (
             <ul
               className="dark:border-primary-600/70 border-primary-300 hover:bg-primary-200/50 my-1 flex h-16 items-center rounded-md border p-2 transition-all"
-              key={setor.nome}
+              key={atendente.UsuarioAtendente.nome}
             >
-              <li className="min-w-50 text-center">{setor.nome}</li>
+              <li className="min-w-50 text-center">
+                {atendente.UsuarioAtendente.nome}
+              </li>
               <li className="min-w-50 text-center">À configurar</li>
               <li className="flex min-w-50 justify-center gap-1">
                 <button
@@ -70,7 +76,7 @@ export default function AtendenteList({
         })
       ) : (
         <span className="block p-2 text-center text-2xl">
-          Nenhum setor encontrado
+          Nenhum atendente encontrado
         </span>
       )}
     </div>

@@ -65,7 +65,6 @@ export type UserAcaoTela = {
   updatedAt: string;
 };
 
-
 // Cada permissão possui os acessos (CRUD), suas ações e, opcionalmente, subtelas (subpermissoes)
 export type PermissaoCompletaData = {
   id: string;
@@ -159,20 +158,18 @@ export type GetUserError = {
   error: string;
 };
 
+export type SetorHelpDesk = {
+  id: string;
+  empresa_id: string;
+  nome: string;
+};
 
-export type SetorHelpDesk ={
-  id: string,
-  empresa_id: string,
-  nome: string,
-
-}
-
-export type MotivoHelpDesk ={
-    id: string,
-    setor_id: string,
-    descricao: string,
-    src_img: string,
-}
+export type MotivoHelpDesk = {
+  id: string;
+  setor_id: string;
+  descricao: string;
+  src_img: string;
+};
 export type KanbanColumn = {
   id: string;
   setor_id: string;
@@ -184,6 +181,21 @@ export type KanbanColumn = {
 
 export type GetKanbanColunaResponse = {
   columns: KanbanColumn[];
+};
+
+export type AtendentesHelpDesk = {
+  id: string;
+  usuario_id: string;
+  empresa_id: string;
+  createdAt: string;
+  updatedAt: string;
+  Setores: SetorHelpDesk[];
+  UsuarioAtendente: {
+    id: string;
+    nome: string;
+    email: string;
+    contato: string;
+  };
 };
 
 export type GetUserResult = GetUserSuccess | GetUserError;
