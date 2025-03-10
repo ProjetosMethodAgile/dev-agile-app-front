@@ -20,7 +20,6 @@ type usuariosResponse = {
 };
 
 export default function AtendenteContainer({
-  className,
   ...props
 }: AtendenteContainerProps) {
   const [search, setSearch] = useState("");
@@ -73,7 +72,7 @@ export default function AtendenteContainer({
   };
 
   return (
-    <div className="" {...props}>
+    <div {...props}>
       <div className="mb-4 flex flex-wrap items-center gap-2">
         <Form.InputText
           id="search"

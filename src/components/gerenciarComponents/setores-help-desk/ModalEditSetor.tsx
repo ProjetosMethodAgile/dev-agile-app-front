@@ -1,6 +1,5 @@
 import { Form } from "@/components/form";
 import iconsMap from "@/utils/iconsMap";
-import SectionTitle from "@/components/titles/SectionTitle";
 
 type ModalEditSetorProps = {
   closeModal: () => void;

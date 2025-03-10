@@ -3,8 +3,6 @@ import { Form } from "@/components/form";
 import iconsMap from "@/utils/iconsMap";
 import SectionTitle from "@/components/titles/SectionTitle";
 import FormInputSelect from "@/components/form/FormInputSelect";
-import { useEffect } from "react";
-import getUsuariosNaoAtendenteHelpDesk from "@/actions/getUsuariosNaoAtendenteHelpDesk";
 import { usuariosDisponiveisHelpDesk } from "@/types/api/apiTypes";
 
 type stateProps = {

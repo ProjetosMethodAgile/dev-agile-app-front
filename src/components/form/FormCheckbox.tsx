@@ -1,5 +1,5 @@
 import { PermissaoCompletaData } from "@/types/api/apiTypes";
-import { ChangeEvent, ElementType, JSX } from "react";
+import { ChangeEvent } from "react";
 
 type FormCheckboxProps = {
   label: string;
