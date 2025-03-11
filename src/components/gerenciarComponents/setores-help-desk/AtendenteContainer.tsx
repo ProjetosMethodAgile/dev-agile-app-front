@@ -7,15 +7,21 @@ import { postSetorHelpDesk } from "@/actions/postSetorHelpDesk";
 import { redirect, useParams } from "next/navigation";
 import { useActionState } from "react";
 import { toast } from "react-toastify";
-import { ModalCadSetor } from "./ModalCadSetor"; // importe o componente criado
-import SetorList from "./SetorList";
+import AtendenteList from "./AtendenteList";
+import { ModalCadAtendente } from "./ModalCadAtendente";
+import getUsuariosNaoAtendenteHelpDesk from "@/actions/getUsuariosNaoAtendenteHelpDesk";
+import { usuariosDisponiveisHelpDesk } from "@/types/api/apiTypes";
 
-export type SetorContainerProps = React.ComponentProps<"div">;
+export type AtendenteContainerProps = React.ComponentProps<"div">;
 
-export default function SetorContainer({
-  className,
+type usuariosResponse = {
+  usuarios: usuariosDisponiveisHelpDesk[];
+  error: string;
+};
+
+export default function AtendenteContainer({
   ...props
-}: SetorContainerProps) {
+}: AtendenteContainerProps) {
   const [search, setSearch] = useState("");
   const AddSetorBtn = iconsMap["add"];
 
@@ -26,6 +32,7 @@ export default function SetorContainer({
     msg_success: "",
     success: false,
   });
+  const [usersAvaliables, setUsersAvaliables] = useState<usuariosResponse>();
 
   useEffect(() => {
     if (state?.errors.length) {
@@ -40,21 +47,32 @@ export default function SetorContainer({
     }
   }, [state]);
 
+  useEffect(() => {
+    async function GetUsersAvaliables() {
+      const usuarios = await getUsuariosNaoAtendenteHelpDesk();
+      if (usuarios.data) {
+        setUsersAvaliables(usuarios.data);
+      }
+    }
+    GetUsersAvaliables();
+  }, []);
+
   const openModal = () => {
     if (typeof empresaTag === "string") {
       openGlobalModal(
-        <ModalCadSetor
+        <ModalCadAtendente
           state={state}
           formAction={formAction}
           empresaTag={empresaTag}
           closeModal={closeGlobalModal}
+          usersAvaliables={usersAvaliables}
         />,
       );
     }
   };
 
   return (
-    <div className="" {...props}>
+    <div {...props}>
       <div className="mb-4 flex flex-wrap items-center gap-2">
         <Form.InputText
           id="search"
@@ -76,7 +94,7 @@ export default function SetorContainer({
           <AddSetorBtn />
         </button>
       </div>
-      <SetorList search={search} />
+      <AtendenteList search={search} />
     </div>
   );
 }

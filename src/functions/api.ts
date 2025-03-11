@@ -1,11 +1,10 @@
 export const API_URL = "https://devagile.com.br/api";
 // export const API_URL = "http://localhost:3001/api";
 
-
-export function GET_USER_ALL(){
+export function GET_USER_ALL() {
   return {
-    url: API_URL + `/usuarios`
-  }
+    url: API_URL + `/usuarios`,
+  };
 }
 
 export function GET_USER_ID(userId: string) {
@@ -49,17 +48,30 @@ export function GET_SETOR_HELPDESK_BY_EMPRESA_ID(id: string) {
 export function POST_SETOR_HELPDESK() {
   return {
     url: API_URL + "/helpdesk/setores",
-  }
-}
-
-export function GET_MOTIVO(setorId:string) {
-  return {
-    url: API_URL + `/kanban/motivos/setor/${setorId}`,
-    
   };
 }
+
+export function GET_MOTIVO(setorId: string) {
+  return {
+    url: API_URL + `/kanban/motivos/setor/${setorId}`,
+  };
+}
+
+
+export function GET_ALL_ATENDENTE_HELPDESK_BY_EMPRESA_ID(id: string) {
+  return {
+    url: API_URL + `/helpdesk/atendentes/empresa/${id}`,
+  };
+}
+
+export function GET_USUARIOS_NAO_ATENDENTE_HELPDESK(id: string) {
+  return {
+    url: API_URL + `/helpdesk/atendentes/usuario/empresa/${id}`,
+  };
+
 export function GET_KANBAN_COLUNA(setor_id:string){
   return{
     url:API_URL+`/helpdesk/columnsBySetor/${setor_id}`
   }
 }
+
