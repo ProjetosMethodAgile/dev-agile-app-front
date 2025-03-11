@@ -1,4 +1,4 @@
-"use client";
+"use client ";
 import { Form } from "@/components/form";
 import iconsMap from "@/utils/iconsMap";
 import SectionTitle from "@/components/titles/SectionTitle";
