@@ -1,3 +1,4 @@
+"use server";
 import { GET_SETOR_HELPDESK_BY_EMPRESA_ID } from "@/functions/api";
 import getEmpresaByTag from "./getEmpresaByTag";
 
