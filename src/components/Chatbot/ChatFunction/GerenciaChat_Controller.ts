@@ -21,9 +21,8 @@ export default class ChatController {
       );
       setMotivo(motivos);
       SetSetorHelpdesk(setorId);
-
     }
-  
+
     setEtapaAtual(2);
   }
 
@@ -107,16 +106,12 @@ export default class ChatController {
     setDataUserChamados(dataUserChamados);
     console.log(dataUserChamados);
 
-
-    
-    // setCountdown(5);
-    // setTimeout(() => {
-    //   resetInterface();
-    // }, 5000);
+    setCountdown(5);
+    setTimeout(() => {
+      resetInterface();
+    }, 5000);
   }
 
-
-  
   async buscaColunaKanbam(setor_id: string) {
     const response = await GET_KANBAN_COLUNA_POR_SETOR_ID(setor_id);
     const primeiraColuna = response.columns[0];

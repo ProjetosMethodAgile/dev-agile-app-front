@@ -12,10 +12,7 @@ import SetorList from "./SetorList";
 
 export type SetorContainerProps = React.ComponentProps<"div">;
 
-export default function SetorContainer({
-  className,
-  ...props
-}: SetorContainerProps) {
+export default function SetorContainer({ ...props }: SetorContainerProps) {
   const [search, setSearch] = useState("");
   const AddSetorBtn = iconsMap["add"];
 
@@ -54,7 +51,7 @@ export default function SetorContainer({
   };
 
   return (
-    <div className="" {...props}>
+    <div {...props}>
       <div className="mb-4 flex flex-wrap items-center gap-2">
         <Form.InputText
           id="search"

@@ -57,7 +57,6 @@ export function GET_MOTIVO(setorId: string) {
   };
 }
 
-
 export function GET_ALL_ATENDENTE_HELPDESK_BY_EMPRESA_ID(id: string) {
   return {
     url: API_URL + `/helpdesk/atendentes/empresa/${id}`,
@@ -68,10 +67,9 @@ export function GET_USUARIOS_NAO_ATENDENTE_HELPDESK(id: string) {
   return {
     url: API_URL + `/helpdesk/atendentes/usuario/empresa/${id}`,
   };
-
-export function GET_KANBAN_COLUNA(setor_id:string){
-  return{
-    url:API_URL+`/helpdesk/columnsBySetor/${setor_id}`
-  }
 }
-
+export function GET_KANBAN_COLUNA(setor_id: string) {
+  return {
+    url: API_URL + `/helpdesk/columnsBySetor/${setor_id}`,
+  };
+}
