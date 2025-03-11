@@ -33,7 +33,6 @@ export async function getUserPermissions(
     const data = await response.json();
     return data.permissoes;
   } catch (error) {
-    console.log(error);
 
     logout(empresaTag);
     return null;

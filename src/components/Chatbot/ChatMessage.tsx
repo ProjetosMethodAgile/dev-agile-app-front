@@ -53,6 +53,7 @@ return (
     )}
     {...props}
   >
+  
     {messages.map((msg, index) => (
       <div 
         key={index}

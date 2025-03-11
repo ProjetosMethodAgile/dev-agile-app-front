@@ -21,7 +21,7 @@ export const fluxo: EtapaFluxo[] = [
   {
     id: 2,
     title: "Informe o Setor",
-    pergunta: "De qual setor você fala?",
+    pergunta: "Qual setor você quer falar?",
     next: (resposta: string) => {
       void resposta;
       return 2;
