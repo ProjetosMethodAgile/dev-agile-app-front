@@ -22,7 +22,6 @@ export default function AtendenteList({
   useEffect(() => {
     async function getAtendentes() {
       const response = await getAtendentesHelpDesk();
-      console.log(response);
       if (response.ok && response.data) {
         setAtendentes(response.data.atendentes);
       }
@@ -30,6 +29,9 @@ export default function AtendenteList({
     getAtendentes();
   }, []);
 
+  useEffect(() => {
+    console.log(atendentes);
+  }, [atendentes]);
   const openModal = () => {
     openGlobalModal(<ModalEditSetor closeModal={closeGlobalModal} />);
   };
@@ -59,7 +61,9 @@ export default function AtendenteList({
               <li className="min-w-50 text-center">
                 {atendente.UsuarioAtendente.nome}
               </li>
-              <li className="min-w-50 text-center">À configurar</li>
+              <li className="min-w-50 text-center">
+                {atendente.Setores.length}
+              </li>
               <li className="flex min-w-50 justify-center gap-1">
                 <button
                   onClick={openModal}

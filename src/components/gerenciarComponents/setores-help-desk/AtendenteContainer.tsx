@@ -3,14 +3,18 @@ import { Form } from "@/components/form";
 import iconsMap from "@/utils/iconsMap";
 import { useGlobalContext } from "@/context/globalContext";
 import { useEffect, useState } from "react";
-import { postSetorHelpDesk } from "@/actions/postSetorHelpDesk";
 import { redirect, useParams } from "next/navigation";
 import { useActionState } from "react";
 import { toast } from "react-toastify";
 import AtendenteList from "./AtendenteList";
 import { ModalCadAtendente } from "./ModalCadAtendente";
 import getUsuariosNaoAtendenteHelpDesk from "@/actions/getUsuariosNaoAtendenteHelpDesk";
-import { usuariosDisponiveisHelpDesk } from "@/types/api/apiTypes";
+import {
+  SetorHelpDesk,
+  usuariosDisponiveisHelpDesk,
+} from "@/types/api/apiTypes";
+import getSetoresHelpDesk from "@/actions/getSetoresHelpDesk";
+import { postAtendenteHelpDesk } from "@/actions/postAtendenteHelpDesk";
 
 export type AtendenteContainerProps = React.ComponentProps<"div">;
 
@@ -27,12 +31,13 @@ export default function AtendenteContainer({
 
   const { openGlobalModal, closeGlobalModal } = useGlobalContext();
   const { empresaTag } = useParams();
-  const [state, formAction] = useActionState(postSetorHelpDesk, {
+  const [state, formAction] = useActionState(postAtendenteHelpDesk, {
     errors: [],
     msg_success: "",
     success: false,
   });
   const [usersAvaliables, setUsersAvaliables] = useState<usuariosResponse>();
+  const [setoresAvaliables, setSetoresAvaliables] = useState<SetorHelpDesk[]>();
 
   useEffect(() => {
     if (state?.errors.length) {
@@ -55,6 +60,14 @@ export default function AtendenteContainer({
       }
     }
     GetUsersAvaliables();
+
+    async function getSetoresAvaliables() {
+      const setores = await getSetoresHelpDesk();
+      if (setores.ok && setores.data) {
+        setSetoresAvaliables(setores.data);
+      }
+    }
+    getSetoresAvaliables();
   }, []);
 
   const openModal = () => {
@@ -66,6 +79,7 @@ export default function AtendenteContainer({
           empresaTag={empresaTag}
           closeModal={closeGlobalModal}
           usersAvaliables={usersAvaliables}
+          setoresAvaliables={setoresAvaliables}
         />,
       );
     }

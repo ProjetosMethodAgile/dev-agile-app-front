@@ -25,8 +25,12 @@ export default function SetorList({ search = "", ...props }: SetorListProps) {
     getSetores();
   }, []);
 
-  const openModal = () => {
-    openGlobalModal(<ModalEditSetor closeModal={closeGlobalModal} />);
+  const openModal = (e: React.MouseEvent<HTMLButtonElement>) => {
+    const currentbtn = e.currentTarget.value;
+    const dataSetor = setores.filter((setor) => setor.id === currentbtn);
+    openGlobalModal(
+      <ModalEditSetor setor={dataSetor[0]} closeModal={closeGlobalModal} />,
+    );
   };
 
   const filteredSetores = search
@@ -50,10 +54,13 @@ export default function SetorList({ search = "", ...props }: SetorListProps) {
               key={setor.nome}
             >
               <li className="min-w-50 text-center">{setor.nome}</li>
-              <li className="min-w-50 text-center">À configurar</li>
+              <li className="min-w-50 text-center">
+                {setor.Atendentes.length}
+              </li>
               <li className="flex min-w-50 justify-center gap-1">
                 <button
                   onClick={openModal}
+                  value={setor.id}
                   className="bg-primary-100 cursor-pointer rounded-xl p-2 text-white hover:bg-blue-600 active:scale-95"
                 >
                   <IconEdit />

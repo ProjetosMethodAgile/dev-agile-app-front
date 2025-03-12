@@ -1,5 +1,5 @@
-export const API_URL = "https://devagile.com.br/api";
-// export const API_URL = "http://localhost:3001/api";
+// export const API_URL = "https://devagile.com.br/api";
+export const API_URL = "http://localhost:3001/api";
 
 export function GET_USER_ALL() {
   return {
@@ -48,6 +48,12 @@ export function GET_SETOR_HELPDESK_BY_EMPRESA_ID(id: string) {
 export function POST_SETOR_HELPDESK() {
   return {
     url: API_URL + "/helpdesk/setores",
+  };
+}
+
+export function POST_ATENDENTE_HELPDESK() {
+  return {
+    url: API_URL + "/helpdesk/atendentes/",
   };
 }
 

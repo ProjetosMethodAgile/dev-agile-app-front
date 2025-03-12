@@ -13,7 +13,7 @@ export default async function ProtectedEmpresaLayout({
   params: Promise<{ empresaTag: string }>;
 }) {
   const { empresaTag } = await params;
-  // Valida a sessão e obtém os dados do usuário (incluindo o token se necessário)
+  // Valida a sessão e obtém os dados do usuário
   const { user } = await validateCompanySession(empresaTag);
   // Obtém as permissões completas para o usuário logado
   const permissions = await getUserPermissions(user.usuario.id, empresaTag);

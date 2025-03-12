@@ -21,7 +21,7 @@ export default async function RootLayout({
   return (
     <UserContextProvider user={user}>
       <html lang="pt-BR">
-        <body className="dark:bg-primary-900 relative bg-blue-100 text-black dark:text-white transition-colors">
+        <body className="dark:bg-primary-900 relative bg-blue-100 text-black transition-colors dark:text-white">
           <BlurCircle className="-bottom-24 -left-24" />
           <BlurCircle className="-top-24 -right-24" />
           <ToggleTheme />
@@ -31,3 +31,4 @@ export default async function RootLayout({
     </UserContextProvider>
   );
 }
+("sasdasd");

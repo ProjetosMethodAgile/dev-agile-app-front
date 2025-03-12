@@ -7,6 +7,7 @@ import iconsMap from "@/utils/iconsMap";
 
 export default async function GerenciarUsuariosPage() {
   await validateScreenAccess("Configurar Help Desk");
+
   return (
     <div className="p-5">
       <ScreenTitle

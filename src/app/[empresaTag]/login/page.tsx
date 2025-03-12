@@ -19,7 +19,7 @@ export default async function EmpresaLoginPage({
   const empresa = await getEmpresaByTag(empresaTag);
 
   if (!empresa.ok || !empresa.data) {
-    redirect("/asd");
+    redirect("/404");
   }
   const validaEmp = empresa.data.id;
   const statusEmp = await VALIDA_EMPRESA_POR_ID(validaEmp);
