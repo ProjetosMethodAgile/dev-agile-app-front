@@ -8,8 +8,8 @@ export default async function EmpresaHomePage() {
   return (
     <main className="p-6">
       <h1>Tela Home</h1>
-
       <NavComponent />
+
     </main>
   );
 }
