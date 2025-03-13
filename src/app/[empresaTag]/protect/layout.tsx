@@ -21,11 +21,11 @@ export default async function ProtectedEmpresaLayout({
   return (
     <UserContextProvider user={user} permissions={permissions}>
       <GlobalContextProvider>
-        <div className="flex h-dvh">
+        <div className="flex h-dvh overflow-hidden">
           <header className="animate-move-right-to-left">
             <NavigationMenu />
           </header>
-          {children}
+          <div className="h-[100vh] w-[100vw] overflow-auto">{children}</div>
         </div>
       </GlobalContextProvider>
     </UserContextProvider>

@@ -33,7 +33,7 @@ export default function AtendenteList({
     console.log(atendentes);
   }, [atendentes]);
   const openModal = () => {
-    openGlobalModal(<ModalEditSetor closeModal={closeGlobalModal} />);
+    // openGlobalModal(<ModalEditSetor closeModal={closeGlobalModal} />);
   };
 
   const filteredAtendentes = search
@@ -59,7 +59,9 @@ export default function AtendenteList({
               key={atendente.UsuarioAtendente.nome}
             >
               <li className="min-w-50 text-center">
-                {atendente.UsuarioAtendente.nome}
+                {atendente.UsuarioAtendente.nome?.length >= 21
+                  ? atendente.UsuarioAtendente.nome.slice(0, 20) + "..."
+                  : atendente.UsuarioAtendente.nome}
               </li>
               <li className="min-w-50 text-center">
                 {atendente.Setores.length}

@@ -14,12 +14,12 @@ export default async function GerenciarUsuariosPage() {
         title="Gerenciar - Help Desk"
         icon={iconsMap["configurar-help-desk"]}
       />
-      <div className="mirror-container flex flex-col p-5 backdrop-blur-2xl md:p-10">
-        <div className="">
+      <div className="mirror-container flex flex-wrap gap-20 p-5 md:p-10">
+        <div className="dark:border-primary-600/70 border-primary-300 rounded-2xl border-2 p-8">
           <SectionTitle title="Setores" className="mb-5 text-center" />
           <SetorContainer />
         </div>
-        <div>
+        <div className="dark:border-primary-600/70 border-primary-300 rounded-2xl border-2 p-8">
           <SectionTitle title="Atendentes" className="mb-5 text-center" />
           <AtendenteContainer />
         </div>

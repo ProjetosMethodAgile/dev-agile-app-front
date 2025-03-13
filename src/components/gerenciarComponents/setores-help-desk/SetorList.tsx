@@ -38,7 +38,7 @@ export default function SetorList({ search = "", ...props }: SetorListProps) {
     : setores;
 
   return (
-    <div {...props} className="h-80 overflow-y-auto">
+    <div {...props} className="h-80 overflow-x-hidden overflow-y-auto">
       <ul className="dark:bg-primary-600 bg-primary-500 sticky top-0 flex rounded-md text-white">
         <li className="min-w-50 text-center">Nome</li>
         <li className="min-w-50 text-center">Qtde. Func</li>
@@ -53,11 +53,15 @@ export default function SetorList({ search = "", ...props }: SetorListProps) {
               className="dark:border-primary-600/70 border-primary-300 hover:bg-primary-200/50 my-1 flex h-16 items-center rounded-md border p-2 transition-all"
               key={setor.nome}
             >
-              <li className="min-w-50 text-center">{setor.nome}</li>
+              <li className="min-w-50 text-center">
+                {setor.nome?.length >= 21
+                  ? setor.nome.slice(0, 20) + "..."
+                  : setor.nome}
+              </li>
               <li className="min-w-50 text-center">
                 {setor.Atendentes.length}
               </li>
-              <li className="flex min-w-50 justify-center gap-1">
+              <li className="flex flex-1 justify-center gap-2">
                 <button
                   onClick={openModal}
                   value={setor.id}
