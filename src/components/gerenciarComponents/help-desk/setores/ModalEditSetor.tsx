@@ -1,11 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Form } from "@/components/form";
-import { SetorHelpDesk } from "@/types/api/apiTypes";
+import { KanbanColumn, SetorHelpDesk } from "@/types/api/apiTypes";
 import iconsMap from "@/utils/iconsMap";
-import KanbanColumn from "@/components/HelpDesk/KanbanColumn";
-
+import KanbanColumnGerenciar from "../kanban-gerenciar-sistema/KanbanColumnGerenciar";
+import KanbanCardGerenciar from "../kanban-gerenciar-sistema/kanbanCardGerenciar";
+import getKanbanColunaBySetorId from "@/actions/getKanbanColunaBySetorId";
 type ModalEditSetorProps = {
   closeModal: () => void;
   setor: SetorHelpDesk;
@@ -16,6 +17,58 @@ function Tab1Content({ setorProps }: { setorProps: SetorHelpDesk }) {
   const IconDelete = iconsMap["delete"];
   const IconEdit = iconsMap["editBtn"];
   const AddSetorBtn = iconsMap["add"];
+
+  const [columns, setColumns] = useState<KanbanColumn[]>([]);
+  const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
+  const [isEditing, setIsEditing] = useState(false);
+
+  const handleDragStart = (
+    e: React.DragEvent<HTMLDivElement>,
+    index: number,
+  ) => {
+    setDraggedIndex(index);
+    e.currentTarget.style.opacity = "0.5";
+  };
+
+  const handleDragOver = (
+    e: React.DragEvent<HTMLDivElement>,
+    index: number,
+  ) => {
+    e.preventDefault();
+  };
+
+  const handleDrop = (
+    e: React.DragEvent<HTMLDivElement>,
+    dropIndex: number,
+  ) => {
+    e.preventDefault();
+    if (draggedIndex === null) return;
+    const updatedColumns = [...columns];
+    const draggedItem = updatedColumns[draggedIndex];
+    updatedColumns.splice(draggedIndex, 1);
+    updatedColumns.splice(dropIndex, 0, draggedItem);
+    setColumns(updatedColumns);
+    setDraggedIndex(null);
+  };
+
+  const handleDragEnd = (e: React.DragEvent<HTMLDivElement>) => {
+    e.currentTarget.style.opacity = "1";
+  };
+
+  async function editaOrdemCols() {}
+
+  useEffect(() => {
+    async function getColumnsSetor() {
+      const response = await getKanbanColunaBySetorId(setorProps.id);
+      // Ordena as colunas pela propriedade "posicao" (convertendo para número)
+      const sortedColumns = response.columns.sort(
+        (a: KanbanColumn, b: KanbanColumn) =>
+          parseInt(a.posicao) - parseInt(b.posicao),
+      );
+      setColumns(sortedColumns);
+    }
+    getColumnsSetor();
+  }, [setorProps.id]);
 
   return (
     <div className="animate-move-left-to-right min-h-90 min-w-130">
@@ -30,7 +83,14 @@ function Tab1Content({ setorProps }: { setorProps: SetorHelpDesk }) {
             <div className="cursor-pointer rounded-xl bg-red-500 p-2 text-white hover:bg-red-700 active:scale-95">
               <IconDelete />
             </div>
-            <div className="bg-primary-100 cursor-pointer rounded-xl p-2 text-white hover:bg-blue-600 active:scale-95">
+            <div
+              onClick={() => {
+                if (!isEditing) setIsEditing(true);
+              }}
+              className={`cursor-pointer rounded-xl p-2 text-white hover:bg-blue-600 active:scale-95 ${
+                isEditing ? "bg-blue-600" : "bg-primary-100"
+              }`}
+            >
               <IconEdit />
             </div>
             <div className="cursor-pointer rounded-xl bg-green-500 p-2 text-white hover:bg-green-600 active:scale-95">
@@ -38,17 +98,47 @@ function Tab1Content({ setorProps }: { setorProps: SetorHelpDesk }) {
             </div>
           </div>
         </div>
-        <div className="bg-primary-150 flex max-w-130 overflow-x-auto">
-          <KanbanColumn title="em andamento">
-            <div></div>
-          </KanbanColumn>
-          <KanbanColumn title="em andamento">
-            <div></div>
-          </KanbanColumn>
-          <KanbanColumn title="em andamento">
-            <div></div>
-          </KanbanColumn>
+        <div className="bg-primary-150 flex max-w-130 overflow-x-auto rounded-[10px] p-5">
+          <div className="flex gap-1">
+            {columns && columns.length ? (
+              columns.map((col, index) => (
+                <div
+                  key={col.id}
+                  draggable={isEditing}
+                  onDragStart={
+                    isEditing ? (e) => handleDragStart(e, index) : undefined
+                  }
+                  onDragOver={
+                    isEditing ? (e) => handleDragOver(e, index) : undefined
+                  }
+                  onDrop={isEditing ? (e) => handleDrop(e, index) : undefined}
+                  onDragEnd={isEditing ? handleDragEnd : undefined}
+                >
+                  <KanbanColumnGerenciar title={col.nome} className="">
+                    <KanbanCardGerenciar titleCard="card" />
+                    <KanbanCardGerenciar titleCard="card" />
+                  </KanbanColumnGerenciar>
+                </div>
+              ))
+            ) : (
+              <div className="flex-1">
+                <h1 className="text-center text-2xl">
+                  Sem colunas cadastradas no setor {setorProps.nome}
+                </h1>
+              </div>
+            )}
+          </div>
         </div>
+        {isEditing && (
+          <div className="mt-4 flex justify-end">
+            <button
+              onClick={() => setIsEditing(false)}
+              className="cursor-pointer rounded-xl bg-green-500 p-2 text-white hover:bg-green-600 active:scale-95"
+            >
+              Confirmar Edição
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );
@@ -100,7 +190,10 @@ export function ModalEditSetor({ closeModal, setor }: ModalEditSetorProps) {
   const Voltar = iconsMap["CircleX"];
 
   return (
-    <Form.Root className="flex max-h-[80vh] flex-col overflow-hidden">
+    <Form.Root
+      onSubmit={(e) => e.preventDefault()}
+      className="flex max-h-[80vh] flex-col overflow-hidden"
+    >
       <Voltar
         className="size-10 cursor-pointer self-end active:scale-95"
         aria-label="Fechar Modal"

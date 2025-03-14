@@ -1,5 +1,5 @@
 // ChatController.ts
-import GET_KANBAN_COLUNA_POR_SETOR_ID from "@/actions/getKanbanColunaBySetorId";
+import getKanbanColunaBySetorId from "@/actions/getKanbanColunaBySetorId";
 import getMotivoSetor from "@/actions/getMotivoSetor";
 import { MotivoHelpDesk } from "@/types/api/apiTypes";
 import React from "react";
@@ -113,7 +113,7 @@ export default class ChatController {
   }
 
   async buscaColunaKanbam(setor_id: string) {
-    const response = await GET_KANBAN_COLUNA_POR_SETOR_ID(setor_id);
+    const response = await getKanbanColunaBySetorId(setor_id);
     const primeiraColuna = response.columns[0];
     return primeiraColuna;
   }

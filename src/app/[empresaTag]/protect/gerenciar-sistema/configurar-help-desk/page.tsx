@@ -1,6 +1,6 @@
 import { validateScreenAccess } from "@/actions/validateScreenAccess";
-import AtendenteContainer from "@/components/gerenciarComponents/setores-help-desk/AtendenteContainer";
-import SetorContainer from "@/components/gerenciarComponents/setores-help-desk/SetorContainer";
+import AtendenteContainer from "@/components/gerenciarComponents/help-desk/atendentes/AtendenteContainer";
+import SetorContainer from "@/components/gerenciarComponents/help-desk/setores/SetorContainer";
 import ScreenTitle from "@/components/titles/ScreenTitle";
 import SectionTitle from "@/components/titles/SectionTitle";
 import iconsMap from "@/utils/iconsMap";

@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, startTransition } from "react";
 import { Form } from "@/components/form";
 import iconsMap from "@/utils/iconsMap";
 import SectionTitle from "@/components/titles/SectionTitle";
@@ -22,7 +22,7 @@ type usuariosResponse = {
 
 type ModalCadAtendenteProps = {
   state: stateProps | void;
-  formAction: (payload: FormData) => void;
+  formAction: (payload: FormData) => Promise<void>;
   empresaTag: string;
   closeModal: () => void;
   usersAvaliables: usuariosResponse | undefined;
@@ -81,8 +81,17 @@ export function ModalCadAtendente({
     setAvailableSetores((prev) => [...prev, setorRemoved]);
   }
 
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const formData = new FormData(event.currentTarget);
+    // Envolva a chamada da action em startTransition para garantir o contexto correto
+    startTransition(() => {
+      formAction(formData);
+    });
+  };
+
   return (
-    <Form.Root action={formAction} className="">
+    <Form.Root action={formAction} onSubmit={handleSubmit} className="">
       <Voltar
         className="size-10 cursor-pointer active:scale-95"
         aria-label="Fechar Modal"
@@ -106,6 +115,7 @@ export function ModalCadAtendente({
         options={availableSetores}
         onChange={handleAddSetorList}
         defaultOptionText={"Escolha os setores"}
+        resetAfterSelect={true}
       />
 
       {selectedSetores.length ? (
