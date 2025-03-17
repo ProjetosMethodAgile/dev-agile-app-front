@@ -7,6 +7,9 @@ import iconsMap from "@/utils/iconsMap";
 import KanbanColumnGerenciar from "../kanban-gerenciar-sistema/KanbanColumnGerenciar";
 import KanbanCardGerenciar from "../kanban-gerenciar-sistema/kanbanCardGerenciar";
 import getKanbanColunaBySetorId from "@/actions/getKanbanColunaBySetorId";
+import putOrdemColsHelpDesk from "@/actions/putOrdemColsHelpDesk";
+import { toast } from "react-toastify";
+
 type ModalEditSetorProps = {
   closeModal: () => void;
   setor: SetorHelpDesk;
@@ -55,12 +58,37 @@ function Tab1Content({ setorProps }: { setorProps: SetorHelpDesk }) {
     e.currentTarget.style.opacity = "1";
   };
 
-  async function editaOrdemCols() {}
+  async function editaOrdemCols(setorId: string, setorList: KanbanColumn[]) {
+    try {
+      const listaFormatada = setorList.map((coluna, index) => ({
+        id: coluna.id,
+        posicao: index,
+      }));
+
+      const resposta = await putOrdemColsHelpDesk(setorId, listaFormatada);
+      console.log("Resposta da atualização:", resposta);
+
+      if (!resposta.ok) {
+        toast.error(
+          "Erro ao atualizar a lista, contate o administrador do sistema.",
+        );
+      } else {
+        const mensagem =
+          typeof resposta.data === "string"
+            ? resposta.data
+            : "Ordem  das colunas atualizada com sucesso!";
+        toast.success(mensagem);
+        setIsEditing(false);
+      }
+    } catch (error) {
+      console.error("Erro na atualização:", error);
+      toast.error("Ocorreu um erro inesperado. Tente novamente.");
+    }
+  }
 
   useEffect(() => {
     async function getColumnsSetor() {
       const response = await getKanbanColunaBySetorId(setorProps.id);
-      // Ordena as colunas pela propriedade "posicao" (convertendo para número)
       const sortedColumns = response.columns.sort(
         (a: KanbanColumn, b: KanbanColumn) =>
           parseInt(a.posicao) - parseInt(b.posicao),
@@ -74,11 +102,11 @@ function Tab1Content({ setorProps }: { setorProps: SetorHelpDesk }) {
     <div className="animate-move-left-to-right min-h-90 min-w-130">
       <div className="mb-2 flex items-center gap-2">
         <Config />
-        <h1 className="text-2xl">configurações do setor - {setorProps.nome}</h1>
+        <h1 className="text-2xl">Configurações do setor - {setorProps.nome}</h1>
       </div>
       <div>
         <div className="mb-3 flex justify-between">
-          <h1 className="text-2xl">colunas do Kanban</h1>
+          <h1 className="text-2xl">Colunas do Kanban</h1>
           <div className="flex gap-2">
             <div className="cursor-pointer rounded-xl bg-red-500 p-2 text-white hover:bg-red-700 active:scale-95">
               <IconDelete />
@@ -100,7 +128,7 @@ function Tab1Content({ setorProps }: { setorProps: SetorHelpDesk }) {
         </div>
         <div className="bg-primary-150 flex max-w-130 overflow-x-auto rounded-[10px] p-5">
           <div className="flex gap-1">
-            {columns && columns.length ? (
+            {columns.length ? (
               columns.map((col, index) => (
                 <div
                   key={col.id}
@@ -114,7 +142,7 @@ function Tab1Content({ setorProps }: { setorProps: SetorHelpDesk }) {
                   onDrop={isEditing ? (e) => handleDrop(e, index) : undefined}
                   onDragEnd={isEditing ? handleDragEnd : undefined}
                 >
-                  <KanbanColumnGerenciar title={col.nome} className="">
+                  <KanbanColumnGerenciar title={col.nome}>
                     <KanbanCardGerenciar titleCard="card" />
                     <KanbanCardGerenciar titleCard="card" />
                   </KanbanColumnGerenciar>
@@ -132,7 +160,7 @@ function Tab1Content({ setorProps }: { setorProps: SetorHelpDesk }) {
         {isEditing && (
           <div className="mt-4 flex justify-end">
             <button
-              onClick={() => setIsEditing(false)}
+              onClick={() => editaOrdemCols(setorProps.id, columns)}
               className="cursor-pointer rounded-xl bg-green-500 p-2 text-white hover:bg-green-600 active:scale-95"
             >
               Confirmar Edição
@@ -152,7 +180,7 @@ function Tab2Content({ setorProps }: { setorProps: SetorHelpDesk }) {
     <div className="animate-move-left-to-right min-h-90 min-w-130">
       <div className="mb-2 flex items-center gap-2">
         <Users />
-        <h1 className="text-2xl">atendentes do setor - {setorProps.nome}</h1>
+        <h1 className="text-2xl">Atendentes do setor - {setorProps.nome}</h1>
       </div>
       {setorProps && (
         <div className="h-80 overflow-y-auto">
@@ -202,21 +230,20 @@ export function ModalEditSetor({ closeModal, setor }: ModalEditSetorProps) {
       <div className="flex gap-5">
         <ul className="mirror-container flex flex-col gap-4 self-start">
           <li
-            className={`${activeTab === "tab1" && "bg-primary-300"} flex cursor-pointer gap-2 rounded-2xl p-2`}
+            className={`${activeTab === "tab1" ? "bg-primary-300" : ""} flex cursor-pointer gap-2 rounded-2xl p-2`}
             onClick={() => setActiveTab("tab1")}
           >
             <Config />
-            config. setor
+            Config. Setor
           </li>
           <li
-            className={`${activeTab === "tab2" && "bg-primary-300"} flex cursor-pointer gap-2 rounded-2xl p-2`}
+            className={`${activeTab === "tab2" ? "bg-primary-300" : ""} flex cursor-pointer gap-2 rounded-2xl p-2`}
             onClick={() => setActiveTab("tab2")}
           >
             <Users />
-            atendentes
+            Atendentes
           </li>
         </ul>
-
         <div className="flex-1">
           {activeTab === "tab1" && <Tab1Content setorProps={setor} />}
           {activeTab === "tab2" && <Tab2Content setorProps={setor} />}

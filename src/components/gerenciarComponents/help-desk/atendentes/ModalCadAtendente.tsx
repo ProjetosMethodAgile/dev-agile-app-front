@@ -22,7 +22,7 @@ type usuariosResponse = {
 
 type ModalCadAtendenteProps = {
   state: stateProps | void;
-  formAction: (payload: FormData) => Promise<void>;
+  formAction: (payload: FormData) => void;
   empresaTag: string;
   closeModal: () => void;
   usersAvaliables: usuariosResponse | undefined;

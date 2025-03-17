@@ -79,3 +79,9 @@ export function GET_KANBAN_COLUNA(setor_id: string) {
     url: API_URL + `/helpdesk/columnsBySetor/${setor_id}`,
   };
 }
+
+export function PUT_ORDEM_KANBAN_COLUNA() {
+  return {
+    url: API_URL + `/helpdesk/columnsBySetor`,
+  };
+}
