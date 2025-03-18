@@ -85,3 +85,12 @@ export function PUT_ORDEM_KANBAN_COLUNA() {
     url: API_URL + `/helpdesk/columnsBySetor`,
   };
 }
+
+export function GET_SETOR_HELPDESK_FOR_USER(
+  usuario_id: string,
+  empresa_id: string,
+) {
+  return {
+    url: API_URL + `/helpdesk/atendente/${usuario_id}/empresa/${empresa_id}`,
+  };
+}
