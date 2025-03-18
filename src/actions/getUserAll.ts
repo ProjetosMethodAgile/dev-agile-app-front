@@ -2,7 +2,7 @@
 
 import { GET_USER_ALL } from "@/functions/api";
 import apiError from "@/functions/api-error";
-import {  UsuariosData } from "@/types/api/apiTypes";
+import { UsuariosData } from "@/types/api/apiTypes";
 import { cookies } from "next/headers";
 
 //Busca todos os usuarios do sistema
@@ -19,7 +19,7 @@ export default async function getUserAll() {
       },
       next: {
         revalidate: 60,
-        tags: ['all-users']
+        tags: ["all-users"],
       },
     });
 

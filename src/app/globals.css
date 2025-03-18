@@ -40,7 +40,7 @@
 }
 
 .mirror-container {
-  @apply animate-move-left-to-right  dark:border-primary-600/70 border-primary-300 flex min-w-100 flex-col rounded-3xl border-2 bg-transparent p-5 backdrop-blur-2xl max-lg:mt-0 max-sm:min-w-full dark:bg-black/20;
+  @apply animate-move-left-to-right dark:border-primary-600/70 border-primary-300 rounded-3xl border-2 bg-transparent p-5 backdrop-blur-2xl max-lg:mt-0 max-sm:min-w-full dark:bg-black/20;
 }
 
 /* Responsivo*/

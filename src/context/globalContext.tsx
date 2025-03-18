@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import Modal from "@/components/modal/Modal";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { fluxo } from "@/components/Chatbot/setores";
+import { fluxo } from "@/components/Chatbot/Fluxo";
 
 type Message = {
   text: string;
@@ -33,10 +33,12 @@ type IGlobalContext = {
   setEtapaAtual: React.Dispatch<React.SetStateAction<number>>;
   setorSelecionado: Setor | null;
   setSetorSelecionado: React.Dispatch<React.SetStateAction<Setor | null>>;
-  messageUser: string;
+  messageUser: string ;
   setMessageUser: React.Dispatch<React.SetStateAction<string>>;
   title: string;
   setTitle: React.Dispatch<React.SetStateAction<string>>;
+  setorHelpDesk: string;
+  SetSetorHelpdesk: React.Dispatch<React.SetStateAction<string>>;
   dataUserChamados: string[];
   setDataUserChamados: React.Dispatch<React.SetStateAction<string[]>>;
   countdown: number | null;
@@ -73,6 +75,7 @@ export function GlobalContextProvider({
   const [title, setTitle] = useState<string>(fluxo[0].title);
   const [card, setCard] = useState<HTMLDivElement | null>(null);
   const [setorSelecionado, setSetorSelecionado] = useState<Setor | null>(null);
+  const [setorHelpDesk, SetSetorHelpdesk] = useState<string>("");
   const [messages, setMessages] = useState<Message[]>([
     {
       text: fluxo[0].pergunta,
@@ -122,7 +125,9 @@ export function GlobalContextProvider({
         openGlobalModal,
         closeGlobalModal,
 
-        motivo, setMotivo
+        motivo, setMotivo,
+        setorHelpDesk, 
+        SetSetorHelpdesk
 
       }}
     >

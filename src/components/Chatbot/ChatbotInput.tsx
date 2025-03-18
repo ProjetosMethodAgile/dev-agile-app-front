@@ -12,15 +12,32 @@ export default function ChatbotInput({
   const { setMessageUser, messageUser, etapaAtual, motivo } = useGlobalContext();
   const handleSendMessage = useHandleSendMessage();
 
-
-  
-  if (etapaAtual === 1 || (etapaAtual === 2)) {
-    if (motivo) {
-      if ( motivo.length > 0) {
-        return null;
+  if (etapaAtual === 1 || (etapaAtual === 2) ) {
+        if (motivo?.length === 0) {
+          return (
+            <div className={twMerge("mt-2", className)} {...props}>
+              <input
+                className="flex w-full py-2 text-xl text-gray-600 outline-0 placeholder:text-xl placeholder:text-gray-600/50 dark:text-gray-100 dark:placeholder:text-gray-600"
+                type="text"
+                value={messageUser}
+                placeholder="Digite sua mensagem"
+                onChange={(e) => setMessageUser(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    handleSendMessage();
+                  }
+                }}
+              />
         
-      }
-    }
+              <Send
+                className="bg-primary-100 mr-5 h-[40px] w-[60px] rounded-2xl p-1"
+                onClick={() => handleSendMessage()}
+              />
+            </div>
+          );
+          
+        }
+        return null;
   }
 
   return (

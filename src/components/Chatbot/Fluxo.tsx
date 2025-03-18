@@ -1,14 +1,4 @@
 
-export const setores = [
-  {
-    nome: "ti",
-    motivo: ["sisplan", "itag", "outros"],
-  },
-  {
-    nome: "Desenvolvimento",
-    motivo: ["mockup", "aprovação", "duvidas"],
-  },
-];
 
 type EtapaFluxo = {
   id: number;
@@ -20,7 +10,7 @@ type EtapaFluxo = {
 
 export const fluxo: EtapaFluxo[] = [
   {
-    id: 0,
+    id: 1,
     title: "Abrir um chamado",
     pergunta: "Qual seu nome?",
     next: (resposta: string) => {
@@ -29,16 +19,16 @@ export const fluxo: EtapaFluxo[] = [
     },
   },
   {
-    id: 1,
+    id: 2,
     title: "Informe o Setor",
-    pergunta: "De qual setor você fala?",
+    pergunta: "Qual setor você quer falar?",
     next: (resposta: string) => {
       void resposta;
       return 2;
     },
   },
   {
-    id: 2,
+    id: 3,
     title: "Informe o Motivo",
     pergunta: "Qual motivo do seu contato?",
     next: (resposta: string) => {
@@ -47,7 +37,7 @@ export const fluxo: EtapaFluxo[] = [
     },
   },
   {
-    id: 3,
+    id: 4,
     title: "Descreva seu chamado",
     pergunta: "Me conta detalhadamente oque deseja?",
     next: (resposta: string) => {
@@ -56,7 +46,7 @@ export const fluxo: EtapaFluxo[] = [
     },
   },
   {
-    id: 4,
+    id: 5,
     title: "Finalizando",
     pergunta: "Estou enviando seu chamado para o time, tudo bem?",
     next: (resposta: string) => {
@@ -65,7 +55,7 @@ export const fluxo: EtapaFluxo[] = [
     },
   },
   {
-    id: 5,
+    id: 6,
     title: "Finalizando",
     pergunta:
       "O time já recebeu seu chamado logo menos alguém entra em contato!",

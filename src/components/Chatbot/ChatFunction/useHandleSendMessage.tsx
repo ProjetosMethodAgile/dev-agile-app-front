@@ -1,10 +1,8 @@
-
+// useHandleSendMessage.ts
 import { useGlobalContext } from "@/context/globalContext";
-import { fluxo, setores } from "../setores";
+import { fluxo } from "../Fluxo";
 import { useEffect, useCallback } from "react";
-import { validateChat } from "./validateMessage";
-
-import getMotivoSetor from "@/actions/getMotivoSetor";
+import ChatController from "@/components/Chatbot/ChatFunction/GerenciaChat_Controller";
 
 type Message = {
   text: string;
@@ -30,10 +28,14 @@ export const useHandleSendMessage = () => {
     setFormDataChamados,
     countdown,
     setCountdown,
-    setMotivo
+    setMotivo,
+    setorHelpDesk,
+    SetSetorHelpdesk,
   } = useGlobalContext();
 
-  // Tratamento de contagem regressiva para recarregar a página
+  const chatController = new ChatController();
+
+  // Contador regressivo (mantido conforme lógica existente)
   useEffect(() => {
     if (countdown === null) return;
     if (countdown > 0) {
@@ -44,7 +46,7 @@ export const useHandleSendMessage = () => {
     }
   }, [countdown, setCountdown]);
 
-  // Função sendMessage estável com useCallback
+  // Função para adicionar mensagens
   const sendMessage = useCallback(
     (newMessage: string, type: "user" | "bot", loading = false) => {
       setMessages((prev: Message[]) => [
@@ -61,122 +63,99 @@ export const useHandleSendMessage = () => {
         },
       ]);
     },
-    [setMessages]
+    [setMessages],
   );
 
-  // Efetua ação quando a etapa é 5
-  useEffect(() => {
-    if (etapaAtual === 5 && countdown === null) {
-      setTimeout(() => {
-        const dadosChamado = {
-          messages,
-          setor: setorSelecionado,
-          title,
-          dataUserChamados,
+  // Função para resetar a interface
+  const resetInterface = () => {
+    setMessages((prev: Message[]) => {
+      const updated = [...prev];
+      const indexLoading = updated.findIndex((msg) => msg.loading);
+      if (indexLoading !== -1) {
+        updated[indexLoading] = {
+          ...updated[indexLoading],
+          text: fluxo[0].pergunta,
+          loading: false,
+          time: new Date().toLocaleTimeString("pt-BR", {
+            hour: "2-digit",
+            minute: "2-digit",
+            second: "2-digit",
+          }),
         };
-        sendMessage("Finalizando...", "bot");
-        setFormDataChamados(dadosChamado);
-        setCountdown(5);
-      }, 3500);
-    }
-  }, [
-    etapaAtual,
-    countdown,
-    messages,
-    setorSelecionado,
-    title,
-    dataUserChamados,
-    sendMessage,
-    setCountdown,
-    setFormDataChamados,
+      }
+      return updated;
+    });
+    setDataUserChamados([]);
+    setEtapaAtual(0);
+    setTitle(fluxo[etapaAtual].title);
+    setSetorSelecionado(null);
+    
+  };
   
-  ]);
+
+  
 
   /**
    * Função principal para tratar o envio de mensagens.
-   * @param text - Texto a ser enviado. Se não fornecido, utiliza o estado messageUser.
-   * @param e - Evento de clique opcional, utilizado para capturar o id do botão.
    */
   const handleSendMessage = async (
     text: string = messageUser,
-    e?: React.MouseEvent<HTMLButtonElement>
+    e?: React.MouseEvent<HTMLButtonElement>,
   ) => {
-    // Se o evento for fornecido, captura e exibe o id do botão clicado
-    if (e) {
-      const setorMotivo = e.currentTarget.id;
-      const response = await getMotivoSetor(setorMotivo);
-      if (Array.isArray(response.data)) {
-        const motivoPorSetor = response.data.map((motivo) => motivo.descricao);
-        setMotivo(motivoPorSetor);
-      }
-      
-   
-     
-    }
-
-    const messageToSend = text;
-    if (!messageToSend.trim()) return;
-
-    // Caso especial: "Descrição" – volta ao início do fluxo
-    if (messageToSend === "Descrição") {
-      sendMessage(messageToSend, "user");
-      setMessageUser("");
-      sendMessage("Escrevendo...", "bot", true);
-
-      setTimeout(() => {
-        setMessages((prev: Message[]) => {
-          const updated = [...prev];
-          const indexLoading = updated.findIndex((msg) => msg.loading);
-          if (indexLoading !== -1) {
-            updated[indexLoading] = {
-              ...updated[indexLoading],
-              text: fluxo[0].pergunta,
-              loading: false,
-              time: new Date().toLocaleTimeString("pt-BR", {
-                hour: "2-digit",
-                minute: "2-digit",
-                second: "2-digit",
-              }),
-            };
-          }
-          return updated;
-        });
-        // Reseta os estados para o início do fluxo
-        setEtapaAtual(0);
-        setTitle(fluxo[0].title);
-        setSetorSelecionado(null);
-      }, 1000);
+    if (etapaAtual === 1 && e) {
+      const setorId = e.currentTarget.id;
+      const setorNome = e.currentTarget.value;
+      await chatController.handleSectorSelection(
+        setorId,
+        setMotivo,
+        setEtapaAtual,
+        SetSetorHelpdesk,
+      );
+      sendMessage(setorNome, "user")
+      sendMessage(fluxo[2].pergunta, "bot")
       return;
     }
 
-    // Validação específica para a etapa 3
+    // Ação de voltar: inicia o countdown de 5 segundos e reseta a interface após esse tempo
+    if (text === "voltar") {
+      await chatController.handleBackAction(
+        sendMessage,
+        setMessageUser,
+        setCountdown,
+        resetInterface,
+      );
+      return;
+    }
+    if (text === "Finalizar") {
+      const returnValue = await chatController.buscaColunaKanbam(setorHelpDesk);
+      const idKanbanInitial = returnValue.id;
+      console.log(idKanbanInitial);
+
+      await chatController.handleFinalize(
+        setCountdown,
+        setDataUserChamados,
+        dataUserChamados,
+        resetInterface,
+      );
+
+      return;
+    }
+
+    
+
     if (etapaAtual === 3) {
-      if (!validateChat(messageToSend)) {
-        const contador = messageToSend.length;
-        sendMessage(
-          `A descrição precisa ter no mínimo 50 caracteres, você só escreveu ${contador} por favor tente novamente.`,
-          "bot"
-        );
+      const validation = chatController.validateMessage(text);
+      if (!validation.valid) {
+        sendMessage(validation.error!, "bot");
         return;
       }
     }
 
-    // Se estivermos na etapa 1, define o setorSelecionado com o objeto completo
-    if (etapaAtual === 1) {
-      const setorObj = setores.find((s) => s.nome === messageToSend);
-      if (setorObj) {
-        setSetorSelecionado(setorObj);
-      }
-    }
+    // Processa e envia a mensagem do usuário
+    setDataUserChamados((prev: string[]) => [...prev, text]);
+    chatController.sendUserMessage(text, sendMessage, setMessageUser);
 
-    // Fluxo normal: armazena a mensagem enviada e atualiza os estados
-    setDataUserChamados((prevData: string[]) => [...prevData, messageToSend]);
-    sendMessage(messageToSend, "user");
-    setMessageUser("");
-
-    const respostaUsuario = messageToSend;
-    const proximaEtapa = fluxo[etapaAtual].next(respostaUsuario);
-
+    const proximaEtapa = fluxo[etapaAtual].next(text);
     sendMessage("Escrevendo...", "bot", true);
 
     setTimeout(() => {
@@ -201,12 +180,19 @@ export const useHandleSendMessage = () => {
         return updated;
       });
 
-      // Atualiza os estados conforme a próxima etapa do fluxo
       if (proximaEtapa !== null) {
         setEtapaAtual(proximaEtapa);
         setTitle(fluxo[proximaEtapa].title);
       } else {
         setTitle("");
+        const dadosChamado = {
+          messages,
+          setor: setorSelecionado,
+          title,
+          dataUserChamados,
+        };
+        setFormDataChamados(dadosChamado);
+        setCountdown(5);
       }
     }, 1000);
   };

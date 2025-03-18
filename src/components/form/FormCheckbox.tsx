@@ -1,5 +1,5 @@
 import { PermissaoCompletaData } from "@/types/api/apiTypes";
-import { ChangeEvent, ElementType, JSX } from "react";
+import { ChangeEvent } from "react";
 
 type FormCheckboxProps = {
   label: string;
@@ -7,7 +7,7 @@ type FormCheckboxProps = {
   checked?: boolean;
   name?: string;
   onChange?: (event: ChangeEvent<HTMLInputElement>) => void;
-  value?: PermissaoCompletaData | any
+  value?: PermissaoCompletaData | any;
 };
 
 export default function FormCheckbox({
@@ -16,10 +16,10 @@ export default function FormCheckbox({
   onChange,
   checked,
   name,
-  value
+  value,
 }: FormCheckboxProps) {
   return (
-    <div className="cursor-pointer flex items-center space-x-2 p-1">
+    <div className="flex cursor-pointer items-center space-x-2 p-1">
       <input
         onChange={onChange}
         checked={checked}

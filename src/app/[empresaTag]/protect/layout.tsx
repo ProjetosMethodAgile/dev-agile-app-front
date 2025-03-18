@@ -3,8 +3,7 @@ import { getUserPermissions } from "@/app/lib/getUserPermissions";
 import { validateCompanySession } from "@/app/lib/validateCompanySession";
 import { UserContextProvider } from "@/context/userContext";
 import { GlobalContextProvider } from "@/context/globalContext";
-import NavigationMenu from "@/components/navigationMenu/NavigationMenu";
-
+import NavigationMenu from "@/components/NavigationMenu/NavigationMenu";
 
 export default async function ProtectedEmpresaLayout({
   children,
@@ -14,7 +13,7 @@ export default async function ProtectedEmpresaLayout({
   params: Promise<{ empresaTag: string }>;
 }) {
   const { empresaTag } = await params;
-  // Valida a sessão e obtém os dados do usuário (incluindo o token se necessário)
+  // Valida a sessão e obtém os dados do usuário
   const { user } = await validateCompanySession(empresaTag);
   // Obtém as permissões completas para o usuário logado
   const permissions = await getUserPermissions(user.usuario.id, empresaTag);
@@ -22,11 +21,11 @@ export default async function ProtectedEmpresaLayout({
   return (
     <UserContextProvider user={user} permissions={permissions}>
       <GlobalContextProvider>
-        <div className="flex h-dvh">
+        <div className="flex h-dvh overflow-hidden">
           <header className="animate-move-right-to-left">
             <NavigationMenu />
           </header>
-          {children}
+          <div className="h-[100vh] w-[100vw] overflow-auto">{children}</div>
         </div>
       </GlobalContextProvider>
     </UserContextProvider>

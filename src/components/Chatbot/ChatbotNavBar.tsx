@@ -6,6 +6,7 @@ import { useGlobalContext } from "@/context/globalContext";
 import { Form } from "../form";
 import { useHandleSendMessage } from "./ChatFunction/useHandleSendMessage";
 import { SetorHelpDesk } from "@/types/api/apiTypes";
+import { fluxo } from "./Fluxo";
 
 type NavBarProps = React.ComponentProps<"nav"> & {
   setores: SetorHelpDesk[];
@@ -16,7 +17,7 @@ export default function ChatbotNavBar({
   className,
   ...props
 }: NavBarProps) {
-  const { etapaAtual, title, motivo } = useGlobalContext();
+  const { etapaAtual, motivo } = useGlobalContext();
   const handleSendMessage = useHandleSendMessage();
 
   if (etapaAtual === 1 || etapaAtual === 2) {
@@ -29,25 +30,26 @@ export default function ChatbotNavBar({
         {...props}
       >
         <h1 className="p-1 text-center text-lg text-[1.1rem] font-semibold text-gray-900 dark:text-gray-100">
-          {title}
+          {fluxo[etapaAtual].title}
         </h1>
         {etapaAtual === 1 && (
-          <div className="flex flex-col gap-5">
+          <div className="flex flex-col gap-5 overflow-y-scroll">
             {setores?.map((setor) => (
               <Form.InputSubmit
                 id={setor.id}
                 key={setor.nome}
                 value={setor.nome}
                 onClick={(e) => handleSendMessage(setor.nome, e)}
-                className="flex h-10 items-center justify-center rounded-[5px] p-2"
+                className="flex h-15 items-center justify-center overflow-hidden rounded-[5px] p-5 text-[15px]"
               >
                 {setor.nome}
               </Form.InputSubmit>
             ))}
           </div>
         )}
+
         {etapaAtual === 2 && (
-          <div className="flex h-full flex-col gap-5">
+          <div className="animate-move-left-to-right flex h-full w-50 flex-col gap-5 overflow-y-scroll p-1">
             {motivo && motivo.length > 0 ? (
               motivo.map((motivoItem: string, index: number) => (
                 <Form.InputSubmit

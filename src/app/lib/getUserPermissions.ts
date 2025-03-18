@@ -1,3 +1,5 @@
+"use server";
+
 // app/lib/getUserPermissions.ts
 import { cookies } from "next/headers";
 import { PermissaoCompletaData } from "@/types/api/apiTypes";
@@ -6,7 +8,7 @@ import logout from "@/actions/logout";
 
 export async function getUserPermissions(
   userId: string,
-  empresaTag: string
+  empresaTag: string,
 ): Promise<PermissaoCompletaData[] | null> {
   try {
     const token = (await cookies()).get("token")?.value;
@@ -34,7 +36,6 @@ export async function getUserPermissions(
     return data.permissoes;
   } catch (error) {
     console.log(error);
-
     logout(empresaTag);
     return null;
   }

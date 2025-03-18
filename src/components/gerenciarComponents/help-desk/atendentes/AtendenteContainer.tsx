@@ -1,32 +1,43 @@
 "use client";
 import { Form } from "@/components/form";
 import iconsMap from "@/utils/iconsMap";
-import { twMerge } from "tailwind-merge";
-import { Setor } from ".";
 import { useGlobalContext } from "@/context/globalContext";
 import { useEffect, useState } from "react";
-import { postSetorHelpDesk } from "@/actions/postSetorHelpDesk";
 import { redirect, useParams } from "next/navigation";
 import { useActionState } from "react";
 import { toast } from "react-toastify";
-import { ModalCadSetor } from "./ModalCadSetor"; // importe o componente criado
+import AtendenteList from "./AtendenteList";
+import { ModalCadAtendente } from "./ModalCadAtendente";
+import getUsuariosNaoAtendenteHelpDesk from "@/actions/getUsuariosNaoAtendenteHelpDesk";
+import {
+  SetorHelpDesk,
+  usuariosDisponiveisHelpDesk,
+} from "@/types/api/apiTypes";
+import getSetoresHelpDesk from "@/actions/getSetoresHelpDesk";
+import { postAtendenteHelpDesk } from "@/actions/postAtendenteHelpDesk";
 
-export type SetorContainerProps = React.ComponentProps<"div">;
+export type AtendenteContainerProps = React.ComponentProps<"div">;
 
-export default function SetorContainer({
-  className,
+type usuariosResponse = {
+  usuarios: usuariosDisponiveisHelpDesk[];
+  error: string;
+};
+
+export default function AtendenteContainer({
   ...props
-}: SetorContainerProps) {
+}: AtendenteContainerProps) {
   const [search, setSearch] = useState("");
   const AddSetorBtn = iconsMap["add"];
 
   const { openGlobalModal, closeGlobalModal } = useGlobalContext();
   const { empresaTag } = useParams();
-  const [state, formAction] = useActionState(postSetorHelpDesk, {
+  const [state, formAction] = useActionState(postAtendenteHelpDesk, {
     errors: [],
     msg_success: "",
     success: false,
   });
+  const [usersAvaliables, setUsersAvaliables] = useState<usuariosResponse>();
+  const [setoresAvaliables, setSetoresAvaliables] = useState<SetorHelpDesk[]>();
 
   useEffect(() => {
     if (state?.errors.length) {
@@ -39,26 +50,47 @@ export default function SetorContainer({
       closeGlobalModal();
       redirect("/devagile/protect/gerenciar-sistema/configurar-help-desk");
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state]);
+
+  useEffect(() => {
+    async function GetUsersAvaliables() {
+      const usuarios = await getUsuariosNaoAtendenteHelpDesk();
+      if (usuarios.data) {
+        setUsersAvaliables(usuarios.data);
+      }
+    }
+    GetUsersAvaliables();
+
+    async function getSetoresAvaliables() {
+      const setores = await getSetoresHelpDesk();
+      if (setores.ok && setores.data) {
+        setSetoresAvaliables(setores.data);
+      }
+    }
+    getSetoresAvaliables();
+  }, []);
 
   const openModal = () => {
     if (typeof empresaTag === "string") {
       openGlobalModal(
-        <ModalCadSetor
+        <ModalCadAtendente
           state={state}
           formAction={formAction}
           empresaTag={empresaTag}
           closeModal={closeGlobalModal}
+          usersAvaliables={usersAvaliables}
+          setoresAvaliables={setoresAvaliables}
         />,
       );
     }
   };
 
   return (
-    <div className={twMerge("w-full", className)} {...props}>
-      <div className="mb-4 flex flex-col items-center gap-2 sm:flex-row">
+    <div {...props}>
+      <div className="mb-4 flex flex-wrap items-center gap-2">
         <Form.InputText
-          inputId="search"
+          id="search"
           name="search"
           icon={iconsMap["search"]}
           placeholder="Busque o setor"
@@ -77,9 +109,7 @@ export default function SetorContainer({
           <AddSetorBtn />
         </button>
       </div>
-      <Setor.Root>
-        <Setor.List search={search} />
-      </Setor.Root>
+      <AtendenteList search={search} />
     </div>
   );
 }
