@@ -50,6 +50,7 @@ export default function AtendenteContainer({
       closeGlobalModal();
       redirect("/devagile/protect/gerenciar-sistema/configurar-help-desk");
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state]);
 
   useEffect(() => {

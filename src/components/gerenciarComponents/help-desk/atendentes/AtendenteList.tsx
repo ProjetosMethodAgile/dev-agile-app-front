@@ -1,10 +1,7 @@
 "use client";
 
-import { useGlobalContext } from "@/context/globalContext";
-
 import iconsMap from "@/utils/iconsMap";
 import { useEffect, useState } from "react";
-import { ModalEditSetor } from "../setores/ModalEditSetor";
 import getAtendentesHelpDesk from "@/actions/getAtendentesHelpDesk";
 import { AtendentesHelpDesk } from "@/types/api/apiTypes";
 
@@ -17,7 +14,7 @@ export default function AtendenteList({
   ...props
 }: AtendenteListProps) {
   const [atendentes, setAtendentes] = useState<AtendentesHelpDesk[]>([]);
-  const { openGlobalModal, closeGlobalModal } = useGlobalContext();
+  // const { openGlobalModal, closeGlobalModal } = useGlobalContext();
 
   useEffect(() => {
     async function getAtendentes() {

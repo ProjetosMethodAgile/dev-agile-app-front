@@ -33,10 +33,7 @@ function Tab1Content({ setorProps }: { setorProps: SetorHelpDesk }) {
     e.currentTarget.style.opacity = "0.5";
   };
 
-  const handleDragOver = (
-    e: React.DragEvent<HTMLDivElement>,
-    index: number,
-  ) => {
+  const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
   };
 
@@ -136,9 +133,7 @@ function Tab1Content({ setorProps }: { setorProps: SetorHelpDesk }) {
                   onDragStart={
                     isEditing ? (e) => handleDragStart(e, index) : undefined
                   }
-                  onDragOver={
-                    isEditing ? (e) => handleDragOver(e, index) : undefined
-                  }
+                  onDragOver={isEditing ? (e) => handleDragOver(e) : undefined}
                   onDrop={isEditing ? (e) => handleDrop(e, index) : undefined}
                   onDragEnd={isEditing ? handleDragEnd : undefined}
                 >

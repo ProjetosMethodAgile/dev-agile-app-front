@@ -40,13 +40,6 @@ export function ModalCadAtendente({
   const Add = iconsMap["add"];
   const IconDelete = iconsMap["delete"];
 
-  // Opções de usuário (para o select, mas sem enviar seu valor direto)
-  const UserOptions =
-    usersAvaliables?.usuarios.map((user) => ({
-      id: user.usuario_id,
-      nome: user.usuario.nome,
-    })) || [];
-
   // Estados para setores disponíveis e selecionados
   const [availableSetores, setAvailableSetores] = useState(
     setoresAvaliables?.map((setor) => ({
