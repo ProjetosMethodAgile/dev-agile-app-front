@@ -5,6 +5,7 @@ import React from "react";
 
 export type KanbanColumnProps = React.ComponentProps<"div"> & {
   title: string;
+  children: React.ReactNode;
 };
 
 export default function KanbanColumn({
