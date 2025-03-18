@@ -88,6 +88,7 @@ export function GET_USER_ID(userId: string) {
     url: API_URL + `/usuario/${userId}`,
   };
 }
+
 export function GET_ALL_ATENDENTE_HELPDESK_BY_EMPRESA_ID(id: string) {
   return {
     url: API_URL + `/helpdesk/atendentes/empresa/${id}`,
@@ -108,5 +109,14 @@ export function GET_KANBAN_COLUNA(setor_id: string) {
 export function PUT_ORDEM_KANBAN_COLUNA() {
   return {
     url: API_URL + `/helpdesk/columnsBySetor`,
+  };
+}
+
+export function GET_SETOR_HELPDESK_FOR_USER(
+  usuario_id: string,
+  empresa_id: string,
+) {
+  return {
+    url: API_URL + `/helpdesk/atendente/${usuario_id}/empresa/${empresa_id}`,
   };
 }

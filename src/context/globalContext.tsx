@@ -126,7 +126,6 @@ export function GlobalContextProvider({
 
         openGlobalModal,
         closeGlobalModal,
-
         motivo,
         setMotivo,
         setorHelpDesk,

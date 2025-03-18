@@ -215,7 +215,7 @@ export function ModalEditSetor({ closeModal, setor }: ModalEditSetorProps) {
   return (
     <Form.Root
       onSubmit={(e) => e.preventDefault()}
-      className="flex max-h-[80vh] flex-col overflow-hidden"
+      className="flex max-h-[95vh] flex-col overflow-hidden overflow-y-auto"
     >
       <Voltar
         className="size-10 cursor-pointer self-end active:scale-95"
