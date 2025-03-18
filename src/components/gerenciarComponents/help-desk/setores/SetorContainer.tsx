@@ -35,6 +35,7 @@ export default function SetorContainer({ ...props }: SetorContainerProps) {
       closeGlobalModal();
       redirect("/devagile/protect/gerenciar-sistema/configurar-help-desk");
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state]);
 
   const openModal = () => {

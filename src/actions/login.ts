@@ -38,6 +38,7 @@ export async function setLogin(formData: FormData): Promise<void> {
       (await cookies()).set("token", login.token, {
         httpOnly: true,
         secure: true,
+        maxAge: 60 * 60 * 24 * 7, // 7 dias
       });
 
       redirect(`/${empresaTag}/protect/home`);

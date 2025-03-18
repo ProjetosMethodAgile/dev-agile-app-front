@@ -161,6 +161,15 @@ export type SetorHelpDesk = {
   id: string;
   empresa_id: string;
   nome: string;
+  createdAt: string;
+  updatedAt: string;
+  Atendentes: {
+    id: string;
+    empresa_id: string;
+    UsuarioAtendente: {
+      nome: string;
+    };
+  }[];
 };
 
 export type MotivoHelpDesk = {

@@ -10,14 +10,18 @@ import {
   Trash2,
   Plus,
   CircleChevronLeft,
+  CircleX,
 } from "lucide-react";
 
 // Mapeia o slug da tela com o ícone correspondente.
 const iconsMap: { [key: string]: React.ElementType } = {
   home: House,
   "gerenciar-sistema": Settings,
+  settings: Settings,
+  CircleX: CircleX,
   "help-desk": Handshake,
   "usuarios-do-sistema": User,
+  users: User,
   "parametros-do-sistema": MonitorCog,
   search: Search,
   sendMessage: Send,

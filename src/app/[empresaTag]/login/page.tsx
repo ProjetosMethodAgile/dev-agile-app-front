@@ -19,7 +19,7 @@ export default async function EmpresaLoginPage({
   const empresa = await getEmpresaByTag(empresaTag);
 
   if (!empresa.ok || !empresa.data) {
-    redirect("/asd");
+    redirect("/404");
   }
   const validaEmp = empresa.data.id;
   const statusEmp = await VALIDA_EMPRESA_POR_ID(validaEmp);
@@ -43,7 +43,10 @@ export default async function EmpresaLoginPage({
         </p>
         <ToggleTheme />
       </div>
-      <Form.Root action={setLogin} className="gap-8">
+      <Form.Root
+        action={setLogin}
+        className="mirror-container flex min-h-80 min-w-100 flex-col gap-5 p-5"
+      >
         <input type="hidden" name="empresaTag" value={empresa.data.tag} />
         <input type="hidden" name="empresaId" value={empresa.data.id} />
 
@@ -73,7 +76,7 @@ export default async function EmpresaLoginPage({
             name="action"
             value="openTicket"
             type="submit"
-            className="text-primary-50 dark:text-primary-50 border-primary-300 dark:border-primary-50 border-1 bg-transparent dark:text-gray-300 dark:hover:border-transparent"
+            className="text-primary-50 border-primary-300 dark:border-primary-50 border-1 bg-transparent dark:text-gray-300 dark:hover:border-transparent"
           >
             Abrir chamado
           </Form.InputSubmit>

@@ -1,40 +1,79 @@
-type FormInputSelectTypes = {
-  options: {
-    id: string;
-    nome: string;
-  }[];
-  label: string;
+"use client";
+import { useEffect, useState } from "react";
+
+export type FormInputSelectTypes = {
+  options: { id: string; nome: string }[];
+  label?: string;
   id?: string;
+  name?: string;
+  // Valor controlado (opcional)
+  value?: string;
+  // Callback de alteração
+  onChange?: (selectedId: string) => void;
+  defaultOptionText?: string; // Texto para o placeholder
+  resetAfterSelect?: boolean; // Se true, reseta o select para o valor default após seleção
 };
 
 export default function FormInputSelect({
   options,
   label,
   id,
+  name,
+  value: propValue,
+  onChange,
+  defaultOptionText = "Selecione as opções da lista",
+  resetAfterSelect = false,
 }: FormInputSelectTypes) {
+  // Estado interno sincronizado com propValue
+  const [value, setValue] = useState(propValue || "");
+
+  useEffect(() => {
+    setValue(propValue || "");
+  }, [propValue]);
+
+  const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const selectedValue = e.target.value;
+    if (onChange) {
+      onChange(selectedValue);
+    }
+    // Se resetAfterSelect estiver true, reseta para o placeholder; caso contrário, mantém o valor selecionado
+    if (resetAfterSelect) {
+      setValue("");
+    } else {
+      setValue(selectedValue);
+    }
+  };
+
   return (
     <div>
       {label && (
-        <label htmlFor={"teste"} className="text-gray-500 dark:text-gray-400">
+        <label
+          htmlFor={id || "teste"}
+          className="text-gray-500 dark:text-gray-400"
+        >
           {label}
         </label>
       )}
       <select
-        className="dark:bg-primary-150 mt-2 flex w-full rounded-xl px-3 py-4 text-gray-600 outline-0 placeholder:text-gray-600/50 dark:text-gray-100 dark:placeholder:text-gray-500"
-        name={id}
+        name={name}
         id={id}
+        onChange={handleChange}
+        value={value}
+        className="focus-within:border-primary-600 hover:border-primary-600 shadow-primary-300/40 flex w-full cursor-pointer items-center justify-center gap-2 rounded-[12px] border-2 border-transparent bg-gray-400/30 py-2 pl-4 text-xl outline-0 transition-all outline-none placeholder:text-xl placeholder:text-gray-600/50 focus-within:bg-gray-400/30 focus-within:shadow-[0px_0px_2px_2px] hover:bg-gray-400/30 hover:shadow-[0px_0px_2px_2px] dark:bg-gray-400/20 dark:text-gray-100 dark:placeholder:text-gray-500"
       >
-        {options.map((option) => {
-          return (
-            <option
-              className="dark:text-primary-50"
-              key={option.id}
-              value={option.id}
-            >
-              {option.nome}
-            </option>
-          );
-        })}
+        {/* Placeholder que força a escolha */}
+        <option value="" disabled>
+          {defaultOptionText}
+        </option>
+        {options.map((option) => (
+          <option
+            key={option.id}
+            value={option.id}
+            className="dark:text-primary-50"
+          >
+            {option.nome}
+          </option>
+        ))}
       </select>
     </div>
   );

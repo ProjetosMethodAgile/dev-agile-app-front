@@ -51,6 +51,12 @@ export function POST_SETOR_HELPDESK() {
   };
 }
 
+export function POST_ATENDENTE_HELPDESK() {
+  return {
+    url: API_URL + "/helpdesk/atendentes/",
+  };
+}
+
 export function GET_MOTIVO(setorId: string) {
   return {
     url: API_URL + `/kanban/motivos/setor/${setorId}`,
@@ -71,5 +77,11 @@ export function GET_USUARIOS_NAO_ATENDENTE_HELPDESK(id: string) {
 export function GET_KANBAN_COLUNA(setor_id: string) {
   return {
     url: API_URL + `/helpdesk/columnsBySetor/${setor_id}`,
+  };
+}
+
+export function PUT_ORDEM_KANBAN_COLUNA() {
+  return {
+    url: API_URL + `/helpdesk/columnsBySetor`,
   };
 }

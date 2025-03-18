@@ -2,7 +2,7 @@
 import { GET_KANBAN_COLUNA } from "@/functions/api";
 import { GetKanbanColunaResponse } from "@/types/api/apiTypes";
 
-export default async function GET_KANBAN_COLUNA_POR_SETOR_ID(
+export default async function getKanbanColunaBySetorId(
   setor_id: string,
 ): Promise<GetKanbanColunaResponse> {
   // Verifica se o setor_id está definido
@@ -19,6 +19,7 @@ export default async function GET_KANBAN_COLUNA_POR_SETOR_ID(
       method: "GET",
       next: {
         revalidate: 60,
+        tags: ["helpdesk-columns"],
       },
     });
 
@@ -30,8 +31,6 @@ export default async function GET_KANBAN_COLUNA_POR_SETOR_ID(
 
     // Converte a resposta para JSON
     const data = (await response.json()) as GetKanbanColunaResponse;
-    console.log(data);
-
     // Validação para garantir que os dados estão no formato esperado
     if (!data || !Array.isArray(data.columns)) {
       throw new Error(
