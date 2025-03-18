@@ -26,24 +26,21 @@ export async function postUser(
   const senha = formData.get("senha") as string;
   const tipoUsuario = formData.get("tipo_usuario") as string;
   const permissionsCheckbox = formData.getAll("checkbox[]") as string[] | null;
+
+
   const errors: string[] = [];
   const permissions: PermissaoUserData[] = [];
   permissionsCheckbox?.map((permission) => {
-    const { id, acessos, acoes }: PermissaoCompletaData = JSON.parse(permission);
-    const data: PermissaoCompletaData = JSON.parse(permission);
+    const permissionsData: PermissaoCompletaData & any = JSON.parse(permission);
+    const permTeste = JSON.parse(permission);
+    console.log(permTeste)
     const newPermission = {
-      permissao_id: id,
-      acessos: {
-        can_create: true,
-        can_read: true,
-        can_update: true,
-        can_delete: true,
-      },
-      acoes: acoes,
+      permissao_id: permissionsData.subScreen.id,
+      acessos: permissionsData.permissions[permissionsData.subScreen.nome],
+      acoes: [],
     };
     permissions.push(newPermission);
   });
-
 
 
   if (errors.length > 0) {

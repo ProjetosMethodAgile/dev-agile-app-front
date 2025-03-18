@@ -16,6 +16,7 @@ export default async function UsuariosDoSistemaPage({
   if (!ok || !data) return <div>Não há dados para retornar: {error}</div>;
 
   const userColumns: { key: keyof User; label: string }[] = [
+    { key: "id", label: "ID" },
     { key: "nome", label: "Nome" },
     { key: "email", label: "E-mail" },
     { key: "contato", label: "Contato" },

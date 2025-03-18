@@ -7,23 +7,12 @@ export function GET_PERMISSIONS_ALL() {
   };
 }
 
-export function GET_USER_ALL() {
-  return {
-    url: API_URL + `/usuarios`,
-  };
-}
-
 export function GET_ROLES_ALL() {
   return {
     url: API_URL + `/roles`,
   };
 }
 
-export function GET_USER_ID(userId: string) {
-  return {
-    url: API_URL + `/usuario/${userId}`,
-  };
-}
 
 export function POST_LOGIN() {
   return {
@@ -74,5 +63,23 @@ export function GET_MOTIVO(setorId: string) {
 export function POST_USUARIO() {
   return {
     url: API_URL + "/usuario/register",
+  };
+}
+
+export function GET_USER_ALL() {
+  return {
+    url: API_URL + `/usuarios`,
+  };
+}
+
+export function GET_USERS_EMP(empresaId: string) {
+  return {
+    url: API_URL + `/usuarios`,
+  };
+}
+
+export function GET_USER_ID(userId: string) {
+  return {
+    url: API_URL + `/usuario/${userId}`,
   };
 }

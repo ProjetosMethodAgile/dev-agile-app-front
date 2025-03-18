@@ -13,7 +13,7 @@ export default function Table<T extends { id: string | number }>({
 }: TableProps<T>) {
   return (
     <table className="min-w-full">
-      <thead className="dark:text-white">
+      <thead className="dark:text-white text-start">
         <tr>
           {columns.map((col) => (
             <th key={col.key as string}>{col.label}</th>

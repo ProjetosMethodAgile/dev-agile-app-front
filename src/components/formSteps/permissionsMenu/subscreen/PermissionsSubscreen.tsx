@@ -1,7 +1,7 @@
 import { Form } from "@/components/form";
 import { PermissaoCompletaData } from "@/types/api/apiTypes";
 import { on } from "events";
-import { ChevronRight } from "lucide-react";
+import { ArrowBigRightDash, ChevronRight } from "lucide-react";
 import React, { useState } from "react";
 
 type PermissionsSubScreenProps = {
@@ -10,6 +10,16 @@ type PermissionsSubScreenProps = {
 };
 
 type PermissionsKeys = "checked" | "create" | "read" | "update" | "delete";
+
+type PermissionsState = {
+  [key: string]: {
+    checked: boolean;
+    create: boolean;
+    read: boolean;
+    update: boolean;
+    delete: boolean;
+  };
+};
 
 function PermissionsSubscreen({
   subScreen,
@@ -24,28 +34,26 @@ function PermissionsSubscreen({
       delete: false,
     },
   };
-  const [isChecked, setIsChecked] = useState<boolean>(false);
-  const [permissions, setPermissions] = useState(permissoesIniciais);
+
+  const [permissions, setPermissions] = useState<PermissionsState>(permissoesIniciais);
 
   function handleCheckboxChange(permissionType: PermissionsKeys) {
-    setIsChecked(!isChecked);
     setPermissions((prev) => {
       const updated = {
         ...prev,
         [subScreen.nome]: {
           ...prev[subScreen.nome],
-          [permissionType]: !prev[subScreen.nome][permissionType],
+          [permissionType]: !(prev[subScreen.nome]?.[permissionType] ?? false),
         },
       };
       return updated;
     });
   }
 
-  console.log(permissions);
   return (
     <div
       key={subScreen.id}
-      className="group border-primary-600/50 my-2 flex flex-col border-b-1 pb-2 text-lg"
+      className="group text-primary-50 px-6 border-primary-600/50 my-2 flex flex-col border-b-1 pb-2 text-lg"
     >
       <h3 className="mb-1 flex items-center space-x-2 font-medium">
         <Form.Checkbox
@@ -54,10 +62,11 @@ function PermissionsSubscreen({
           label={subScreen.nome}
           id={subScreen.id}
           name="checkbox[]"
+          value={{subScreen, permissions}}
         />
       </h3>
       {permissions[subScreen.nome].checked && (
-        <div className="ml-4 flex space-x-5 text-gray-600 transition-all">
+        <div className="ml-4 flex space-x-5  transition-all">
           {(["create", "read", "update", "delete"] as PermissionsKeys[]).map(
             (perm) => (
               <Form.Checkbox

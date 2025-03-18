@@ -21,16 +21,16 @@ export default function PermissionsScreen({
   function handleCheckScreen(screenId: string, screenName: string) {
     setCurrentSubscreen(
       <SubScreenConfig
-        screenId={screenId}
-        screenName={screenName}
-        subscreens={subscreens}
-      />,
+      screenName={screenName}
+      subscreens={subscreens}
+      screenId={screenId}
+    />
     );
   }
 
   return (
     <div className="border-primary-50/10 flex flex-col gap-3 pb-1 font-semibold *:cursor-pointer">
-      <ScreenConfig screens={screens} handleCheckScreen={handleCheckScreen} />
+      <ScreenConfig screens={screens}  handleCheckScreen={handleCheckScreen}  />
       {currentSubscreen}
     </div>
   );

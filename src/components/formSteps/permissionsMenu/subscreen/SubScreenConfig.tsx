@@ -1,30 +1,46 @@
+import { ChevronDown, ChevronRight, Lock } from "lucide-react";
 import PermissionsSubscreen from "./PermissionsSubscreen";
-import { X } from "lucide-react";
+
 import { PermissaoCompletaData } from "@/types/api/apiTypes";
+import { Form } from "@/components/form";
 import { useState } from "react";
 
-type SubScreenModalConfigProps = {
-  screenName: string;
+type SubScreenModalConfigProps = React.ComponentProps<"div"> & {
   screenId: string;
   subscreens: PermissaoCompletaData[];
+  screenName: string;
 };
 
 export default function SubScreenConfig({
-  screenName,
   screenId,
   subscreens,
+  screenName,
+  ...props
 }: SubScreenModalConfigProps) {
+  const [isChecked, setIsChecked] = useState<boolean>(false);
+
   return (
-    <div className="flex  flex-col  px-5">
-      <div className="flex justify-between">
-        <h2 className="text-xl font-semibold">{screenName}</h2>
+    <div {...props} className={`flex-col`}>
+      <div className="border-primary-300/10 flex items-center border-b-2 text-xl font-bold">
+        <Form.Checkbox
+          label={screenName}
+          checked={isChecked}
+          id={screenId}
+          onChange={() => setIsChecked(!isChecked)}
+        />
+        {isChecked ? <ChevronDown /> : <ChevronRight />}
       </div>
-      {subscreens.map((subscreen) => {
-        if (subscreen.parent_id === screenId)
+      {isChecked &&
+        subscreens.map((subscreen) => {
           return (
-            <PermissionsSubscreen key={subscreen.id} subScreen={subscreen} />
+            <div
+              key={subscreen.id}
+              className={subscreen.parent_id === screenId ? "" : "hidden"}
+            >
+              <PermissionsSubscreen key={subscreen.id} subScreen={subscreen} />
+            </div>
           );
-      })}
+        })}
     </div>
   );
 }
