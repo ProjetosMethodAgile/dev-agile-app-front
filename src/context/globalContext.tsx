@@ -33,7 +33,7 @@ type IGlobalContext = {
   setEtapaAtual: React.Dispatch<React.SetStateAction<number>>;
   setorSelecionado: Setor | null;
   setSetorSelecionado: React.Dispatch<React.SetStateAction<Setor | null>>;
-  messageUser: string ;
+  messageUser: string;
   setMessageUser: React.Dispatch<React.SetStateAction<string>>;
   title: string;
   setTitle: React.Dispatch<React.SetStateAction<string>>;
@@ -46,9 +46,11 @@ type IGlobalContext = {
   formDataChamados: FormDataChamados | null;
   openGlobalModal: (content: React.ReactNode) => void;
   closeGlobalModal: () => void;
-  setFormDataChamados: React.Dispatch<React.SetStateAction<FormDataChamados | null>>;
-  motivo:string[]|null;
-  setMotivo:React.Dispatch<React.SetStateAction<string[]|null>>;
+  setFormDataChamados: React.Dispatch<
+    React.SetStateAction<FormDataChamados | null>
+  >;
+  motivo: string[] | null;
+  setMotivo: React.Dispatch<React.SetStateAction<string[] | null>>;
 };
 
 const GlobalContext = React.createContext<IGlobalContext | null>(null);
@@ -125,10 +127,10 @@ export function GlobalContextProvider({
         openGlobalModal,
         closeGlobalModal,
 
-        motivo, setMotivo,
-        setorHelpDesk, 
-        SetSetorHelpdesk
-
+        motivo,
+        setMotivo,
+        setorHelpDesk,
+        SetSetorHelpdesk,
       }}
     >
       {children}

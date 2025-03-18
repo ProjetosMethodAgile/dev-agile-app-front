@@ -12,7 +12,7 @@ export default function FormRoot({
   ...props
 }: FormRootProps) {
   return (
-    <form className={twMerge(`mirror-container w-full `, className)} {...props}>
+    <form className={twMerge(`mirror-container`, className)} {...props}>
       {children}
     </form>
   );
