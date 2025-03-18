@@ -2,11 +2,11 @@
 
 import { GET_USER_ALL } from "@/functions/api";
 import apiError from "@/functions/api-error";
-import { UsuariosData } from "@/types/api/apiTypes";
+import {  UsuariosData } from "@/types/api/apiTypes";
 import { cookies } from "next/headers";
 
 //Busca todos os usuarios do sistema
-export default async function getUserAll() {
+export default async function getUsersByTagEmp() {
   try {
     const token = (await cookies()).get("token")?.value;
     if (!token) throw new Error("Token não encontrado.");
@@ -19,7 +19,7 @@ export default async function getUserAll() {
       },
       next: {
         revalidate: 60,
-        tags: ["all-users"],
+        tags: ['all-users']
       },
     });
 

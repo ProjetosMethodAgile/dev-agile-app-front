@@ -23,7 +23,7 @@ export default async function getUser(): Promise<GetUserResult> {
         Authorization: "Bearer " + token,
       },
       next: {
-        revalidate: 60,
+        tags: ['new-user']
       },
     });
     if (!response.ok) throw new Error("Erro ao pegar o usuário.");

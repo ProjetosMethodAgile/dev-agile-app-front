@@ -1,15 +1,15 @@
 export const API_URL = "https://devagile.com.br/api";
 // export const API_URL = "http://localhost:3001/api";
 
-export function GET_USER_ALL() {
+export function GET_PERMISSIONS_ALL() {
   return {
-    url: API_URL + `/usuarios`,
+    url: API_URL + "/permissoes",
   };
 }
 
-export function GET_USER_ID(userId: string) {
+export function GET_ROLES_ALL() {
   return {
-    url: API_URL + `/usuario/${userId}`,
+    url: API_URL + `/roles`,
   };
 }
 
@@ -60,6 +60,32 @@ export function POST_ATENDENTE_HELPDESK() {
 export function GET_MOTIVO(setorId: string) {
   return {
     url: API_URL + `/kanban/motivos/setor/${setorId}`,
+  };
+}
+
+//=================USUARIOS=====================================/
+
+export function POST_USUARIO() {
+  return {
+    url: API_URL + "/usuario/register",
+  };
+}
+
+export function GET_USER_ALL() {
+  return {
+    url: API_URL + `/usuarios`,
+  };
+}
+
+export function GET_USERS_EMP(empresaId: string) {
+  return {
+    url: API_URL + `/usuarios`,
+  };
+}
+
+export function GET_USER_ID(userId: string) {
+  return {
+    url: API_URL + `/usuario/${userId}`,
   };
 }
 

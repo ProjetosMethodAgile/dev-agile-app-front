@@ -65,6 +65,12 @@ export type UserAcaoTela = {
   updatedAt: string;
 };
 
+export type PermissaoUserData = {
+  permissao_id: string;
+  acessos: PermissoesData;
+  acoes: AcaoTelaData[];
+};
+
 // Cada permissão possui os acessos (CRUD), suas ações e, opcionalmente, subtelas (subpermissoes)
 export type PermissaoCompletaData = {
   id: string;
@@ -85,15 +91,15 @@ export type PermissaoCompletaData = {
 };
 
 export type User = {
-  id: string;
+  id?: string;
   nome: string;
   email: string;
   contato: string;
-  empresa: EmpresaData[];
+  empresa?: EmpresaData[];
   usuario_roles: RoleData[];
   permissoes: PermissaoCompletaData[];
-  createdAt: string;
-  updatedAt: string;
+  createdAt?: string;
+  updatedAt?: string;
 };
 
 export type UsuariosData = {

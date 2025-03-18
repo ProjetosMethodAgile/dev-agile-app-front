@@ -55,7 +55,7 @@ export default function SetorContainer({ ...props }: SetorContainerProps) {
     <div {...props}>
       <div className="mb-4 flex flex-wrap items-center gap-2">
         <Form.InputText
-          id="search"
+          inputId="search"
           name="search"
           icon={iconsMap["search"]}
           placeholder="Busque o setor"

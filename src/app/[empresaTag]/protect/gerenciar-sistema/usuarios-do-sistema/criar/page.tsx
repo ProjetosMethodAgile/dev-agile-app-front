@@ -1,78 +1,22 @@
-"use client";
-
-import { Form } from "@/components/form";
-import RegisterNavigation from "@/components/nav/registersNavigation/RegisterNavigation";
+import getPermissionsAll from "@/actions/getPermissionsAll";
+import getRolesAll from "@/actions/getRolesAll";
+import FormStepsUser from "@/components/formSteps/FormStepsUser";
 import ScreenTitle from "@/components/titles/ScreenTitle";
-import {
-  ChevronRight,
-  KeyRound,
-  MailIcon,
-  User2,
-  UserCheck,
-  UserCircle,
-} from "lucide-react";
+import { log } from "console";
+import { UserCheck } from "lucide-react";
 import React from "react";
 
-const CriarUsuarioPage = () => {
-  const [activeTab, setActiveTab] = React.useState("informacoes");
+const CriarUsuarioPage = async () => {
+const roles = await getRolesAll()
+const permissoes = await getPermissionsAll()
 
+if(!roles.ok) throw new Error(roles.error || 'Não foi possivel obter as Roles')
+if(!permissoes.ok) throw new Error(permissoes.error|| 'Não foi possivel obter as Permissoes')
+  
   return (
     <div className="container">
       <ScreenTitle title="Usuarios do sistema - Cadastro" icon={UserCheck} />
-      <div className="flex gap-5">
-        <RegisterNavigation setActiveTab={setActiveTab} activeTab={activeTab} />
-        <Form.Root>
-          {activeTab === "informacoes" && (
-            <div>
-              <Form.Section title="Dados do usuario">
-                <Form.InputText
-                  icon={UserCircle}
-                  id="nome"
-                  name="nome"
-                  label="Nome do usuario"
-                />
-              </Form.Section>
-              <Form.Section title="Acesso ao sistema">
-                <Form.InputText
-                  icon={MailIcon}
-                  id="email"
-                  type="mail"
-                  name="email"
-                  label="Email"
-                />
-                <Form.InputText
-                  icon={KeyRound}
-                  id="senha"
-                  type="password"
-                  name="senha"
-                  label="Senha"
-                />
-                <Form.InputText
-                  icon={KeyRound}
-                  id="senha"
-                  type="password"
-                  name="senha"
-                  label="Confirmar Senha"
-                />
-              </Form.Section>
-              <Form.ButtonNav direction="Continuar" icon={ChevronRight} />
-            </div>
-          )}
-          {activeTab === "permissoes" && (
-            <div>
-              <Form.Section title="Permissoes do usuario">
-                <Form.InputText
-                  icon={User2}
-                  id="nome"
-                  name="nome"
-                  label="Nome do usuario"
-                />
-              </Form.Section>
-              <Form.ButtonNav direction="Continuar" icon={ChevronRight} />
-            </div>
-          )}
-        </Form.Root>
-      </div>
+      <FormStepsUser rolesData={roles.data || []} permissoesData={permissoes.data || []} />
     </div>
   );
 };
