@@ -212,6 +212,21 @@ export type AtendentesHelpDesk = {
   };
 };
 
+export type HelpDeskSetoresPorAtendente = {
+  id: string;
+  Setores: {
+    id: string;
+    nome: string;
+    empresa_id: string;
+  }[];
+  UsuarioAtendente: {
+    id: string;
+    nome: string;
+    email: string;
+    contato: string;
+  };
+};
+
 export type usuariosDisponiveisHelpDesk = {
   usuario_id: string;
   empresa_id: string;

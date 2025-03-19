@@ -1,6 +1,6 @@
 "use server";
 
-import { TokenData } from "@/types/api/apiTypes";
+import { HelpDeskSetoresPorAtendente, TokenData } from "@/types/api/apiTypes";
 import { cookies } from "next/headers";
 import jwt from "jsonwebtoken";
 import apiError from "@/functions/api-error";
@@ -18,6 +18,19 @@ export default async function getSetoresHelpDeskForUser() {
       usuarioData.id,
       usuarioData.empresa.id,
     );
+    const response = await fetch(url, {
+      method: "GET",
+      headers: {
+        Authorization: "Bearer " + token,
+      },
+      next: {
+        revalidate: 60,
+        tags: ["helpdesk-kanban"],
+      },
+    });
+
+    const data: HelpDeskSetoresPorAtendente = await response.json();
+    return { data, ok: true, error: "" };
   } catch (error) {
     return apiError(error);
   }
