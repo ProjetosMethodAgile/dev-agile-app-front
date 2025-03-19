@@ -13,21 +13,23 @@ export default async function EmpresaHomePage() {
   if (!data) return <h1>Nenhum setor cadastrado para você no momento</h1>;
   return (
     <main className="h-dvh overflow-x-hidden p-6">
-      <nav className="h1-[10dvh]">
+      <nav className="h1-[10dvh] flex gap-5">
         <ScreenTitle
-          title="Gerenciar - Help Desk"
+          title="Help Desk"
           icon={iconsMap["help-desk"]}
           className="mb-0 text-2xl"
         />
-        <FormInputSelect
-          options={
-            data?.Setores.map((setor) => ({
-              id: setor.id,
-              nome: setor.nome,
-            })) || []
-          }
-          defaultOption={false}
-        />
+        <div className="w-50">
+          <FormInputSelect
+            options={
+              data?.Setores.map((setor) => ({
+                id: setor.id,
+                nome: setor.nome,
+              })) || []
+            }
+            defaultOption={false}
+          />
+        </div>
       </nav>
       <Kanban.Root>
         <Kanban.Column title="teste">
