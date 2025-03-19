@@ -91,10 +91,6 @@ export const useHandleSendMessage = () => {
     setSetorSelecionado(null);
     
   };
-  
-
-  
-
   /**
    * Função principal para tratar o envio de mensagens.
    */
@@ -102,9 +98,17 @@ export const useHandleSendMessage = () => {
     text: string = messageUser,
     e?: React.MouseEvent<HTMLButtonElement>,
   ) => {
+
+
+   if (!text.length) {
+    sendMessage("Digite algo para que eu possa entender!", "bot")
+     return;
+   }
     if (etapaAtual === 1 && e) {
       const setorId = e.currentTarget.id;
       const setorNome = e.currentTarget.value;
+
+
       await chatController.handleSectorSelection(
         setorId,
         setMotivo,
@@ -112,6 +116,7 @@ export const useHandleSendMessage = () => {
         SetSetorHelpdesk,
       );
       sendMessage(setorNome, "user")
+
       sendMessage(fluxo[2].pergunta, "bot")
       return;
     }
@@ -128,15 +133,15 @@ export const useHandleSendMessage = () => {
     }
     if (text === "Finalizar") {
       const returnValue = await chatController.buscaColunaKanbam(setorHelpDesk);
-      const idKanbanInitial = returnValue.id;
-      console.log(idKanbanInitial);
 
-      await chatController.handleFinalize(
-        setCountdown,
-        setDataUserChamados,
-        dataUserChamados,
-        resetInterface,
-      );
+      const idKanbanInitial = returnValue.id;
+      
+    await chatController.handleFinalize(
+      setCountdown,
+      setDataUserChamados,
+      dataUserChamados,
+      resetInterface,
+    );
 
       return;
     }

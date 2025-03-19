@@ -46,7 +46,7 @@ return (
        w-1/1
        dark:border-primary-600/70
        dark:bg-black/20 dark:backdrop-blur-2xl
-       overflow-y-scroll
+       overflow-y-auto
        min-h-115
        `,
       className
