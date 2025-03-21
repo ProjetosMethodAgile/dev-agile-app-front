@@ -1,8 +1,4 @@
-import { Form } from "@/components/form";
-import { useGlobalContext } from "@/context/globalContext";
 import { PermissaoCompletaData } from "@/types/api/apiTypes";
-import { MoveUpRight } from "lucide-react";
-import SubScreenConfig from "../subscreen/SubScreenConfig";
 import { useState } from "react";
 
 type ScreenConfigProps = {
@@ -18,7 +14,7 @@ export default function ScreenConfig({
   const [activeTab, setActiveTab] = useState("");
 
   return (
-    <div className=" flex gap-6 text-xl font-semibold *:cursor-pointer">
+    <div className="flex gap-6 text-xl font-semibold *:cursor-pointer">
       {screens.map((screen) => {
         return (
           <button
@@ -26,11 +22,10 @@ export default function ScreenConfig({
               handleCheckScreen(screen.id, screen.nome);
               setActiveTab(screen.nome);
             }}
-
             key={screen.id}
             type="button"
-            className={`text-xl text-primary-50 flex cursor-pointer ${
-              activeTab === screen.nome ? "text-white border-b-2" : ""
+            className={`text-primary-50 flex cursor-pointer text-xl ${
+              activeTab === screen.nome ? "border-b-2 text-white" : ""
             }`}
           >
             {screen.nome}

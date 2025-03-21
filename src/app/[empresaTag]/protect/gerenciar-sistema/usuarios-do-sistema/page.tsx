@@ -5,12 +5,14 @@ import Table from "@/components/ui/table/Table";
 import { User } from "@/types/api/apiTypes";
 import iconsMap from "@/utils/iconsMap";
 
-export default async function UsuariosDoSistemaPage({
-  params,
-}: {
-  params: Promise<{ empresaTag: string }>;
-}) {
-  const { empresaTag } = await params;
+export default async function UsuariosDoSistemaPage(
+  {
+    // params,
+  }: {
+    params: Promise<{ empresaTag: string }>;
+  },
+) {
+  // const { empresaTag } = await params;
   const { data, ok, error } = await getUserAll();
 
   if (!ok || !data) return <div>Não há dados para retornar: {error}</div>;
@@ -30,7 +32,7 @@ export default async function UsuariosDoSistemaPage({
       />
       <div className="mirror-container">
         <AddButton route="usuarios-do-sistema/criar" />
-        <Table data={data} columns={userColumns}  />
+        <Table data={data} columns={userColumns} />
       </div>
     </div>
   );
