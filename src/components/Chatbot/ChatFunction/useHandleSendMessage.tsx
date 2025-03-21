@@ -1,7 +1,7 @@
 // useHandleSendMessage.ts
 import { useGlobalContext } from "@/context/globalContext";
 import { fluxo } from "../Fluxo";
-import { useEffect, useCallback } from "react";
+import { useEffect, useCallback, useState } from "react";
 import ChatController from "@/components/Chatbot/ChatFunction/GerenciaChat_Controller";
 
 type Message = {
@@ -32,7 +32,8 @@ export const useHandleSendMessage = () => {
     setorHelpDesk,
     SetSetorHelpdesk,
   } = useGlobalContext();
-
+const [motivoselecionado,setMotivoselecionado] = useState("")
+const [motivoMap,setMotivoMap] = useState({})
   const chatController = new ChatController();
 
   // Contador regressivo (mantido conforme lógica existente)
@@ -105,17 +106,20 @@ export const useHandleSendMessage = () => {
     if (etapaAtual === 1 && e) {
       const setorId = e.currentTarget.id;
       const setorNome = e.currentTarget.value;
+  
+      
       await chatController.handleSectorSelection(
         setorId,
         setMotivo,
         setEtapaAtual,
         SetSetorHelpdesk,
+       
       );
       sendMessage(setorNome, "user")
       sendMessage(fluxo[2].pergunta, "bot")
       return;
     }
-
+    
     // Ação de voltar: inicia o countdown de 5 segundos e reseta a interface após esse tempo
     if (text === "voltar") {
       await chatController.handleBackAction(
@@ -127,21 +131,34 @@ export const useHandleSendMessage = () => {
       return;
     }
     if (text === "Finalizar") {
-      const returnValue = await chatController.buscaColunaKanbam(setorHelpDesk);
-      const idKanbanInitial = returnValue.id;
-      console.log(idKanbanInitial);
+      console.log(motivoMap);
+      // const returnValue = await chatController.postCardNoLogin(setorHelpDesk,motivoImage,motivoID,"1",messageUser,motivoSelecionado);
 
-      await chatController.handleFinalize(
-        setCountdown,
-        setDataUserChamados,
-        dataUserChamados,
-        resetInterface,
-      );
+      
+      // await chatController.handleFinalize(
+        //   setCountdown,
+        //   setDataUserChamados,
+        //   dataUserChamados,
+        //   resetInterface,
+        // );
+        
+        return;
+      }
+      
+      
+      if (etapaAtual === 2 && e) {
+        const motivoEscolhido = e.currentTarget.value;
+        setMotivoselecionado(motivoEscolhido);
+        const motivoObject = await chatController.pegaMotivo(setorHelpDesk, motivoEscolhido);
+        setMotivoMap(motivoObject);
+        console.log(motivoObject);
+        
 
-      return;
-    }
+        
+      }
+      
 
-    
+
 
     if (etapaAtual === 3) {
       const validation = chatController.validateMessage(text);

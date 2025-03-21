@@ -1,7 +1,8 @@
 // ChatController.ts
 import getKanbanColunaBySetorId from "@/actions/getKanbanColunaBySetorId";
 import getMotivoSetor from "@/actions/getMotivoSetor";
-import { MotivoHelpDesk } from "@/types/api/apiTypes";
+import { postCardHelpdesk } from "@/actions/HelpDesk/postCardHelpdesk";
+import { MotivoHelpDesk, PostHelpdesk } from "@/types/api/apiTypes";
 import React from "react";
 
 export default class ChatController {
@@ -12,27 +13,23 @@ export default class ChatController {
     setorId: string,
     setMotivo: (motivos: string[] | null) => void,
     setEtapaAtual: (etapa: number) => void,
-    SetSetorHelpdesk: React.Dispatch<React.SetStateAction<string>>,
-  ): Promise<void> {
+    SetSetorHelpdesk: React.Dispatch<React.SetStateAction< string>>,
+  ): Promise<void>{
     const response = await getMotivoSetor(setorId);
     if (Array.isArray(response.data)) {
       const motivos = response.data.map(
         (motivo: MotivoHelpDesk) => motivo.descricao,
       );
+
       setMotivo(motivos);
       SetSetorHelpdesk(setorId);
+   
     }
 
     setEtapaAtual(2);
   }
 
-  /**
-   * Valida o input do usuario
-   */
 
-  /**
-   * Valida o comprimento e conteúdo da mensagem.
-   */
   validateMessage(message: string): { valid: boolean; error?: string } {
     const trimmed = message.trim();
     if (!trimmed) {
@@ -105,16 +102,44 @@ export default class ChatController {
   ): Promise<void> {
     setDataUserChamados(dataUserChamados);
     console.log(dataUserChamados);
-
     setCountdown(5);
     setTimeout(() => {
       resetInterface();
     }, 5000);
   }
 
-  async buscaColunaKanbam(setor_id: string) {
-    const response = await getKanbanColunaBySetorId(setor_id);
-    const primeiraColuna = response.columns[0];
-    return primeiraColuna;
+  async pegaMotivo(setorIdSelecionado: string, nomeMotivo: string) {
+    const response = await getMotivoSetor(setorIdSelecionado);
+    if (Array.isArray(response.data)) {
+      // Procura o motivo cujo atributo 'descricao' seja igual ao nome recebido
+      const motivoEncontrado = response.data.find(
+        (motivo: MotivoHelpDesk) => motivo.descricao === nomeMotivo
+      );
+      if (motivoEncontrado) {
+        return motivoEncontrado;
+      } else {
+        console.log("Motivo não encontrado");
+        return null;
+      }
+    }
+  }
+  
+  
+
+async postCardNoLogin({setor_id,
+    src_img_capa,
+    titulo_chamado,
+    status,descricao}:PostHelpdesk) {
+    const response = await postCardHelpdesk(
+     { setor_id,
+      src_img_capa,
+      titulo_chamado,
+      status,
+      descricao}
+    );
+
+
+
+    return;
   }
 }

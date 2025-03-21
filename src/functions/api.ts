@@ -84,9 +84,9 @@ export function GET_KANBAN_CARDS_BY_SETOR_ID(setor_id: string) {
   };
 }
 
-export function PUT_ORDEM_KANBAN_COLUNA() {
+export function PUT_ORDEM_KANBAN_COLUNA(setor_kanban_id:string) {
   return {
-    url: API_URL + `/helpdesk/columnsBySetor`,
+    url: API_URL + `/api/helpdesk/cardsBySetor/${setor_kanban_id}`,
   };
 }
 

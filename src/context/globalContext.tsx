@@ -51,6 +51,10 @@ type IGlobalContext = {
   >;
   motivo: string[] | null;
   setMotivo: React.Dispatch<React.SetStateAction<string[] | null>>;
+  motivoID: string | null;
+  setMotivoID: React.Dispatch<React.SetStateAction<string | null>>;
+  motivoImage: string | null;
+  setMotivoImage: React.Dispatch<React.SetStateAction<string | null>>;
   currentSetor: string;
   setCurrentSetor: React.Dispatch<React.SetStateAction<string>>;
 };
@@ -103,6 +107,8 @@ export function GlobalContextProvider({
     setGlobalModalContent(null);
   };
   const [motivo, setMotivo] = useState<string[] | null>(null);
+  const [motivoID, setMotivoID] = useState<string | null>(null);
+  const [motivoImage, setMotivoImage] = useState<string | null>(null);
 
   //================HELP-DESK=========================//
 
@@ -136,6 +142,10 @@ export function GlobalContextProvider({
         SetSetorHelpdesk,
         currentSetor,
         setCurrentSetor,
+        motivoID, 
+        setMotivoID,
+        motivoImage,
+        setMotivoImage
       }}
     >
       {children}

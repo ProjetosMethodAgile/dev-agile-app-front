@@ -163,6 +163,9 @@ export type GetUserError = {
   error: string;
 };
 
+
+//_________________________HELPDESK____________________________
+
 export type SetorHelpDesk = {
   id: string;
   empresa_id: string;
@@ -192,6 +195,14 @@ export type KanbanColumn = {
   createdAt: string;
   updatedAt: string;
 };
+export type PostHelpdesk = {
+    
+  setor_id:string,
+  src_img_capa:string,
+  titulo_chamado:string,
+  status:string,
+  descricao:string,
+}
 
 export type GetKanbanColunaResponse = {
   columns: KanbanColumn[];
