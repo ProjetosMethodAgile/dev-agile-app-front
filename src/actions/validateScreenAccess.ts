@@ -1,4 +1,3 @@
-// app/actions/validateScreenAccess.ts
 "use server";
 
 import { redirect } from "next/navigation";

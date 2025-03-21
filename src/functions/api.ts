@@ -63,6 +63,54 @@ export function GET_MOTIVO(setorId: string) {
   };
 }
 
+export function GET_KANBAN_COLUNA(setor_id: string) {
+  return {
+    url: API_URL + `/helpdesk/columnsBySetor/${setor_id}`,
+  };
+}
+
+export function GET_KANBAN_COLUNAS_BY_SETOR_EMP_ID(
+  setor_id: string,
+  emp_id: string,
+) {
+  return {
+    url: API_URL + `/helpdesk/columns/setor/${setor_id}/empresa/${emp_id}`,
+  };
+}
+
+export function GET_KANBAN_CARDS_BY_SETOR_ID(setor_id: string) {
+  return {
+    url: API_URL + `/helpdesk/cardsBySetor/${setor_id}`,
+  };
+}
+
+export function PUT_ORDEM_KANBAN_COLUNA() {
+  return {
+    url: API_URL + `/helpdesk/columnsBySetor`,
+  };
+}
+
+export function GET_SETOR_HELPDESK_FOR_USER(
+  usuario_id: string,
+  empresa_id: string,
+) {
+  return {
+    url: API_URL + `/helpdesk/atendente/${usuario_id}/empresa/${empresa_id}`,
+  };
+}
+
+export function GET_ALL_ATENDENTE_HELPDESK_BY_EMPRESA_ID(id: string) {
+  return {
+    url: API_URL + `/helpdesk/atendentes/empresa/${id}`,
+  };
+}
+
+export function GET_USUARIOS_NAO_ATENDENTE_HELPDESK(id: string) {
+  return {
+    url: API_URL + `/helpdesk/atendentes/usuario/empresa/${id}`,
+  };
+}
+
 //=================USUARIOS=====================================/
 
 export function POST_USUARIO() {
@@ -86,37 +134,5 @@ export function GET_USERS_EMP(empresaId: string) {
 export function GET_USER_ID(userId: string) {
   return {
     url: API_URL + `/usuario/${userId}`,
-  };
-}
-
-export function GET_ALL_ATENDENTE_HELPDESK_BY_EMPRESA_ID(id: string) {
-  return {
-    url: API_URL + `/helpdesk/atendentes/empresa/${id}`,
-  };
-}
-
-export function GET_USUARIOS_NAO_ATENDENTE_HELPDESK(id: string) {
-  return {
-    url: API_URL + `/helpdesk/atendentes/usuario/empresa/${id}`,
-  };
-}
-export function GET_KANBAN_COLUNA(setor_id: string) {
-  return {
-    url: API_URL + `/helpdesk/columnsBySetor/${setor_id}`,
-  };
-}
-
-export function PUT_ORDEM_KANBAN_COLUNA() {
-  return {
-    url: API_URL + `/helpdesk/columnsBySetor`,
-  };
-}
-
-export function GET_SETOR_HELPDESK_FOR_USER(
-  usuario_id: string,
-  empresa_id: string,
-) {
-  return {
-    url: API_URL + `/helpdesk/atendente/${usuario_id}/empresa/${empresa_id}`,
   };
 }
