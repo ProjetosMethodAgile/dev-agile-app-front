@@ -212,6 +212,21 @@ export type AtendentesHelpDesk = {
   };
 };
 
+export type HelpDeskSetoresPorAtendente = {
+  id: string;
+  Setores: {
+    id: string;
+    nome: string;
+    empresa_id: string;
+  }[];
+  UsuarioAtendente: {
+    id: string;
+    nome: string;
+    email: string;
+    contato: string;
+  };
+};
+
 export type usuariosDisponiveisHelpDesk = {
   usuario_id: string;
   empresa_id: string;
@@ -223,6 +238,25 @@ export type usuariosDisponiveisHelpDesk = {
     email: string;
     contato: string;
   };
+};
+
+export type ColumnsHelpDesk = KanbanColumn & {
+  ColumnAcoes: {
+    id: string;
+    nome: string;
+    descricao: string;
+  }[];
+};
+
+export type CardHelpDesk = {
+  id: string;
+  column_id: string;
+  src_img_capa: string;
+  titulo_chamado: string;
+  status: string;
+  createdAt: string;
+  updateAt: string;
+  ColumnsCard: KanbanColumn;
 };
 
 export type GetUserResult = GetUserSuccess | GetUserError;

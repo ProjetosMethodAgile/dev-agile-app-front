@@ -10,6 +10,7 @@ export type FormInputSelectTypes = {
   value?: string;
   // Callback de alteração
   onChange?: (selectedId: string) => void;
+  defaultOption?: boolean;
   defaultOptionText?: string; // Texto para o placeholder
   resetAfterSelect?: boolean; // Se true, reseta o select para o valor default após seleção
 };
@@ -23,6 +24,7 @@ export default function FormInputSelect({
   onChange,
   defaultOptionText = "Selecione as opções da lista",
   resetAfterSelect = false,
+  defaultOption = true,
 }: FormInputSelectTypes) {
   // Estado interno sincronizado com propValue
   const [value, setValue] = useState(propValue || "");
@@ -62,9 +64,11 @@ export default function FormInputSelect({
         className="focus-within:border-primary-600 hover:border-primary-600 shadow-primary-300/40 flex w-full cursor-pointer items-center justify-center gap-2 rounded-[12px] border-2 border-transparent bg-gray-400/30 py-2 pl-4 text-xl outline-0 transition-all outline-none placeholder:text-xl placeholder:text-gray-600/50 focus-within:bg-gray-400/30 focus-within:shadow-[0px_0px_2px_2px] hover:bg-gray-400/30 hover:shadow-[0px_0px_2px_2px] dark:bg-gray-400/20 dark:text-gray-100 dark:placeholder:text-gray-500"
       >
         {/* Placeholder que força a escolha */}
-        <option value="" disabled>
-          {defaultOptionText}
-        </option>
+        {defaultOption && (
+          <option value="" disabled>
+            {defaultOptionText}
+          </option>
+        )}
         {options.map((option) => (
           <option
             key={option.id}

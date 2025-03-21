@@ -51,6 +51,8 @@ type IGlobalContext = {
   >;
   motivo: string[] | null;
   setMotivo: React.Dispatch<React.SetStateAction<string[] | null>>;
+  currentSetor: string;
+  setCurrentSetor: React.Dispatch<React.SetStateAction<string>>;
 };
 
 const GlobalContext = React.createContext<IGlobalContext | null>(null);
@@ -102,6 +104,9 @@ export function GlobalContextProvider({
   };
   const [motivo, setMotivo] = useState<string[] | null>(null);
 
+  //================HELP-DESK=========================//
+
+  const [currentSetor, setCurrentSetor] = useState<string>("");
   return (
     <GlobalContext.Provider
       value={{
@@ -123,13 +128,14 @@ export function GlobalContextProvider({
         setCountdown,
         formDataChamados,
         setFormDataChamados,
-
         openGlobalModal,
         closeGlobalModal,
         motivo,
         setMotivo,
         setorHelpDesk,
         SetSetorHelpdesk,
+        currentSetor,
+        setCurrentSetor,
       }}
     >
       {children}
