@@ -1,27 +1,28 @@
+// src/app/ContainerClientHelpDesk.tsx
 "use client";
 import { useGlobalContext } from "@/context/globalContext";
 import { Kanban } from "..";
 import getColumnsHelpDeskForUser from "@/actions/HelpDesk/getColumnsHelpDeskForUser";
+import getCardsHelpDeskBySetorId from "@/actions/HelpDesk/getCardsHelpDeskBySetorId";
 import { useEffect, useState, useCallback } from "react";
 import { CardHelpDesk, ColumnsHelpDesk } from "@/types/api/apiTypes";
-import getCardsHelpDeskBySetorId from "@/actions/HelpDesk/getCardsHelpDeskBySetorId";
-import useSocket from "@/hooks/useSocket";
+import useKanbanWebSocket from "@/hooks/useKanbanWebSocket";
 
-export type ContainerClientHelpDeskProps = React.ComponentProps<"div">;
-
-export default function ContainerClientHelpDesk({
-  ...props
-}: ContainerClientHelpDeskProps) {
+export default function ContainerClientHelpDesk(
+  props: React.ComponentProps<"div">,
+) {
   const { currentSetor } = useGlobalContext();
   const [columns, setColumns] = useState<ColumnsHelpDesk[]>([]);
   const [cards, setCards] = useState<CardHelpDesk[]>([]);
   const [loading, setLoading] = useState(false);
-  const socket = useSocket();
+
+  const ws = useKanbanWebSocket();
 
   // Função para buscar dados do kanban
   const fetchData = useCallback(async () => {
     if (!currentSetor) return;
     setLoading(true);
+
     const { data } = await getColumnsHelpDeskForUser(currentSetor);
     if (data) {
       setColumns(data);
@@ -35,29 +36,28 @@ export default function ContainerClientHelpDesk({
     setLoading(false);
   }, [currentSetor]);
 
+  // Busca inicial
   useEffect(() => {
     fetchData();
   }, [currentSetor, fetchData]);
 
-  // Efeito para escutar os eventos do socket
+  // Escuta mensagens do WS para atualizar a interface
   useEffect(() => {
-    if (!socket) return;
-    // Escuta os eventos do kanban e atualiza os dados
-    socket.on("cardCreated", fetchData);
-    socket.on("cardUpdated", fetchData);
-    socket.on("cardDeleted", fetchData);
-    socket.on("columnCreated", fetchData);
-    socket.on("columnUpdated", fetchData);
+    if (!ws) return;
 
-    // Limpeza: remove os ouvintes quando o componente desmontar ou socket mudar
-    return () => {
-      socket.off("cardCreated", fetchData);
-      socket.off("cardUpdated", fetchData);
-      socket.off("cardDeleted", fetchData);
-      socket.off("columnCreated", fetchData);
-      socket.off("columnUpdated", fetchData);
+    ws.onmessage = (event) => {
+      const data = JSON.parse(event.data);
+      if (
+        data.type === "cardCreated" ||
+        data.type === "cardUpdated" ||
+        data.type === "cardDeleted" ||
+        data.type === "columnCreated" ||
+        data.type === "columnUpdated"
+      ) {
+        fetchData();
+      }
     };
-  }, [socket, fetchData]);
+  }, [ws, fetchData]);
 
   if (loading) return <div>Carregando colunas...</div>;
 
