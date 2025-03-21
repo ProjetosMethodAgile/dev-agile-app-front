@@ -27,6 +27,7 @@ export default function SubScreenConfig({
           checked={isChecked}
           id={screenId}
           onChange={() => setIsChecked(!isChecked)}
+          name="checkbox[]"
         />
         {isChecked ? <ChevronDown /> : <ChevronRight />}
       </div>

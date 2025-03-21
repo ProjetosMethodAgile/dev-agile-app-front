@@ -111,6 +111,7 @@ export default function FormStepsUser({
                 options={currentRoles}
                 label="Tipo de usuario"
                 id="tipo_usuario"
+                name="tipo_usuario"
               />
             </Form.Section>
             <Form.Section title="Permissões">

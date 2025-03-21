@@ -7,7 +7,7 @@ type FormCheckboxProps = {
   checked?: boolean;
   name?: string;
   onChange?: (event: ChangeEvent<HTMLInputElement>) => void;
-  screen?: PermissaoCompletaData;
+  value?: PermissaoCompletaData;
 };
 
 export default function FormCheckbox({
@@ -16,17 +16,17 @@ export default function FormCheckbox({
   onChange,
   checked,
   name,
-  screen,
+  value,
 }: FormCheckboxProps) {
   return (
-    <div className="text-primary-50 flex cursor-pointer items-center justify-center space-x-2 p-1">
+    <div className="text-primary-50 flex cursor-pointer items-center  space-x-2 p-1">
       <input
         onChange={onChange}
         checked={checked}
         type="checkbox"
         name={name}
         id={id}
-        value={JSON.stringify(screen)}
+        value={JSON.stringify(value)}
       />
       <label htmlFor={id}>{label}</label>
     </div>

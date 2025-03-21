@@ -1,4 +1,5 @@
 "use server";
+
 import apiError from "@/functions/api-error";
 import { cookies } from "next/headers";
 import jwt from "jsonwebtoken";
@@ -26,23 +27,27 @@ export async function postUser(
   const senha = formData.get("senha") as string;
   const tipoUsuario = formData.get("tipo_usuario") as string;
   const permissionsCheckbox = formData.getAll("checkbox[]") as string[] | null;
-
-
   const errors: string[] = [];
   const permissions: PermissaoUserData[] = [];
   permissionsCheckbox?.map((permission) => {
     const permissionsData: PermissaoCompletaData & any = JSON.parse(permission);
     const permTeste = JSON.parse(permission);
-    console.log(permTeste)
     const newPermission = {
-      permissao_id: permissionsData.subScreen.id,
-      acessos: permissionsData.permissions[permissionsData.subScreen.nome],
+      permissao_id: permissionsData.id,
+      nome: permissionsData.nome,
+      acessos: {
+        can_create: permissionsData.crud.create,
+        can_read: permissionsData.crud.read,
+        can_update: permissionsData.crud.update,
+        can_delete: permissionsData.crud.delete,
+      },
       acoes: [],
     };
+
     permissions.push(newPermission);
   });
 
-
+  console.log(permissions);
   if (errors.length > 0) {
     return { errors, msg_success: "", success: false };
   }
