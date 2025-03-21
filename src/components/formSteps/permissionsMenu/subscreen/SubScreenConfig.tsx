@@ -1,4 +1,4 @@
-import { ChevronDown, ChevronRight, Lock } from "lucide-react";
+import { ChevronDown, ChevronRight } from "lucide-react";
 import PermissionsSubscreen from "./PermissionsSubscreen";
 
 import { PermissaoCompletaData } from "@/types/api/apiTypes";

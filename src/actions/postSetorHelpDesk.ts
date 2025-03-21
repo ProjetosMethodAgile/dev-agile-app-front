@@ -47,7 +47,6 @@ export async function postSetorHelpDesk(
       }),
     });
     if (response.ok) {
-      const json = await response.json();
       revalidateTag("setor-helpdesk");
       return {
         success: true,

@@ -7,7 +7,6 @@ import FormForgetPassword from "./FormForgetPassword";
 import FormRemember from "./FormRemember";
 import FormsParagrafo from "./FormsParagrafo";
 import FormSection from "./FormSection";
-import FormButtonNav from "./FormButtonNavNext";
 import FormButtonNavNext from "./FormButtonNavNext";
 import FormButtonNavBack from "./FormButtonNavBack";
 import FormInputSelect from "./FormInputSelect";
@@ -25,6 +24,6 @@ export const Form = {
   Paragrafo: FormsParagrafo,
   Section: FormSection,
   ButtonNext: FormButtonNavNext,
-  ButtonBack:FormButtonNavBack,
-  Checkbox: FormCheckbox
+  ButtonBack: FormButtonNavBack,
+  Checkbox: FormCheckbox,
 };

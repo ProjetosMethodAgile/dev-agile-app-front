@@ -1,6 +1,6 @@
 "use server";
 
-import { GET_PERMISSIONS_ALL, GET_ROLES_ALL } from "@/functions/api";
+import { GET_PERMISSIONS_ALL } from "@/functions/api";
 import apiError from "@/functions/api-error";
 import { PermissaoCompletaData } from "@/types/api/apiTypes";
 import { cookies } from "next/headers";

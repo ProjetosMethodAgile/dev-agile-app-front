@@ -90,6 +90,12 @@ export function PUT_ORDEM_KANBAN_COLUNA() {
   };
 }
 
+export function PUT_CARD_COLUMN() {
+  return {
+    url: API_URL + `/helpdesk/card/updateColumn`,
+  };
+}
+
 export function GET_SETOR_HELPDESK_FOR_USER(
   usuario_id: string,
   empresa_id: string,
@@ -125,7 +131,7 @@ export function GET_USER_ALL() {
   };
 }
 
-export function GET_USERS_EMP(empresaId: string) {
+export function GET_USERS_EMP() {
   return {
     url: API_URL + `/usuarios`,
   };
