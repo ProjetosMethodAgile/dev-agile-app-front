@@ -1,6 +1,7 @@
-'use server'
+"use server";
 
-import { POST_ORDEM_KANBAN_COLUNA } from "@/functions/api";
+import { POST_CHAMADO_KANBAN_COLUNA } from "@/functions/api";
+import { revalidateTag } from "next/cache";
 
 export async function postCardHelpdesk(
   setor_id: string,
@@ -10,13 +11,12 @@ export async function postCardHelpdesk(
   descricao: string,
 ) {
   // Supondo que POST_ORDEM_KANBAN_COLUNA retorne um objeto com a propriedade "url"
-  const urlObject = POST_ORDEM_KANBAN_COLUNA();
+  const urlObject = POST_CHAMADO_KANBAN_COLUNA();
 
   if (!urlObject || !urlObject.url) {
     return { msg_success: "erro", success: false };
   }
 
-  
   try {
     const response = await fetch(urlObject.url, {
       method: "POST",
@@ -35,6 +35,8 @@ export async function postCardHelpdesk(
         descricao,
       }),
     });
+    revalidateTag("helpdesk-columns");
+    revalidateTag("helpdesk-cards");
 
     if (!response.ok) {
       return { msg_success: "erro", success: false, status: response.status };

@@ -1,18 +1,23 @@
 "use client";
 import Link from "next/link";
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { useUser } from "@/context/userContext";
 import logout from "@/actions/logout";
 import { usePathname } from "next/navigation";
 import { PermissaoCompletaData } from "@/types/api/apiTypes";
 import { House, PanelRightClose, UserRound, LogOut } from "lucide-react";
 import iconsMap from "@/utils/iconsMap";
+import { toast } from "react-toastify";
+import useKanbanWebSocket from "@/hooks/useKanbanWebSocket";
+import getSetoresHelpDeskForUser from "@/actions/HelpDesk/getSetoresHelpDeskForUser";
+import { log } from "console";
 
 export default function NavigationMenu() {
   const { user, permissions } = useUser();
   const [isExpanded, setIsExpanded] = useState(false);
   const navRef = useRef(null);
   const pathname = usePathname();
+  const ws = useKanbanWebSocket();
 
   // Verifica se a empresa está definida
   const empresaTag = user?.usuario.empresa?.[0]?.tag;
@@ -28,6 +33,25 @@ export default function NavigationMenu() {
   const toggleSidebar = () => {
     setIsExpanded((prev) => !prev);
   };
+
+  useEffect(() => {
+    async function getSetores() {
+      const { data } = await getSetoresHelpDeskForUser();
+      if (!ws) return;
+
+      ws.onmessage = async (event) => {
+        const Parsedata = JSON.parse(event.data);
+        data?.Setores.map((setor) => {
+          if (Parsedata.type === `cardCreated-${setor.id}`) {
+            toast.warning(
+              `UM NOVO CHAMADO FOI ABERTO PARA O SETOR: ${setor.nome}`,
+            );
+          }
+        });
+      };
+    }
+    getSetores();
+  }, [ws]);
 
   return (
     <nav
