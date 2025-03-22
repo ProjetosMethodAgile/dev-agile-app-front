@@ -51,6 +51,14 @@ type IGlobalContext = {
   >;
   motivo: string[] | null;
   setMotivo: React.Dispatch<React.SetStateAction<string[] | null>>;
+  motivoID: string | null;
+  setMotivoID: React.Dispatch<React.SetStateAction<string | null>>;
+  motivoImage: string | null;
+  setMotivoImage: React.Dispatch<React.SetStateAction<string | null>>;
+  numChamado: string | null;
+  setNumChamado: React.Dispatch<React.SetStateAction<string | null>>;
+  setMotivoselecionado: React.Dispatch<React.SetStateAction<string>>;
+  motivoselecionado:string | null; 
   currentSetor: string;
   setCurrentSetor: React.Dispatch<React.SetStateAction<string>>;
 };
@@ -80,6 +88,8 @@ export function GlobalContextProvider({
   const [card, setCard] = useState<HTMLDivElement | null>(null);
   const [setorSelecionado, setSetorSelecionado] = useState<Setor | null>(null);
   const [setorHelpDesk, SetSetorHelpdesk] = useState<string>("");
+  const [motivoselecionado, setMotivoselecionado] = useState<string>("");
+
   const [messages, setMessages] = useState<Message[]>([
     {
       text: fluxo[0].pergunta,
@@ -103,6 +113,9 @@ export function GlobalContextProvider({
     setGlobalModalContent(null);
   };
   const [motivo, setMotivo] = useState<string[] | null>(null);
+  const [motivoID, setMotivoID] = useState<string | null>(null);
+  const [motivoImage, setMotivoImage] = useState<string | null>(null);
+  const [numChamado, setNumChamado] = useState<string | null>(null);
 
   //================HELP-DESK=========================//
 
@@ -136,6 +149,13 @@ export function GlobalContextProvider({
         SetSetorHelpdesk,
         currentSetor,
         setCurrentSetor,
+        motivoID, 
+        setMotivoID,
+        motivoImage,
+        setMotivoImage,
+        motivoselecionado, 
+        setMotivoselecionado,
+        numChamado, setNumChamado
       }}
     >
       {children}

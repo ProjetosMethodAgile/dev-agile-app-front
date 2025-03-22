@@ -1,5 +1,7 @@
 
 
+
+
 type EtapaFluxo = {
   id: number;
   title: string;
@@ -7,6 +9,8 @@ type EtapaFluxo = {
   // A função "next" recebe uma resposta mas não a utiliza, então fazemos um "void" nela para marcar como utilizada.
   next: (resposta: string) => number | null;
 };
+
+
 
 export const fluxo: EtapaFluxo[] = [
   {
@@ -18,6 +22,7 @@ export const fluxo: EtapaFluxo[] = [
       return 1;
     },
   },
+
   {
     id: 2,
     title: "Informe o Setor",

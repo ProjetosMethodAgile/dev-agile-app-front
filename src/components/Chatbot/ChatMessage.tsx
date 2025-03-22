@@ -14,6 +14,8 @@ export default  function ChatMessages({ className, ...props }: ChatMessagesProps
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const handleSendMessage = useHandleSendMessage();
   const amalfiszinho = "/image/chatAmalfis/amalfiszinho.png";
+  const {numChamado
+} = useGlobalContext();
 
 
   useEffect(() => {
@@ -29,7 +31,7 @@ if(countdown !== null ) {
 return(
 
   <nav className="dark:bg-primary-300 fixed inset-0 flex items-center justify-center rounded-[15px]">
-      <h2 className="text-4xl text-white">Finalizando em {countdown}...</h2>
+      <h2 className="text-4xl text-white">Nº chamado: {numChamado} Finalizando em {countdown}...</h2>
   </nav>
     )
 
@@ -82,7 +84,7 @@ return (
         )}
         <span className={msg.loading ? "animate-pulse" : "max-w-[350px] text-wrap"}>
           {msg.text}
-          {etapaAtual === 4 && index === messages.length - 1 && (
+          {etapaAtual=== 4 && etapaAtual <5&& index === messages.length - 1 && (
             <div className="flex gap-2 p-5">
               <button
                 className="w-[100px] rounded-[15px] bg-red-500 p-3"
@@ -91,6 +93,7 @@ return (
               >
                 Voltar
               </button>
+            
               <button
                 className="w-[100px] rounded-[15px] bg-green-500 p-3"
                 value="Finalizar"
@@ -105,6 +108,7 @@ return (
               </button>
             </div>
           )}
+        
         </span>
       </div>
     ))}

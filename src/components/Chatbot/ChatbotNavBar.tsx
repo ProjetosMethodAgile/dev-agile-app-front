@@ -56,7 +56,7 @@ export default function ChatbotNavBar({
                   id={`motivo-${index}`}
                   key={index}
                   value={motivoItem}
-                  onClick={(e) => handleSendMessage(motivoItem, e)}
+                  onClick={(e) => handleSendMessage(motivoItem,  e)}
                   className="flex h-15 items-center justify-center overflow-hidden rounded-[5px] p-5 text-[15px]"
                 >
                   {motivoItem}
