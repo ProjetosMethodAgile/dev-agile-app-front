@@ -142,7 +142,7 @@ export const useHandleSendMessage = () => {
       await chatController.postCardNoLogin(
         setorHelpDesk, // ID do setor
         motivoImage??"",   // URL da imagem vinda do GlobalContext
-        `Chamado: Nº: ${numChamado}\n${motivoNome}\n${motivoselecionado}`,
+        `Chamado: Nº: ${numChamadoNow}\n${motivoNome}\n${motivoselecionado}`,
         status,
         descricao      // Descrição do chamado
       );
