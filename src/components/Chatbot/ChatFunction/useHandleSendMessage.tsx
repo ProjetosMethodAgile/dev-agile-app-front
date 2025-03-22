@@ -34,12 +34,12 @@ export const useHandleSendMessage = () => {
     SetSetorHelpdesk,
     setMotivoselecionado,
     motivoselecionado,
-    numChamado, setNumChamado,
+    setNumChamado,
   } = useGlobalContext();
   const [motivoID, setMotivoID] = useState<string>("");
   const chatController = new ChatController();
   console.log(motivoID);
-  
+
   useEffect(() => {
     if (countdown === null) return;
     if (countdown > 0) {
@@ -65,7 +65,7 @@ export const useHandleSendMessage = () => {
         },
       ]);
     },
-    [setMessages]
+    [setMessages],
   );
 
   const resetInterface = () => {
@@ -94,7 +94,7 @@ export const useHandleSendMessage = () => {
 
   const handleSendMessage = async (
     text: string = messageUser,
-    e?: React.MouseEvent<HTMLButtonElement>
+    e?: React.MouseEvent<HTMLButtonElement>,
   ) => {
     // 1) Seleção do setor (etapaAtual === 1)
     if (etapaAtual === 1 && e) {
@@ -105,58 +105,61 @@ export const useHandleSendMessage = () => {
         setorId,
         setMotivo,
         setEtapaAtual,
-        SetSetorHelpdesk
+        SetSetorHelpdesk,
       );
       sendMessage(setorNome, "user");
       sendMessage(fluxo[etapaAtual].pergunta, "bot");
       return;
     }
-    
+
     // 2) Ação de "voltar"
     if (text === "voltar") {
       await chatController.handleBackAction(
         sendMessage,
         setMessageUser,
         setCountdown,
-        resetInterface
+        resetInterface,
       );
       return;
     }
-    
+
     // 3) Finalizar o chamado
-    if (text === "Finalizar") {       
-      setEtapaAtual(5)
-      let numChamadoNow: string;
-      
+    if (text === "Finalizar") {
+      setEtapaAtual(5);
+      let numChamadoNow: string = "";
+
       const dia: number = new Date().getDate();
       const mes: number = new Date().getUTCMonth() + 1;
       const ano: number = new Date().getFullYear();
       const second: number = new Date().getSeconds();
       const serial: number = Math.random() * (90 - 1) + 1;
-      
+
       numChamadoNow = `${dia}${mes}${ano}${second}-${Math.floor(serial)}`;
-      setNumChamado(numChamadoNow)
+      setNumChamado(numChamadoNow);
       const motivoNome = dataUserChamados[0] || "";
       const descricao = dataUserChamados.slice(1).join(" ") || "";
       const status = "1";
       await chatController.postCardNoLogin(
         setorHelpDesk, // ID do setor
-        motivoImage??"",   // URL da imagem vinda do GlobalContext
+        motivoImage ?? "", // URL da imagem vinda do GlobalContext
         `Chamado: Nº: ${numChamadoNow}\n${motivoNome}\n${motivoselecionado}`,
         status,
-        descricao      // Descrição do chamado
+        descricao, // Descrição do chamado
       );
-      sendMessage(fluxo[5].pergunta + ` esse é o Nº: ${numChamadoNow} do chamado`, "bot");
-      setTimeout(()=>{ 
-        setTimeout(()=>{
+      sendMessage(
+        fluxo[5].pergunta + ` esse é o Nº: ${numChamadoNow} do chamado`,
+        "bot",
+      );
+      setTimeout(() => {
+        setTimeout(() => {
           chatController.handleFinalize(
-          setCountdown,
-          setDataUserChamados,
-          dataUserChamados,
-          resetInterface    
-        )
-      },10000)
-      },5000) 
+            setCountdown,
+            setDataUserChamados,
+            dataUserChamados,
+            resetInterface,
+          );
+        }, 10000);
+      }, 5000);
       return;
     }
 
@@ -168,7 +171,7 @@ export const useHandleSendMessage = () => {
       // Busca informações detalhadas do motivo
       const motivoObject = await chatController.pegaMotivo(
         setorHelpDesk,
-        motivoEscolhido
+        motivoEscolhido,
       );
 
       console.log("Objeto retornado de pegaMotivo:", motivoObject);
