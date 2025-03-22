@@ -6,8 +6,7 @@ export default function useKanbanWebSocket() {
   const [ws, setWs] = useState<WebSocket | null>(null);
 
   useEffect(() => {
-    // Conecte no domínio, usando o path '/api/socket'
-    const socketUrl = "wss://devagile.com.br:3001";
+    const socketUrl = "wss://devagile.com.br/socket/";
     const newWs = new WebSocket(socketUrl);
 
     newWs.onopen = () => {
