@@ -90,6 +90,12 @@ export function POST_ORDEM_KANBAN_COLUNA() {
   };
 }
 
+export function PUT_ORDEM_KANBAN_COLUNA() {
+  return {
+    url: API_URL + `/helpdesk/columnsBySetor`,
+  };
+}
+
 export function PUT_CARD_COLUMN() {
   return {
     url: API_URL + `/helpdesk/card/updateColumn`,

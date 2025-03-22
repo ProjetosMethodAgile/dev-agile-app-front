@@ -1,7 +1,6 @@
-import getKanbanColunaBySetorId from "@/actions/getKanbanColunaBySetorId";
 import getMotivoSetor from "@/actions/getMotivoSetor";
 import { postCardHelpdesk } from "@/actions/HelpDesk/postCardHelpdesk";
-import { MotivoHelpDesk, PostHelpdesk } from "@/types/api/apiTypes";
+import { MotivoHelpDesk } from "@/types/api/apiTypes";
 import React from "react";
 
 export default class ChatController {
@@ -75,14 +74,12 @@ export default class ChatController {
     }, 5000);
   }
   async handleFinalize(
-
     setCountdown: (value: number | null) => void,
     setDataUserChamados: React.Dispatch<React.SetStateAction<string[]>>,
     dataUserChamados: string[],
 
-    resetInterface:() => void,
+    resetInterface: () => void,
   ): Promise<void> {
-   
     setDataUserChamados(dataUserChamados);
 
     setCountdown(15);
@@ -94,7 +91,7 @@ export default class ChatController {
     const response = await getMotivoSetor(setorIdSelecionado);
     if (Array.isArray(response.data)) {
       const motivoEncontrado = response.data.find(
-        (motivo: MotivoHelpDesk) => motivo.descricao === nomeMotivo
+        (motivo: MotivoHelpDesk) => motivo.descricao === nomeMotivo,
       );
       if (motivoEncontrado) {
         return motivoEncontrado;
@@ -104,7 +101,7 @@ export default class ChatController {
       }
     }
   }
-  
+
   async postCardNoLogin(
     setor_id: string,
     src_img_capa: string,
@@ -117,9 +114,9 @@ export default class ChatController {
       src_img_capa,
       titulo_chamado,
       status,
-      descricao
+      descricao,
     );
-    
+
     return response;
   }
 }
