@@ -55,6 +55,8 @@ type IGlobalContext = {
   setMotivoID: React.Dispatch<React.SetStateAction<string | null>>;
   motivoImage: string | null;
   setMotivoImage: React.Dispatch<React.SetStateAction<string | null>>;
+  numChamado: string | null;
+  setNumChamado: React.Dispatch<React.SetStateAction<string | null>>;
   setMotivoselecionado: React.Dispatch<React.SetStateAction<string>>;
   motivoselecionado:string | null; 
   currentSetor: string;
@@ -113,6 +115,7 @@ export function GlobalContextProvider({
   const [motivo, setMotivo] = useState<string[] | null>(null);
   const [motivoID, setMotivoID] = useState<string | null>(null);
   const [motivoImage, setMotivoImage] = useState<string | null>(null);
+  const [numChamado, setNumChamado] = useState<string | null>(null);
 
   //================HELP-DESK=========================//
 
@@ -151,7 +154,8 @@ export function GlobalContextProvider({
         motivoImage,
         setMotivoImage,
         motivoselecionado, 
-        setMotivoselecionado
+        setMotivoselecionado,
+        numChamado, setNumChamado
       }}
     >
       {children}

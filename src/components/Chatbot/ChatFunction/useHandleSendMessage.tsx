@@ -33,17 +33,13 @@ export const useHandleSendMessage = () => {
     setorHelpDesk,
     SetSetorHelpdesk,
     setMotivoselecionado,
-    motivoselecionado
+    motivoselecionado,
+    numChamado, setNumChamado,
   } = useGlobalContext();
-
-  // Estados para guardar informações do motivo selecionado
   const [motivoID, setMotivoID] = useState<string>("");
-
   const chatController = new ChatController();
-
-  /**
-   * Lida com o countdown para recarregar a página após x segundos de inatividade.
-   */
+  console.log(motivoID);
+  
   useEffect(() => {
     if (countdown === null) return;
     if (countdown > 0) {
@@ -53,10 +49,6 @@ export const useHandleSendMessage = () => {
       window.location.reload();
     }
   }, [countdown, setCountdown]);
-
-  /**
-   * Envia nova mensagem para o array de mensagens.
-   */
   const sendMessage = useCallback(
     (newMessage: string, type: "user" | "bot", loading = false) => {
       setMessages((prev: Message[]) => [
@@ -100,9 +92,6 @@ export const useHandleSendMessage = () => {
     setSetorSelecionado(null);
   };
 
-  /**
-   * Função principal para tratar o envio de mensagens do usuário.
-   */
   const handleSendMessage = async (
     text: string = messageUser,
     e?: React.MouseEvent<HTMLButtonElement>
@@ -122,7 +111,7 @@ export const useHandleSendMessage = () => {
       sendMessage(fluxo[etapaAtual].pergunta, "bot");
       return;
     }
-
+    
     // 2) Ação de "voltar"
     if (text === "voltar") {
       await chatController.handleBackAction(
@@ -133,25 +122,41 @@ export const useHandleSendMessage = () => {
       );
       return;
     }
-
+    
     // 3) Finalizar o chamado
     if (text === "Finalizar") {       
-        const motivoNome = dataUserChamados[0] || "";
-        const descricao = dataUserChamados.slice(1).join(" ") || "";
-        const status = "1";
-        const response = await chatController.postCardNoLogin(
+      setEtapaAtual(5)
+      let numChamadoNow: string;
+      
+      const dia: number = new Date().getDate();
+      const mes: number = new Date().getUTCMonth() + 1;
+      const ano: number = new Date().getFullYear();
+      const second: number = new Date().getSeconds();
+      const serial: number = Math.random() * (90 - 1) + 1;
+      
+      numChamadoNow = `${dia}${mes}${ano}${second}-${Math.floor(serial)}`;
+      setNumChamado(numChamadoNow)
+      const motivoNome = dataUserChamados[0] || "";
+      const descricao = dataUserChamados.slice(1).join(" ") || "";
+      const status = "1";
+      await chatController.postCardNoLogin(
         setorHelpDesk, // ID do setor
         motivoImage??"",   // URL da imagem vinda do GlobalContext
-        `Chamado: ${motivoNome} ${motivoselecionado}` ,    // Título do chamado
+        `Chamado: Nº: ${numChamado}\n${motivoNome}\n${motivoselecionado}`,
         status,
         descricao      // Descrição do chamado
       );
-      chatController.handleFinalize(
-        setCountdown,
-        setDataUserChamados,
-        dataUserChamados,
-        resetInterface,
-      )
+      sendMessage(fluxo[5].pergunta + ` esse é o Nº: ${numChamadoNow} do chamado`, "bot");
+      setTimeout(()=>{ 
+        setTimeout(()=>{
+          chatController.handleFinalize(
+          setCountdown,
+          setDataUserChamados,
+          dataUserChamados,
+          resetInterface    
+        )
+      },10000)
+      },5000) 
       return;
     }
 

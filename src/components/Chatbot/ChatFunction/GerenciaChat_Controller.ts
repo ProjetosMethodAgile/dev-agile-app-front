@@ -74,20 +74,22 @@ export default class ChatController {
       resetInterface();
     }, 5000);
   }
-
   async handleFinalize(
+
     setCountdown: (value: number | null) => void,
     setDataUserChamados: React.Dispatch<React.SetStateAction<string[]>>,
     dataUserChamados: string[],
-    resetInterface: () => void,
+
+    resetInterface:() => void,
   ): Promise<void> {
+   
     setDataUserChamados(dataUserChamados);
-    setCountdown(5);
+
+    setCountdown(15);
     setTimeout(() => {
       resetInterface();
     }, 5000);
   }
-
   async pegaMotivo(setorIdSelecionado: string, nomeMotivo: string) {
     const response = await getMotivoSetor(setorIdSelecionado);
     if (Array.isArray(response.data)) {
