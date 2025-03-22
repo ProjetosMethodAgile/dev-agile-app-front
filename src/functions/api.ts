@@ -84,7 +84,7 @@ export function GET_KANBAN_CARDS_BY_SETOR_ID(setor_id: string) {
   };
 }
 
-export function POST_ORDEM_KANBAN_COLUNA() {
+export function POST_CHAMADO_KANBAN_COLUNA() {
   return {
     url: API_URL + `/helpdesk/card`,
   };

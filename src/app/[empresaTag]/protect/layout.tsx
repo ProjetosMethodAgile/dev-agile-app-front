@@ -4,6 +4,7 @@ import { validateCompanySession } from "@/app/lib/validateCompanySession";
 import { UserContextProvider } from "@/context/userContext";
 import { GlobalContextProvider } from "@/context/globalContext";
 import NavigationMenu from "@/components/NavigationMenu/NavigationMenu";
+import { toast } from "react-toastify";
 
 export default async function ProtectedEmpresaLayout({
   children,
@@ -17,7 +18,6 @@ export default async function ProtectedEmpresaLayout({
   const { user } = await validateCompanySession(empresaTag);
   // Obtém as permissões completas para o usuário logado
   const permissions = await getUserPermissions(user.usuario.id, empresaTag);
-
   return (
     <UserContextProvider user={user} permissions={permissions}>
       <GlobalContextProvider>

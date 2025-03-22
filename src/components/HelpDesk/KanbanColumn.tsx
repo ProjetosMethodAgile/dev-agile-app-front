@@ -1,3 +1,4 @@
+// src/app/KanbanColumn.tsx
 "use client";
 import putPosicaoCardColumnid from "@/actions/HelpDesk/putPosicaoCardColumnid";
 import { useGlobalContext } from "@/context/globalContext";
@@ -8,12 +9,15 @@ export type KanbanColumnProps = React.ComponentProps<"div"> & {
   title: string;
   columnId: string;
   children: React.ReactNode;
+  // Novo prop para atualizar o estado do card ao soltar
+  onCardDrop?: (cardId: string, newColumnId: string) => void;
 };
 
 export default function KanbanColumn({
   children,
   title,
   columnId,
+  onCardDrop,
   ...props
 }: KanbanColumnProps) {
   const { card, setCard } = useGlobalContext();
@@ -25,18 +29,17 @@ export default function KanbanColumn({
     dragCounter.current = 0;
     e.currentTarget.classList.remove("bg-primary-500");
 
-    if (cardList.current && card) {
-      // Remove o card do container atual
-      card.parentElement?.removeChild(card);
-      // Adiciona o card à lista desta coluna
-      cardList.current.appendChild(card);
-
-      // Obtém o card_id do atributo data-card-id
+    if (card) {
       const cardId = card.getAttribute("data-card-id");
       if (cardId) {
+        // Atualiza a posição do card no backend
         const result = await putPosicaoCardColumnid(cardId, columnId);
         if (!result.ok) {
           console.error("Erro ao atualizar coluna do card:", result.error);
+        } else {
+          if (onCardDrop) {
+            onCardDrop(cardId, columnId);
+          }
         }
       }
       setCard(null);
@@ -61,7 +64,7 @@ export default function KanbanColumn({
 
   return (
     <div
-      className="border-primary-600 flex h-full min-w-70 flex-col gap-4 overflow-hidden rounded-3xl border bg-black/20 p-3 backdrop-blur-2xl"
+      className="border-primary-600 flex h-full max-w-70 min-w-70 flex-col gap-4 overflow-hidden rounded-3xl border bg-black/20 p-3 backdrop-blur-2xl"
       onDragOverCapture={(e) => e.preventDefault()}
       onDragEnterCapture={dragHoverStart}
       onDragLeaveCapture={dragHoverEnd}
