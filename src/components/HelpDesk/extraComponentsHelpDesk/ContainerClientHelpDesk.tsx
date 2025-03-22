@@ -69,7 +69,7 @@ export default function ContainerClientHelpDesk(
         fetchData();
       }
     };
-  }, [ws, fetchData]);
+  }, [currentSetor, ws, fetchData]);
 
   if (loading) return <div>Carregando colunas...</div>;
 

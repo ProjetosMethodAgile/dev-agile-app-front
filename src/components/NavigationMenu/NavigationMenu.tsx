@@ -10,7 +10,6 @@ import iconsMap from "@/utils/iconsMap";
 import { toast } from "react-toastify";
 import useKanbanWebSocket from "@/hooks/useKanbanWebSocket";
 import getSetoresHelpDeskForUser from "@/actions/HelpDesk/getSetoresHelpDeskForUser";
-import { log } from "console";
 
 export default function NavigationMenu() {
   const { user, permissions } = useUser();
@@ -19,30 +18,16 @@ export default function NavigationMenu() {
   const pathname = usePathname();
   const ws = useKanbanWebSocket();
 
-  // Verifica se a empresa está definida
-  const empresaTag = user?.usuario.empresa?.[0]?.tag;
-  if (!empresaTag) {
-    return <div>Empresa não definida.</div>;
-  }
-
-  // Filtra apenas as permissões de nível superior (telas) – ignorando as subtelas (com parent_id)
-  const accessibleScreens = permissions?.filter(
-    (screen: PermissaoCompletaData) => !screen.parent_id,
-  );
-
-  const toggleSidebar = () => {
-    setIsExpanded((prev) => !prev);
-  };
-
+  // Chamada de hooks incondicionalmente
   useEffect(() => {
     async function getSetores() {
-      const { data } = await getSetoresHelpDeskForUser();
       if (!ws) return;
+      const { data } = await getSetoresHelpDeskForUser();
 
       ws.onmessage = async (event) => {
-        const Parsedata = JSON.parse(event.data);
-        data?.Setores.map((setor) => {
-          if (Parsedata.type === `cardCreated-${setor.id}`) {
+        const parsedData = JSON.parse(event.data);
+        data?.Setores.forEach((setor) => {
+          if (parsedData.type === `cardCreated-${setor.id}`) {
             toast.warning(
               `UM NOVO CHAMADO FOI ABERTO PARA O SETOR: ${setor.nome}`,
             );
@@ -52,6 +37,20 @@ export default function NavigationMenu() {
     }
     getSetores();
   }, [ws]);
+
+  // Verificação de empresa após as chamadas dos hooks
+  const empresaTag = user?.usuario.empresa?.[0]?.tag;
+  if (!empresaTag) {
+    return <div>Empresa não definida.</div>;
+  }
+
+  const accessibleScreens = permissions?.filter(
+    (screen: PermissaoCompletaData) => !screen.parent_id,
+  );
+
+  const toggleSidebar = () => {
+    setIsExpanded((prev) => !prev);
+  };
 
   return (
     <nav
