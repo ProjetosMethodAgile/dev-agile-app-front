@@ -1,4 +1,3 @@
-// useHandleSendMessage.ts
 import { useGlobalContext } from "@/context/globalContext";
 import { fluxo } from "../Fluxo";
 import { useEffect, useCallback, useState } from "react";
@@ -29,14 +28,22 @@ export const useHandleSendMessage = () => {
     countdown,
     setCountdown,
     setMotivo,
+    motivoImage,
+    setMotivoImage,
     setorHelpDesk,
     SetSetorHelpdesk,
+    setMotivoselecionado,
+    motivoselecionado
   } = useGlobalContext();
-const [motivoselecionado,setMotivoselecionado] = useState("")
-const [motivoMap,setMotivoMap] = useState({})
+
+  // Estados para guardar informações do motivo selecionado
+  const [motivoID, setMotivoID] = useState<string>("");
+
   const chatController = new ChatController();
 
-  // Contador regressivo (mantido conforme lógica existente)
+  /**
+   * Lida com o countdown para recarregar a página após x segundos de inatividade.
+   */
   useEffect(() => {
     if (countdown === null) return;
     if (countdown > 0) {
@@ -47,7 +54,9 @@ const [motivoMap,setMotivoMap] = useState({})
     }
   }, [countdown, setCountdown]);
 
-  // Função para adicionar mensagens
+  /**
+   * Envia nova mensagem para o array de mensagens.
+   */
   const sendMessage = useCallback(
     (newMessage: string, type: "user" | "bot", loading = false) => {
       setMessages((prev: Message[]) => [
@@ -64,10 +73,9 @@ const [motivoMap,setMotivoMap] = useState({})
         },
       ]);
     },
-    [setMessages],
+    [setMessages]
   );
 
-  // Função para resetar a interface
   const resetInterface = () => {
     setMessages((prev: Message[]) => {
       const updated = [...prev];
@@ -88,78 +96,86 @@ const [motivoMap,setMotivoMap] = useState({})
     });
     setDataUserChamados([]);
     setEtapaAtual(0);
-    setTitle(fluxo[etapaAtual].title);
+    setTitle(fluxo[0].title);
     setSetorSelecionado(null);
-    
   };
-  
-
-  
 
   /**
-   * Função principal para tratar o envio de mensagens.
+   * Função principal para tratar o envio de mensagens do usuário.
    */
   const handleSendMessage = async (
     text: string = messageUser,
-    e?: React.MouseEvent<HTMLButtonElement>,
+    e?: React.MouseEvent<HTMLButtonElement>
   ) => {
+    // 1) Seleção do setor (etapaAtual === 1)
     if (etapaAtual === 1 && e) {
       const setorId = e.currentTarget.id;
       const setorNome = e.currentTarget.value;
-  
-      
+
       await chatController.handleSectorSelection(
         setorId,
         setMotivo,
         setEtapaAtual,
-        SetSetorHelpdesk,
-       
+        SetSetorHelpdesk
       );
-      sendMessage(setorNome, "user")
-      sendMessage(fluxo[2].pergunta, "bot")
+      sendMessage(setorNome, "user");
+      sendMessage(fluxo[etapaAtual].pergunta, "bot");
       return;
     }
-    
-    // Ação de voltar: inicia o countdown de 5 segundos e reseta a interface após esse tempo
+
+    // 2) Ação de "voltar"
     if (text === "voltar") {
       await chatController.handleBackAction(
         sendMessage,
         setMessageUser,
         setCountdown,
-        resetInterface,
+        resetInterface
       );
       return;
     }
-    if (text === "Finalizar") {
-      console.log(motivoMap);
-      // const returnValue = await chatController.postCardNoLogin(setorHelpDesk,motivoImage,motivoID,"1",messageUser,motivoSelecionado);
 
-      
-      // await chatController.handleFinalize(
-        //   setCountdown,
-        //   setDataUserChamados,
-        //   dataUserChamados,
-        //   resetInterface,
-        // );
-        
-        return;
+    // 3) Finalizar o chamado
+    if (text === "Finalizar") {       
+        const motivoNome = dataUserChamados[0] || "";
+        const descricao = dataUserChamados.slice(1).join(" ") || "";
+        const status = "1";
+        const response = await chatController.postCardNoLogin(
+        setorHelpDesk, // ID do setor
+        motivoImage??"",   // URL da imagem vinda do GlobalContext
+        `Chamado: ${motivoNome} ${motivoselecionado}` ,    // Título do chamado
+        status,
+        descricao      // Descrição do chamado
+      );
+      chatController.handleFinalize(
+        setCountdown,
+        setDataUserChamados,
+        dataUserChamados,
+        resetInterface,
+      )
+      return;
+    }
+
+    // 4) Seleção do motivo (etapaAtual === 2)
+    if (etapaAtual === 2 && e) {
+      const motivoEscolhido = e.currentTarget.value;
+      setMotivoselecionado(motivoEscolhido);
+
+      // Busca informações detalhadas do motivo
+      const motivoObject = await chatController.pegaMotivo(
+        setorHelpDesk,
+        motivoEscolhido
+      );
+
+      console.log("Objeto retornado de pegaMotivo:", motivoObject);
+      if (motivoObject && typeof motivoObject === "object") {
+        setMotivoImage(motivoObject.src_img); // Atualiza o GlobalContext
+        setMotivoID(motivoObject.id);
+      } else {
+        console.error("Objeto inválido recebido:", motivoObject);
       }
-      
-      
-      if (etapaAtual === 2 && e) {
-        const motivoEscolhido = e.currentTarget.value;
-        setMotivoselecionado(motivoEscolhido);
-        const motivoObject = await chatController.pegaMotivo(setorHelpDesk, motivoEscolhido);
-        setMotivoMap(motivoObject);
-        console.log(motivoObject);
-        
+    }
 
-        
-      }
-      
-
-
-
+    // 5) Validação da descrição (etapaAtual === 3)
     if (etapaAtual === 3) {
       const validation = chatController.validateMessage(text);
       if (!validation.valid) {
@@ -168,13 +184,14 @@ const [motivoMap,setMotivoMap] = useState({})
       }
     }
 
-    // Processa e envia a mensagem do usuário
+    // Armazena a mensagem digitada pelo usuário
     setDataUserChamados((prev: string[]) => [...prev, text]);
     chatController.sendUserMessage(text, sendMessage, setMessageUser);
 
     const proximaEtapa = fluxo[etapaAtual].next(text);
     sendMessage("Escrevendo...", "bot", true);
 
+    // Após um delay, atualiza a mensagem de "Escrevendo..." para a próxima pergunta ou finaliza
     setTimeout(() => {
       setMessages((prev: Message[]) => {
         const updated = [...prev];

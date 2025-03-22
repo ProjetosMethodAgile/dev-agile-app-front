@@ -1,4 +1,3 @@
-// ChatController.ts
 import getKanbanColunaBySetorId from "@/actions/getKanbanColunaBySetorId";
 import getMotivoSetor from "@/actions/getMotivoSetor";
 import { postCardHelpdesk } from "@/actions/HelpDesk/postCardHelpdesk";
@@ -6,29 +5,22 @@ import { MotivoHelpDesk, PostHelpdesk } from "@/types/api/apiTypes";
 import React from "react";
 
 export default class ChatController {
-  /**
-   * Trata a seleção do setor e atualiza a etapa.
-   */
   async handleSectorSelection(
     setorId: string,
     setMotivo: (motivos: string[] | null) => void,
     setEtapaAtual: (etapa: number) => void,
-    SetSetorHelpdesk: React.Dispatch<React.SetStateAction< string>>,
-  ): Promise<void>{
+    setSetorHelpdesk: React.Dispatch<React.SetStateAction<string>>,
+  ): Promise<void> {
     const response = await getMotivoSetor(setorId);
     if (Array.isArray(response.data)) {
       const motivos = response.data.map(
         (motivo: MotivoHelpDesk) => motivo.descricao,
       );
-
       setMotivo(motivos);
-      SetSetorHelpdesk(setorId);
-   
+      setSetorHelpdesk(setorId);
     }
-
     setEtapaAtual(2);
   }
-
 
   validateMessage(message: string): { valid: boolean; error?: string } {
     const trimmed = message.trim();
@@ -50,9 +42,6 @@ export default class ChatController {
     return { valid: true };
   }
 
-  /**
-   * Envia a mensagem do usuário e limpa o input.
-   */
   sendUserMessage(
     text: string,
     sendMessage: (
@@ -67,13 +56,6 @@ export default class ChatController {
     setMessageUser("");
   }
 
-  /**
-   * Trata a ação de "voltar":
-   * - Envia a mensagem de voltar;
-   * - Limpa o input;
-   * - Exibe a mensagem de loading;
-   * - Ativa o contador de 5 segundos e, após esse tempo, reseta a interface.
-   */
   async handleBackAction(
     sendMessage: (
       newMessage: string,
@@ -87,13 +69,12 @@ export default class ChatController {
     sendMessage("voltar", "user");
     setMessageUser("");
     sendMessage("Escrevendo...", "bot", true);
-    // Ativa o contador de 5 segundos
     setCountdown(5);
-    // Após 5 segundos, reseta a interface
     setTimeout(() => {
       resetInterface();
     }, 5000);
   }
+
   async handleFinalize(
     setCountdown: (value: number | null) => void,
     setDataUserChamados: React.Dispatch<React.SetStateAction<string[]>>,
@@ -101,7 +82,6 @@ export default class ChatController {
     resetInterface: () => void,
   ): Promise<void> {
     setDataUserChamados(dataUserChamados);
-    console.log(dataUserChamados);
     setCountdown(5);
     setTimeout(() => {
       resetInterface();
@@ -111,7 +91,6 @@ export default class ChatController {
   async pegaMotivo(setorIdSelecionado: string, nomeMotivo: string) {
     const response = await getMotivoSetor(setorIdSelecionado);
     if (Array.isArray(response.data)) {
-      // Procura o motivo cujo atributo 'descricao' seja igual ao nome recebido
       const motivoEncontrado = response.data.find(
         (motivo: MotivoHelpDesk) => motivo.descricao === nomeMotivo
       );
@@ -124,22 +103,21 @@ export default class ChatController {
     }
   }
   
-  
-
-async postCardNoLogin({setor_id,
-    src_img_capa,
-    titulo_chamado,
-    status,descricao}:PostHelpdesk) {
+  async postCardNoLogin(
+    setor_id: string,
+    src_img_capa: string,
+    titulo_chamado: string,
+    status: string,
+    descricao: string,
+  ) {
     const response = await postCardHelpdesk(
-     { setor_id,
+      setor_id,
       src_img_capa,
       titulo_chamado,
       status,
-      descricao}
+      descricao
     );
-
-
-
-    return;
+    
+    return response;
   }
 }

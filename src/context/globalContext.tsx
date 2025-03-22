@@ -55,6 +55,8 @@ type IGlobalContext = {
   setMotivoID: React.Dispatch<React.SetStateAction<string | null>>;
   motivoImage: string | null;
   setMotivoImage: React.Dispatch<React.SetStateAction<string | null>>;
+  setMotivoselecionado: React.Dispatch<React.SetStateAction<string>>;
+  motivoselecionado:string | null; 
   currentSetor: string;
   setCurrentSetor: React.Dispatch<React.SetStateAction<string>>;
 };
@@ -84,6 +86,8 @@ export function GlobalContextProvider({
   const [card, setCard] = useState<HTMLDivElement | null>(null);
   const [setorSelecionado, setSetorSelecionado] = useState<Setor | null>(null);
   const [setorHelpDesk, SetSetorHelpdesk] = useState<string>("");
+  const [motivoselecionado, setMotivoselecionado] = useState<string>("");
+
   const [messages, setMessages] = useState<Message[]>([
     {
       text: fluxo[0].pergunta,
@@ -145,7 +149,9 @@ export function GlobalContextProvider({
         motivoID, 
         setMotivoID,
         motivoImage,
-        setMotivoImage
+        setMotivoImage,
+        motivoselecionado, 
+        setMotivoselecionado
       }}
     >
       {children}
