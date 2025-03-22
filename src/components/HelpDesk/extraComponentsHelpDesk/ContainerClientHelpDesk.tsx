@@ -18,11 +18,9 @@ export default function ContainerClientHelpDesk(
 
   const ws = useKanbanWebSocket();
 
-  // Função para buscar dados do kanban
+  // Função para buscar dados do Kanban
   const fetchData = useCallback(async () => {
     if (!currentSetor) return;
-    setLoading(true);
-
     const { data } = await getColumnsHelpDeskForUser(currentSetor);
     if (data) {
       setColumns(data);
@@ -32,16 +30,29 @@ export default function ContainerClientHelpDesk(
       }
     } else {
       setColumns([]);
+      setCards([]);
     }
     setLoading(false);
   }, [currentSetor]);
+
+  // Função para atualizar o column_id de um card
+  const updateCardColumn = useCallback(
+    (cardId: string, newColumnId: string) => {
+      setCards((prevCards) =>
+        prevCards.map((card) =>
+          card.id === cardId ? { ...card, column_id: newColumnId } : card,
+        ),
+      );
+    },
+    [],
+  );
 
   // Busca inicial
   useEffect(() => {
     fetchData();
   }, [currentSetor, fetchData]);
 
-  // Escuta mensagens do WS para atualizar a interface
+  // Escuta mensagens do WebSocket para atualizar a interface
   useEffect(() => {
     if (!ws) return;
 
@@ -49,6 +60,7 @@ export default function ContainerClientHelpDesk(
       const data = JSON.parse(event.data);
       if (
         data.type === "cardCreated" ||
+        data.type === `cardCreated-${currentSetor}` ||
         data.type === "cardUpdated" ||
         data.type === "cardDeleted" ||
         data.type === "columnCreated" ||
@@ -57,7 +69,7 @@ export default function ContainerClientHelpDesk(
         fetchData();
       }
     };
-  }, [ws, fetchData]);
+  }, [currentSetor, ws, fetchData]);
 
   if (loading) return <div>Carregando colunas...</div>;
 
@@ -70,6 +82,7 @@ export default function ContainerClientHelpDesk(
               title={column.nome}
               columnId={column.id}
               key={column.id}
+              onCardDrop={updateCardColumn} // Passa a função para atualizar o card
             >
               {cards
                 .filter((card) => card.column_id === column.id)

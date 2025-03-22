@@ -17,7 +17,6 @@ export default async function ProtectedEmpresaLayout({
   const { user } = await validateCompanySession(empresaTag);
   // Obtém as permissões completas para o usuário logado
   const permissions = await getUserPermissions(user.usuario.id, empresaTag);
-
   return (
     <UserContextProvider user={user} permissions={permissions}>
       <GlobalContextProvider>

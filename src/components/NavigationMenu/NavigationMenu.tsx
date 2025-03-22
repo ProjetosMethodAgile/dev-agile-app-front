@@ -1,26 +1,49 @@
 "use client";
 import Link from "next/link";
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { useUser } from "@/context/userContext";
 import logout from "@/actions/logout";
 import { usePathname } from "next/navigation";
 import { PermissaoCompletaData } from "@/types/api/apiTypes";
 import { House, PanelRightClose, UserRound, LogOut } from "lucide-react";
 import iconsMap from "@/utils/iconsMap";
+import { toast } from "react-toastify";
+import useKanbanWebSocket from "@/hooks/useKanbanWebSocket";
+import getSetoresHelpDeskForUser from "@/actions/HelpDesk/getSetoresHelpDeskForUser";
 
 export default function NavigationMenu() {
   const { user, permissions } = useUser();
   const [isExpanded, setIsExpanded] = useState(false);
   const navRef = useRef(null);
   const pathname = usePathname();
+  const ws = useKanbanWebSocket();
 
-  // Verifica se a empresa está definida
+  // Chamada de hooks incondicionalmente
+  useEffect(() => {
+    async function getSetores() {
+      if (!ws) return;
+      const { data } = await getSetoresHelpDeskForUser();
+
+      ws.onmessage = async (event) => {
+        const parsedData = JSON.parse(event.data);
+        data?.Setores.forEach((setor) => {
+          if (parsedData.type === `cardCreated-${setor.id}`) {
+            toast.warning(
+              `UM NOVO CHAMADO FOI ABERTO PARA O SETOR: ${setor.nome}`,
+            );
+          }
+        });
+      };
+    }
+    getSetores();
+  }, [ws]);
+
+  // Verificação de empresa após as chamadas dos hooks
   const empresaTag = user?.usuario.empresa?.[0]?.tag;
   if (!empresaTag) {
     return <div>Empresa não definida.</div>;
   }
 
-  // Filtra apenas as permissões de nível superior (telas) – ignorando as subtelas (com parent_id)
   const accessibleScreens = permissions?.filter(
     (screen: PermissaoCompletaData) => !screen.parent_id,
   );
