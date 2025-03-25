@@ -1,4 +1,5 @@
 import getUserAll from "@/actions/getUserAll";
+import { validateScreenAccess } from "@/actions/validateScreenAccess";
 import ScreenTitle from "@/components/titles/ScreenTitle";
 import AddButton from "@/components/ui/button/RedirectButton";
 import Table from "@/components/ui/table/Table";
@@ -13,12 +14,12 @@ export default async function UsuariosDoSistemaPage(
   },
 ) {
   // const { empresaTag } = await params;
+  await validateScreenAccess("Usuarios do sistema");
   const { data, ok, error } = await getUserAll();
 
   if (!ok || !data) return <div>Não há dados para retornar: {error}</div>;
 
   const userColumns: { key: keyof User; label: string }[] = [
-    { key: "id", label: "ID" },
     { key: "nome", label: "Nome" },
     { key: "email", label: "E-mail" },
     { key: "contato", label: "Contato" },

@@ -1,9 +1,11 @@
 import getPermissionsAll from "@/actions/getPermissionsAll";
 import getRolesAll from "@/actions/getRolesAll";
+import FormStepsUser from "@/components/formSteps/FormStepsUser";
 // import FormStepsUser from "@/components/formSteps/FormStepsUser";
 import ScreenTitle from "@/components/titles/ScreenTitle";
 import { UserCheck } from "lucide-react";
 import React from "react";
+
 
 const CriarUsuarioPage = async () => {
   const roles = await getRolesAll();
@@ -17,10 +19,10 @@ const CriarUsuarioPage = async () => {
   return (
     <div className="container">
       <ScreenTitle title="Usuarios do sistema - Cadastro" icon={UserCheck} />
-      {/* <FormStepsUser
+       <FormStepsUser
         rolesData={roles.data || []}
         permissoesData={permissoes.data || []}
-      /> */}
+      /> 
     </div>
   );
 };

@@ -12,13 +12,13 @@ export default function Table<T extends { id: string | number }>({
   columns,
 }: TableProps<T>) {
   return (
-    <table className="min-w-full">
+    <table className="min-w-full mt-2">
       <thead className="dark:text-white text-start">
         <tr>
           {columns.map((col) => (
             <th key={col.key as string}>{col.label}</th>
           ))}
-          <th>actions</th>
+          <th>Ações</th>
         </tr>
       </thead>
       <tbody>
@@ -32,7 +32,7 @@ export default function Table<T extends { id: string | number }>({
             } dark:hover:bg-primary-600/60 hover:bg-primary-50/70 transition-colors`}
           >
             {columns.map((col) => (
-              <td className="px-6 py-4" key={col.key as string}>
+              <td className="px-6 py-4 cursor-pointer" key={col.key as string}>
                 {row[col.key] as React.ReactNode}
               </td>
             ))}

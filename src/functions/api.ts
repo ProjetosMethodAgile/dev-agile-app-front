@@ -142,3 +142,9 @@ export function GET_USER_ID(userId: string) {
     url: API_URL + `/usuario/${userId}`,
   };
 }
+
+export function DELETE_USER_BY_ID(userID: string) {
+  return {
+    url: API_URL + `/usuario/${userID}`,
+  };
+}

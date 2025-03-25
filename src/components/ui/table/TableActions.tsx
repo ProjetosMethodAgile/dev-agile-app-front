@@ -1,3 +1,4 @@
+import deleteUser from "@/actions/deleteUser";
 import { Pencil, Trash2 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -13,7 +14,7 @@ export default function TableActions() {
           <Pencil size={19} />
         </Link>
       </button>
-      <button className="cursor-pointer text-red-500 hover:text-red-700">
+      <button onClick={()=> deleteUser('221d16ca-4992-400f-949e-02f8fb3d8902')} className="cursor-pointer text-red-500 hover:text-red-700">
         <Trash2 size={19} />
       </button>
     </td>
