@@ -69,4 +69,15 @@ export const fluxo: EtapaFluxo[] = [
       return null;
     },
   },
+  //*logado */
+  {
+    id: 10,
+    title: "Motivo",
+    pergunta:
+      "Ola, qual motivo do contato",
+    next: (resposta: string) => {
+      void resposta;
+      return 10;
+    },
+  },
 ];

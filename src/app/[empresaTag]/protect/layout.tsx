@@ -4,7 +4,7 @@ import { validateCompanySession } from "@/app/lib/validateCompanySession";
 import { UserContextProvider } from "@/context/userContext";
 import { GlobalContextProvider } from "@/context/globalContext";
 import NavigationMenu from "@/components/NavigationMenu/NavigationMenu";
-
+import { ChatSuspenso } from "@/components/ChatSuspenso/ChatSuspenso";
 export default async function ProtectedEmpresaLayout({
   children,
   params,
@@ -24,9 +24,12 @@ export default async function ProtectedEmpresaLayout({
           <header className="animate-move-right-to-left">
             <NavigationMenu />
           </header>
+        <div className="absolute right-10 bottom-5 items-center flex  justify-center ">
+        <ChatSuspenso/>
+        </div>
           <div className="h-[100vh] w-[100vw] overflow-auto">{children}</div>
         </div>
       </GlobalContextProvider>
     </UserContextProvider>
-  );
+  );''
 }

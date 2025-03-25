@@ -4,6 +4,7 @@ import Modal from "@/components/modal/Modal";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { fluxo } from "@/components/Chatbot/Fluxo";
+import { FluxoChatSuspenso } from "@/components/ChatSuspenso/ActionChatSuspenso/FluxoChatSuspenso";
 
 type Message = {
   text: string;
@@ -61,6 +62,11 @@ type IGlobalContext = {
   motivoselecionado:string | null; 
   currentSetor: string;
   setCurrentSetor: React.Dispatch<React.SetStateAction<string>>;
+  messagesLogado:Message[];
+  setMessagesLogado: React.Dispatch<React.SetStateAction<Message[]>>;
+  
+  
+  
 };
 
 const GlobalContext = React.createContext<IGlobalContext | null>(null);
@@ -101,6 +107,19 @@ export function GlobalContextProvider({
       type: "bot",
     },
   ]);
+  const [messagesLogado, setMessagesLogado] = useState<Message[]>([
+    {
+      text: FluxoChatSuspenso[0].pergunta,
+      time: new Date().toLocaleTimeString("pt-BR", {
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit",
+      }),
+      type: "bot",
+    },
+  ]);
+
+
   const [etapaAtual, setEtapaAtual] = useState<number>(0);
   const [messageUser, setMessageUser] = useState("");
 
@@ -155,7 +174,8 @@ export function GlobalContextProvider({
         setMotivoImage,
         motivoselecionado, 
         setMotivoselecionado,
-        numChamado, setNumChamado
+        numChamado, setNumChamado,
+        messagesLogado, setMessagesLogado
       }}
     >
       {children}
