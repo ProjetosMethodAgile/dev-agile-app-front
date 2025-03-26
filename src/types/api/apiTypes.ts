@@ -163,7 +163,6 @@ export type GetUserError = {
   error: string;
 };
 
-
 //_________________________HELPDESK____________________________
 
 export type SetorHelpDesk = {
@@ -196,13 +195,12 @@ export type KanbanColumn = {
   updatedAt: string;
 };
 export type PostHelpdesk = {
-    
-  setor_id:string,
-  src_img_capa:string,
-  titulo_chamado:string,
-  status:string,
-  descricao:string,
-}
+  setor_id: string;
+  src_img_capa: string;
+  titulo_chamado: string;
+  status: string;
+  descricao: string;
+};
 
 export type GetKanbanColunaResponse = {
   columns: KanbanColumn[];
@@ -259,6 +257,7 @@ export type ColumnsHelpDesk = KanbanColumn & {
   }[];
 };
 
+//listar cards no kanban
 export type CardHelpDesk = {
   id: string;
   column_id: string;
@@ -268,6 +267,44 @@ export type CardHelpDesk = {
   createdAt: string;
   updateAt: string;
   ColumnsCard: KanbanColumn;
+};
+
+//card com mais detalhes e todo corpo de conversas
+export type CardHelpDeskSessao = {
+  id: string;
+  column_id: string;
+  src_img_capa: string;
+  titulo_chamado: string;
+  status: string;
+  createdAt: string;
+  updatedAt: string;
+  ColumnsCard: {
+    nome: string;
+  };
+  CardSessao: {
+    id: string;
+    SessaoAtendenteID: {
+      visualizacao_atendente: boolean;
+      atendente_id: string;
+      createdAt: string;
+    }[];
+    MessageSessao: {
+      atendente_id: string;
+      cliente_id: string;
+      content_msg: string;
+      createdAt: string;
+      updatedAt: string;
+      ClienteSessao: {
+        nome: string;
+      };
+      AtendenteMessage: {
+        id: string;
+        UsuarioAtendente: {
+          nome: string;
+        };
+      };
+    }[];
+  };
 };
 
 export type GetUserResult = GetUserSuccess | GetUserError;

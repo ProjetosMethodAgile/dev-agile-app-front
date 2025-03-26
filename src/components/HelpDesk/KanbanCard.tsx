@@ -6,11 +6,13 @@ import { useGlobalContext } from "@/context/globalContext";
 export type KanbanCardProps = React.ComponentProps<"div"> & {
   titleCard: string;
   cardId: string;
+  openCard: React.MouseEventHandler<HTMLDivElement>;
 };
 
 export default function KanbanCard({
   titleCard,
   cardId,
+  openCard,
   ...props
 }: KanbanCardProps) {
   const cardRef = React.useRef<HTMLDivElement>(null);
@@ -41,6 +43,7 @@ export default function KanbanCard({
           dragCardEnd(cardRef.current);
         }
       }}
+      onClick={openCard}
       {...props}
     >
       <p className="text-[18px]">{titleCard}</p>
