@@ -20,20 +20,18 @@ export default function ChatSuspensoNav({
   const { etapaAtual, motivo } = useGlobalContext();
    const handleSendMessagechatSuspenso = viewChatSuspenso();
  
-
-
   if (etapaAtual === 0 || etapaAtual === 2) {
     return (
       <nav
         className={twMerge(
         
-          "animate-move-left-to-right dark:border-primary-600/70 border-primary-300 flex min-h-115 flex-col gap-6 rounded-3xl border-2 bg-transparent p-5 backdrop-blur-2xl max-lg:mt-0 max-sm:min-w-full dark:border-1 dark:bg-black/20 dark:backdrop-blur-2xl overflow-hidden",
+          "animate-move-right-to-left   dark:border-primary-600/70 border-primary-300 flex  flex-col gap-6 rounded-3xl border-2 bg-transparent p-5 backdrop-blur-2xl max-lg:mt-0 max-sm:min-w-full dark:border-1 dark:bg-black/20 dark:backdrop-blur-2xl overflow-hidden",
           className,
         )}
         {...props}
       >
         <h1 className="p-1 text-center text-lg text-[1.1rem] font-semibold text-gray-900 dark:text-gray-100">
-          {FluxoChatSuspenso[etapaAtual].title}
+          {FluxoChatSuspenso[motivo? 1:2].title}
         </h1>
         {etapaAtual === 0 && (
           <div className="flex flex-col gap-5 overflow-y-scroll">

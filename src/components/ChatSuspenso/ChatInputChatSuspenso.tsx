@@ -44,7 +44,7 @@ export function ChatInputChatSuspenso() {
   return (
     <div className="flex">
       <input
-        className="flex w-full py-2 text-xl text-gray-600 outline-0 placeholder:text-xl placeholder:text-gray-600/50 dark:text-gray-100 dark:placeholder:text-gray-600"
+        className="flex w-full py-2 text-xl text-gray-600 outline-0 placeholder:text-xl placeholder:text-gray-600/50 dark:text-gray-100 dark:placeholder:text-gray-600 p-7"
         type="text"
         value={messageUser}
         placeholder="Digite sua mensagem"

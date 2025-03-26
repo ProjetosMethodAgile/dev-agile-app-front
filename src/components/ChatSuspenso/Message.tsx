@@ -13,14 +13,8 @@ type Message = {
 export function Message() {
   const {
     messagesLogado,
-    setMessagesLogado,
-    setDataUserChamados,
-    setTitle,
-    setSetorSelecionado,
-    setMessages,
     etapaAtual,
-    countdown,
-    numChamado,
+
   } = useGlobalContext();
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const amalfiszinho = "/image/chatAmalfis/amalfiszinho.png";
@@ -32,7 +26,7 @@ export function Message() {
   }, [messagesLogado]);
 
   return (
-    <div className="h-80 rounded-sm overflow-auto">
+    <div className="   rounded-sm overflow-auto p-10 overflow-x-hidden ">
       {messagesLogado.map((msg, index) => (
         <div
           key={index}
@@ -42,10 +36,11 @@ export function Message() {
               : `
                 relative flex w-[400px] gap-1 rounded-tl-2xl 
                 border border-amber-50 p-6 pl-[60px] break-words 
-                shadow-md ${
+                shadow-md  ${
                   msg.type === "user"
-                    ? "ml-auto justify-end rounded-r-[15px] rounded-br-[50px] bg-blue-500 text-white"
-                    : "animate-move-right-to-left from-primary-100 to-primary-150 rounded-[15px] rounded-r-[15px] rounded-bl-[50px] bg-linear-to-r/srgb text-amber-50"
+                  
+                    ? " mt-3  animate-move-left-to-right duration-[2000ms] ml-auto justify-end rounded-r-[15px] rounded-br-[50px] bg-blue-500 text-white"
+                    : "mt-3  animate-move-right-to-left duration-[500ms]  from-primary-100 to-primary-150 rounded-[15px]  rounded-r-[15px] rounded-bl-[50px] bg-linear-to-r/srgb text-amber-50"
                 }`
           }
         >
@@ -58,7 +53,7 @@ export function Message() {
               className="absolute -top-2 -left-1 h-14 w-14 rounded-full border-2 border-amber-50"
             />
           )}
-          <span className={msg.loading ? "animate-pulse" : "max-w-[350px] text-wrap"}>
+          <span className={msg.loading ? "animate-pulse" : "max-w-[350px] text-wrap  overflow-hidden"}>
             {msg.text}
             {etapaAtual === 4 &&
               etapaAtual < 5 &&

@@ -1,5 +1,4 @@
 import getMotivoSetor from "@/actions/getMotivoSetor";
-import { postCardHelpdesk } from "@/actions/HelpDesk/postCardHelpdesk";
 import { MotivoHelpDesk } from "@/types/api/apiTypes";
 import React from "react";
 
@@ -81,7 +80,6 @@ export default class ChatController {
     resetInterface: () => void,
   ): Promise<void> {
     setDataUserChamados(dataUserChamados);
-
     setCountdown(15);
     setTimeout(() => {
       resetInterface();
@@ -102,21 +100,5 @@ export default class ChatController {
     }
   }
 
-  async postCardNoLogin(
-    setor_id: string,
-    src_img_capa: string,
-    titulo_chamado: string,
-    status: string,
-    descricao: string,
-  ) {
-    const response = await postCardHelpdesk(
-      setor_id,
-      src_img_capa,
-      titulo_chamado,
-      status,
-      descricao,
-    );
 
-    return response;
-  }
 }

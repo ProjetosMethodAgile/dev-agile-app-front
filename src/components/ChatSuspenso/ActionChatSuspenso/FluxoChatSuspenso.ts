@@ -12,18 +12,18 @@ type EtapaFluxo = {
   
   export const FluxoChatSuspenso: EtapaFluxo[] = [
     {
-      id: 1,
+      id: 0,
       title: "Abrir um chamado",
       pergunta: "Com quem você quer falar?",
       next: (resposta: string) => {
         void resposta;
-        return 1;
+        return 0;
       },
     },
     {
       id: 2,
-      title: "Abrir um chamado",
-      pergunta: "Qual motivo so chamado",
+      title: "Motivo",
+      pergunta: "Qual motivo do chamado",
       next: (resposta: string) => {
         void resposta;
         return 2;

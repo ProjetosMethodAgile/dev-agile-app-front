@@ -16,10 +16,7 @@ export function ChatSuspenso () {
       const response = await getSetoresHelpDesk();
       if (response.ok && response.data) {
         setSetores(response.data);
-      } else {
-   
-        setSetores([]);
-      }
+      } 
     }
     GET_SETOR();
   }, []);

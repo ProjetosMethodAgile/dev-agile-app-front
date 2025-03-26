@@ -1,8 +1,10 @@
 import { useGlobalContext } from "@/context/globalContext";
 import { useEffect, useCallback, useState } from "react";
-import ChatController from "@/components/Chatbot/ChatFunction/GerenciaChat_Controller";
+import ChatController from "@/components/Chatbot/ChatFunction/Controller/GerenciaChat_Controller";
 import { FluxoChatSuspenso } from "./FluxoChatSuspenso";
-
+import { Chamado } from "./Controller/Chamados";
+import { ControllerChamados } from "./Controller/ControllerChamados";
+import { ChamadoLogin } from "./Controller/ChamadosLogin";
 type Message = {
   text: string;
   time: string;
@@ -11,11 +13,15 @@ type Message = {
 };
 
 export const viewChatSuspenso = () => {
+  
+  const controllerChamados = new ControllerChamados();
+
   const {
     etapaAtual,
     setEtapaAtual,
     setorSelecionado,
     setSetorSelecionado,
+    closeGlobalModal,
     messageUser,
     setMessageUser,
     title,
@@ -40,7 +46,6 @@ export const viewChatSuspenso = () => {
   const [, setMotivoID] = useState<string>("");
 
   const chatController = new ChatController();
-  
 
   // Função auxiliar para retornar o horário formatado
   const getFormattedTime = () =>
@@ -93,8 +98,10 @@ export const viewChatSuspenso = () => {
     });
     setDataUserChamados([]);
     setEtapaAtual(0);
+    closeGlobalModal(),
     setTitle(FluxoChatSuspenso[0].title);
     setSetorSelecionado(null);
+  
   };
   const handleSendMessagechatSuspenso = async (
     text: string = messageUser,
@@ -104,11 +111,13 @@ export const viewChatSuspenso = () => {
   
     // Na etapa 1, diferencie seleção do setor vs. seleção do motivo
     if (etapaAtual === 0 && e) {
+      
       if (!setorSelecionado) {
+     
         // Seleção do setor
         const setorId = e.currentTarget.id;
         const setorNome = e.currentTarget.value;
-        console.log(setorNome);
+      
         
   
         await chatController.handleSectorSelection(
@@ -117,11 +126,15 @@ export const viewChatSuspenso = () => {
           setEtapaAtual,
           SetSetorHelpdesk,
         );
+        const responseUser =  await controllerChamados.pegaUsuarioLogado();
         sendMessage(setorNome, "user");
-        sendMessage(FluxoChatSuspenso[etapaAtual].pergunta, "bot");
+        sendMessage(FluxoChatSuspenso[1].pergunta + ` ${responseUser}`, "bot");
         return;
       } else {
         // Seleção do motivo (quando o setor já foi selecionado)
+
+
+
         const motivoEscolhido = e.currentTarget.value;
         console.log("Motivo escolhido:", motivoEscolhido);
         setMotivoselecionado(motivoEscolhido);
@@ -132,18 +145,26 @@ export const viewChatSuspenso = () => {
           motivoEscolhido,
         );
   
-        console.log("Objeto retornado de pegaMotivo:", motivoObject);
         if (motivoObject && typeof motivoObject === "object") {
           setMotivo(motivoObject); // Atualiza o motivo selecionado no contexto
-          setMotivoImage(motivoObject.src_img);
           setMotivoID(motivoObject.id);
-        } else {
-          console.error("Objeto inválido recebido:", motivoObject);
-        }
+        } 
         return;
       }
     }
-  
+
+    if (etapaAtual === 2 && e) {
+      const motivoEscolhido = e.currentTarget.value;
+      setMotivoselecionado(motivoEscolhido);
+      const motivoObject = await chatController.pegaMotivo(
+        setorHelpDesk,
+        motivoEscolhido,
+      );
+      setMotivoImage(motivoObject.src_img);
+
+    }
+
+
     // 2) Ação de "voltar"
     if (text === "voltar") {
       await chatController.handleBackAction(
@@ -154,10 +175,12 @@ export const viewChatSuspenso = () => {
       );
       return;
     }
-  
+    
     // 3) Finalizar o chamado
-    if (text === "Finalizar") {
+    if (text === "Finalizar"&& etapaAtual >3) {
       setEtapaAtual(5);
+      const responseUser =  await controllerChamados.pegaUsuarioLogado();
+ 
       let numChamadoNow: string = "";
   
       const dia = new Date().getDate();
@@ -167,35 +190,61 @@ export const viewChatSuspenso = () => {
       const serial = Math.random() * (90 - 1) + 1;
   
       numChamadoNow = `${dia}${mes}${ano}${second}-${Math.floor(serial)}`;
+   
+      
       setNumChamado(numChamadoNow);
-  
+      
       const motivoNome = dataUserChamados[0] || "";
       const descricao = dataUserChamados.slice(1).join(" ") || "";
       const status = "1";
-  
-      await chatController.postCardNoLogin(
-        setorHelpDesk,             // ID do setor
-        motivoImage ?? "",         // URL da imagem do motivo
-        `Chamado: Nº: ${numChamadoNow}\n${motivoNome}\n${motivoselecionado}`,
-        status,
-        descricao,                 // Descrição do chamado
+
+      const initTitle = `Chamado: Nº: ${numChamadoNow}\n${motivoNome}\n${motivoselecionado}`
+      const chamado = new Chamado(
+        setorHelpDesk,
+        motivoImage ?? "",
+        initTitle,
+        descricao,
+        status
       );
-      sendMessage(
+      
+      
+      const chamadoLogin = new ChamadoLogin(
+       responseUser ?? " ",
+       chamado.getSetorID(),
+       chamado.getSrcImgCapa(),
+       chamado.getTitulo(),
+       chamado.getDescricao(),
+       chamado.getStatus(),
+       
+      ); 
+      
+     controllerChamados.enviarChamado(
+      chamado.getSetorID(),
+      chamado.getSrcImgCapa(),
+     `${chamado.getTitulo()} chamado de ${chamadoLogin.getNome()}`,
+      chamado.getDescricao(),
+      chamado.getStatus(),
+
+     )
+      
+
+
+     
+          sendMessage(
         `${FluxoChatSuspenso[5].pergunta} esse é o Nº: ${numChamadoNow} do chamado`,
         "bot",
       );
-  
-      // Executa a finalização após dois delays encadeados
+
       setTimeout(() => {
-        setTimeout(() => {
-          chatController.handleFinalize(
-            setCountdown,
-            setDataUserChamados,
-            dataUserChamados,
-            resetInterface,
+       
+        chatController.handleFinalize(
+          setCountdown,
+          setDataUserChamados,
+          dataUserChamados,
+          resetInterface,
           );
-        }, 10000);
-      }, 5000);
+        }, 1000);
+
       return;
     }
   
@@ -203,7 +252,9 @@ export const viewChatSuspenso = () => {
     if (etapaAtual === 3) {
       const validation = chatController.validateMessage(text);
       if (!validation.valid) {
-        sendMessage(validation.error!, "bot");
+ 
+        sendMessage(validation.error!, "bot",false);
+        
         return;
       }
     }

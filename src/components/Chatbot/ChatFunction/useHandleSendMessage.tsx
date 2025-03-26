@@ -1,7 +1,9 @@
 import { useGlobalContext } from "@/context/globalContext";
 import { fluxo } from "../Fluxo";
 import { useEffect, useCallback, useState } from "react";
-import ChatController from "@/components/Chatbot/ChatFunction/GerenciaChat_Controller";
+import ChatController from "@/components/Chatbot/ChatFunction/Controller/GerenciaChat_Controller";
+import { Chamado } from "@/components/ChatSuspenso/ActionChatSuspenso/Controller/Chamados";
+import { ControllerChamados } from "@/components/ChatSuspenso/ActionChatSuspenso/Controller/ControllerChamados";
 
 type Message = {
   text: string;
@@ -139,13 +141,36 @@ export const useHandleSendMessage = () => {
       const motivoNome = dataUserChamados[0] || "";
       const descricao = dataUserChamados.slice(1).join(" ") || "";
       const status = "1";
-      await chatController.postCardNoLogin(
-        setorHelpDesk, // ID do setor
-        motivoImage ?? "", // URL da imagem vinda do GlobalContext
-        `Chamado: Nº: ${numChamadoNow}\n${motivoNome}\n${motivoselecionado}`,
-        status,
-        descricao, // Descrição do chamado
+      // await chatController.postCardNoLogin(
+      //   setorHelpDesk, // ID do setor
+      //   motivoImage ?? "", // URL da imagem vinda do GlobalContext
+      //   `Chamado: Nº: ${numChamadoNow}\n${motivoNome}\n${motivoselecionado}`,
+      //   status,
+      //   descricao, // Descrição do chamado
+      // );
+      // console.log(motivoImage);
+      const initTitle = `Chamado: Nº: ${numChamadoNow}\n${motivoNome}\n${motivoselecionado}`
+
+ const chamado = new Chamado(
+        setorHelpDesk,
+        motivoImage ?? "",
+        initTitle,
+        descricao,
+        status
       );
+      
+      const controllerChamados = new ControllerChamados();
+      
+      await controllerChamados.enviarChamado(
+        chamado.getSetorID(),
+        chamado.getSrcImgCapa(),
+        chamado.getTitulo(),
+        chamado.getDescricao(),
+        chamado.getStatus()
+      );
+
+
+      
       sendMessage(
         fluxo[5].pergunta + ` esse é o Nº: ${numChamadoNow} do chamado`,
         "bot",
