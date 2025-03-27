@@ -23,7 +23,7 @@ export default async function EmpresaHomePage() {
         <div className="w-50">
           <InputSelectHelpDesk
             options={
-              data?.Setores.map((setor) => ({
+              data?.Setores?.map((setor) => ({
                 id: setor.id,
                 nome: setor.nome,
               })) || []

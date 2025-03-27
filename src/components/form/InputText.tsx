@@ -9,7 +9,7 @@ type FormInputTextProps = Omit<
   React.InputHTMLAttributes<HTMLInputElement> & {
     icon?: ElementType;
     label?: string;
-    inputId?: string 
+    inputId?: string;
   };
 
 export default function FormInputText({
@@ -38,10 +38,10 @@ export default function FormInputText({
       >
         {Icon && <Icon className="text-gray-600 dark:text-gray-400" />}
         <input
-          {...props}
           type={props.type || "text"}
           id={inputId && inputId}
           className="flex w-full py-2 text-xl text-gray-600 outline-0 placeholder:text-xl placeholder:text-gray-600/50 dark:text-gray-100 dark:placeholder:text-gray-500"
+          {...props}
         />
       </div>
     </div>
