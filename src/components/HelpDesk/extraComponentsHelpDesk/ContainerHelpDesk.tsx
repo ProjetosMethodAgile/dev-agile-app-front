@@ -1,4 +1,3 @@
-// src/app/ContainerClientHelpDesk.tsx
 "use client";
 import { useGlobalContext } from "@/context/globalContext";
 import { Kanban } from "..";
@@ -7,11 +6,9 @@ import getCardsHelpDeskBySetorId from "@/actions/HelpDesk/getCardsHelpDeskBySeto
 import { useEffect, useState, useCallback } from "react";
 import { CardHelpDesk, ColumnsHelpDesk } from "@/types/api/apiTypes";
 import useKanbanWebSocket from "@/hooks/useKanbanWebSocket";
-import ModalCardHelpdesk from "./ModalCardHelpdesk";
+import ModalCardHelpdesk from "./ModalCardHelpdesk/ModalCardHelpdesk";
 
-export default function ContainerClientHelpDesk(
-  props: React.ComponentProps<"div">,
-) {
+export default function ContainerHelpDesk(props: React.ComponentProps<"div">) {
   const { currentSetor, openGlobalModal, closeGlobalModal } =
     useGlobalContext();
   const [columns, setColumns] = useState<ColumnsHelpDesk[]>([]);

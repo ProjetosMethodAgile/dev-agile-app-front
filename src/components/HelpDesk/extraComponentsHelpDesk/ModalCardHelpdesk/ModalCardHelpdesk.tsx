@@ -5,6 +5,7 @@ import iconsMap from "@/utils/iconsMap";
 import { useEffect, useState } from "react";
 import formatDateSimple from "@/utils/formatDateSimple";
 import Image from "next/image";
+import InputTextMessage from "./InputTextMessage";
 export type ModalCardHelpdeskProps = React.ComponentProps<"form"> & {
   cardId: string;
   closeModal: () => void;
@@ -19,6 +20,7 @@ export default function ModalCardHelpdesk({
   const Paperclip = iconsMap["Paperclip"];
   const [loading, setLoading] = useState(false);
   const [card, setCard] = useState<CardHelpDeskSessao | null>();
+  const [message, setMessage] = useState("");
   useEffect(() => {
     async function getCardData() {
       setLoading(true);
@@ -32,7 +34,11 @@ export default function ModalCardHelpdesk({
   }, [cardId]);
 
   return (
-    <Form.Root onSubmit={(e) => e.preventDefault()} {...props}>
+    <Form.Root
+      className="max-h-[90dvh] overflow-x-hidden overflow-y-auto"
+      onSubmit={(e) => e.preventDefault()}
+      {...props}
+    >
       <div className="flex gap-5">
         <Voltar
           className="mb-4 h-10 w-10 cursor-pointer self-start active:scale-95"
@@ -50,9 +56,12 @@ export default function ModalCardHelpdesk({
 
       <div className="flex w-full flex-col gap-4 sm:w-[800px] sm:flex-row">
         {/* column-1 */}
-        <div className="w-full sm:w-3/5">
+        <div className="flex w-full flex-col gap-2 sm:w-3/5">
           {loading ? (
-            <div className="h-60 w-full animate-pulse rounded-xl bg-gray-300" />
+            <>
+              <div className="h-20 w-full animate-pulse rounded-xl bg-gray-300" />
+              <div className="h-90 w-full animate-pulse rounded-xl bg-gray-300" />
+            </>
           ) : (
             <Image
               src={
@@ -65,9 +74,50 @@ export default function ModalCardHelpdesk({
               alt="Imagem do Card"
               quality={80}
               sizes="100vw"
-              className="h-20 w-full rounded-xl object-cover"
+              className="h-30 w-full rounded-xl object-cover"
             />
           )}
+          <div className="min-h-90 rounded-xl">
+            <div className="mirror-container flex min-h-90 flex-col rounded-xl p-2">
+              {/* Área de mensagens */}
+              <div className="mb-2 flex-1 overflow-y-auto">
+                {card?.CardSessao.MessageSessao &&
+                card.CardSessao.MessageSessao.length > 0 ? (
+                  card.CardSessao.MessageSessao.map((msg, index) => {
+                    const isAtendente = Boolean(msg.AtendenteMessage);
+                    const senderName = isAtendente
+                      ? msg.AtendenteMessage.UsuarioAtendente.nome
+                      : msg.ClienteSessao?.nome || "Cliente Externo";
+                    return (
+                      <div
+                        key={index}
+                        className={`mb-4 rounded p-2 shadow ${
+                          isAtendente ? "bg-blue-100" : "bg-green-100"
+                        }`}
+                      >
+                        <div className="flex items-center justify-between">
+                          <span className="text-primary-150 text-sm font-bold">
+                            {senderName}
+                          </span>
+                          <span className="text-xs text-gray-500">
+                            {formatDateSimple(msg.createdAt)}
+                          </span>
+                        </div>
+                        <p className="mt-1 text-base text-gray-700">
+                          {msg.content_msg}
+                        </p>
+                      </div>
+                    );
+                  })
+                ) : (
+                  <p className="text-center text-gray-500">Nenhuma mensagem</p>
+                )}
+              </div>
+
+              {/* Input de nova mensagem */}
+              <InputTextMessage message={message} setMessage={setMessage} />
+            </div>
+          </div>
         </div>
         {/* column-2 */}
         <div className="flex w-full flex-col gap-2 sm:w-2/5">
