@@ -26,7 +26,7 @@ export function Message() {
   }, [messagesLogado]);
 
   return (
-    <div className="   rounded-sm overflow-auto p-10 overflow-x-hidden ">
+    <div className=" h-110  rounded-sm overflow-auto p-10 overflow-x-hidden ">
       {messagesLogado.map((msg, index) => (
         <div
           key={index}

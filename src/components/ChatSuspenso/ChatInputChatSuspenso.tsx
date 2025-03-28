@@ -15,7 +15,7 @@ export function ChatInputChatSuspenso() {
     }
   };
 
-  if (etapaAtual === 1 || etapaAtual === 2 || etapaAtual === 5) {
+  if (etapaAtual === 0 || etapaAtual === 2 || etapaAtual === 5) {
     if (motivo?.length === 0) {
       return (
         <div className="flex">
