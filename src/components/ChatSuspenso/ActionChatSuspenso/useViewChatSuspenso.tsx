@@ -1,5 +1,6 @@
+"use client";
 import { useGlobalContext } from "@/context/globalContext";
-import { useEffect, useCallback, useState } from "react";
+import { useEffect, useCallback } from "react";
 import ChatController from "@/components/Chatbot/ChatFunction/Controller/GerenciaChat_Controller";
 import { FluxoChatSuspenso } from "./FluxoChatSuspenso";
 import { Chamado } from "./Controller/Chamados";
@@ -12,8 +13,7 @@ type Message = {
   loading?: boolean;
 };
 
-export const viewChatSuspenso = () => {
-  
+export const useViewChatSuspenso = () => {
   const controllerChamados = new ControllerChamados();
 
   const {
@@ -42,8 +42,6 @@ export const viewChatSuspenso = () => {
     messagesLogado,
     setMessagesLogado,
   } = useGlobalContext();
-
-  const [, setMotivoID] = useState<string>("");
 
   const chatController = new ChatController();
 
@@ -98,57 +96,49 @@ export const viewChatSuspenso = () => {
     });
     setDataUserChamados([]);
     setEtapaAtual(0);
-    closeGlobalModal(),
+    closeGlobalModal();
     setTitle(FluxoChatSuspenso[0].title);
     setSetorSelecionado(null);
-  
   };
   const handleSendMessagechatSuspenso = async (
     text: string = messageUser,
     e?: React.MouseEvent<HTMLButtonElement>,
   ) => {
     e?.preventDefault();
-  
+
     // Na etapa 1, diferencie seleção do setor vs. seleção do motivo
     if (etapaAtual === 0 && e) {
-      
       if (!setorSelecionado) {
-     
         // Seleção do setor
         const setorId = e.currentTarget.id;
         const setorNome = e.currentTarget.value;
-      
-        
-  
+
         await chatController.handleSectorSelection(
           setorId,
           setMotivo,
           setEtapaAtual,
           SetSetorHelpdesk,
         );
-        const responseUser =  await controllerChamados.pegaUsuarioLogado();
+        const responseUser = await controllerChamados.pegaUsuarioLogado();
         sendMessage(setorNome, "user");
         sendMessage(FluxoChatSuspenso[1].pergunta + ` ${responseUser}`, "bot");
         return;
       } else {
         // Seleção do motivo (quando o setor já foi selecionado)
 
-
-
         const motivoEscolhido = e.currentTarget.value;
         console.log("Motivo escolhido:", motivoEscolhido);
         setMotivoselecionado(motivoEscolhido);
-  
+
         // Busca informações detalhadas do motivo
         const motivoObject = await chatController.pegaMotivo(
           setorHelpDesk,
           motivoEscolhido,
         );
-  
+
         if (motivoObject && typeof motivoObject === "object") {
           setMotivo(motivoObject); // Atualiza o motivo selecionado no contexto
-          setMotivoID(motivoObject.id);
-        } 
+        }
         return;
       }
     }
@@ -161,9 +151,7 @@ export const viewChatSuspenso = () => {
         motivoEscolhido,
       );
       setMotivoImage(motivoObject.src_img);
-
     }
-
 
     // 2) Ação de "voltar"
     if (text === "voltar") {
@@ -175,97 +163,88 @@ export const viewChatSuspenso = () => {
       );
       return;
     }
-    
+
     // 3) Finalizar o chamado
-    if (text === "Finalizar"&& etapaAtual >3) {
+    if (text === "Finalizar" && etapaAtual > 3) {
       setEtapaAtual(5);
-      const responseUser =  await controllerChamados.pegaUsuarioLogado();
- 
+      const responseUser = await controllerChamados.pegaUsuarioLogado();
+
       let numChamadoNow: string = "";
-  
+
       const dia = new Date().getDate();
       const mes = new Date().getUTCMonth() + 1;
       const ano = new Date().getFullYear();
       const second = new Date().getSeconds();
       const serial = Math.random() * (90 - 1) + 1;
-  
+
       numChamadoNow = `${dia}${mes}${ano}${second}-${Math.floor(serial)}`;
-   
-      
+
       setNumChamado(numChamadoNow);
-      
+
       const motivoNome = dataUserChamados[0] || "";
       const descricao = dataUserChamados.slice(1).join(" ") || "";
       const status = "1";
 
-      const initTitle = `Chamado: Nº: ${numChamadoNow}\n${motivoNome}\n${motivoselecionado}`
+      const initTitle = `Chamado: Nº: ${numChamadoNow}\n${motivoNome}\n${motivoselecionado}`;
       const chamado = new Chamado(
         setorHelpDesk,
         motivoImage ?? "",
         initTitle,
         descricao,
-        status
+        status,
       );
-      
-      
+
       const chamadoLogin = new ChamadoLogin(
-       responseUser ?? " ",
-       chamado.getSetorID(),
-       chamado.getSrcImgCapa(),
-       chamado.getTitulo(),
-       chamado.getDescricao(),
-       chamado.getStatus(),
-       
-      ); 
-      
-     controllerChamados.enviarChamado(
-      chamado.getSetorID(),
-      chamado.getSrcImgCapa(),
-     `${chamado.getTitulo()} chamado de ${chamadoLogin.getNome()}`,
-      chamado.getDescricao(),
-      chamado.getStatus(),
+        responseUser ?? " ",
+        chamado.getSetorID(),
+        chamado.getSrcImgCapa(),
+        chamado.getTitulo(),
+        chamado.getDescricao(),
+        chamado.getStatus(),
+      );
 
-     )
-      
+      controllerChamados.enviarChamado(
+        chamado.getSetorID(),
+        chamado.getSrcImgCapa(),
+        `${chamado.getTitulo()} chamado de ${chamadoLogin.getNome()}`,
+        chamado.getDescricao(),
+        chamado.getStatus(),
+      );
 
-
-     
-          sendMessage(
+      sendMessage(
         `${FluxoChatSuspenso[5].pergunta} esse é o Nº: ${numChamadoNow} do chamado`,
         "bot",
       );
 
       setTimeout(() => {
-       
         chatController.handleFinalize(
           setCountdown,
           setDataUserChamados,
           dataUserChamados,
           resetInterface,
-          );
-        }, 1000);
+        );
+      }, 1000);
 
       return;
     }
-  
+
     // 5) Validação da descrição (etapaAtual === 3)
     if (etapaAtual === 3) {
       const validation = chatController.validateMessage(text);
       if (!validation.valid) {
- 
-        sendMessage(validation.error!, "bot",false);
-        
+        sendMessage(validation.error!, "bot", false);
+
         return;
       }
     }
-  
+
     // Armazena a mensagem digitada pelo usuário e envia a mensagem
     setDataUserChamados((prev: string[]) => [...prev, text]);
     chatController.sendUserMessage(text, sendMessage, setMessageUser);
-  
+
     const proximaEtapa = FluxoChatSuspenso[etapaAtual].next(text);
     sendMessage("Escrevendo...", "bot", true);
-  
+
     // Atualiza a mensagem "Escrevendo..." após um delay para a próxima pergunta ou finalização
     setTimeout(() => {
       setMessagesLogado((prev: Message[]) => {
@@ -284,14 +263,14 @@ export const viewChatSuspenso = () => {
         }
         return updated;
       });
-  
+
       if (proximaEtapa !== null) {
         setEtapaAtual(proximaEtapa);
         setTitle(FluxoChatSuspenso[proximaEtapa].title);
       } else {
         setTitle("");
         const dadosChamado = {
-          messages: messagesLogado, 
+          messages: messagesLogado,
           setor: setorSelecionado,
           title,
           dataUserChamados,
@@ -300,7 +279,6 @@ export const viewChatSuspenso = () => {
       }
     }, 1000);
   };
-  
 
   return handleSendMessagechatSuspenso;
 };

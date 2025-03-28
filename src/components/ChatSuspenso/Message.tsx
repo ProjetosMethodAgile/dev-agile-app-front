@@ -1,7 +1,7 @@
-import { useGlobalContext } from '@/context/globalContext';
-import Image from 'next/image';
-import React, { useEffect, useRef } from 'react';
-import { viewChatSuspenso } from './ActionChatSuspenso/viewChatSuspenso';
+import { useGlobalContext } from "@/context/globalContext";
+import Image from "next/image";
+import React, { useEffect, useRef } from "react";
+import { useViewChatSuspenso } from "./ActionChatSuspenso/useViewChatSuspenso";
 
 type Message = {
   text: string;
@@ -11,36 +11,28 @@ type Message = {
 };
 
 export function Message() {
-  const {
-    messagesLogado,
-    etapaAtual,
-
-  } = useGlobalContext();
+  const { messagesLogado, etapaAtual } = useGlobalContext();
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const amalfiszinho = "/image/chatAmalfis/amalfiszinho.png";
-  const handleSendMessagechatSuspenso = viewChatSuspenso();
+  const handleSendMessagechatSuspenso = useViewChatSuspenso();
 
   // Sempre que messagesLogado mudar, rola até a última mensagem
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messagesLogado]);
 
   return (
-    <div className=" h-110  rounded-sm overflow-auto p-10 overflow-x-hidden ">
+    <div className="h-110 overflow-auto overflow-x-hidden rounded-sm p-10">
       {messagesLogado.map((msg, index) => (
         <div
           key={index}
           className={
             msg.loading
               ? ""
-              : `
-                relative flex w-[400px] gap-1 rounded-tl-2xl 
-                border border-amber-50 p-6 pl-[60px] break-words 
-                shadow-md  ${
+              : `relative flex w-[400px] gap-1 rounded-tl-2xl border border-amber-50 p-6 pl-[60px] break-words shadow-md ${
                   msg.type === "user"
-                  
-                    ? " mt-3  animate-move-left-to-right duration-[2000ms] ml-auto justify-end rounded-r-[15px] rounded-br-[50px] bg-blue-500 text-white"
-                    : "mt-3  animate-move-right-to-left duration-[500ms]  from-primary-100 to-primary-150 rounded-[15px]  rounded-r-[15px] rounded-bl-[50px] bg-linear-to-r/srgb text-amber-50"
+                    ? "animate-move-left-to-right mt-3 ml-auto justify-end rounded-r-[15px] rounded-br-[50px] bg-blue-500 text-white duration-[2000ms]"
+                    : "animate-move-right-to-left from-primary-100 to-primary-150 mt-3 rounded-[15px] rounded-r-[15px] rounded-bl-[50px] bg-linear-to-r/srgb text-amber-50 duration-[500ms]"
                 }`
           }
         >
@@ -53,7 +45,13 @@ export function Message() {
               className="absolute -top-2 -left-1 h-14 w-14 rounded-full border-2 border-amber-50"
             />
           )}
-          <span className={msg.loading ? "animate-pulse" : "max-w-[350px] text-wrap  overflow-hidden"}>
+          <span
+            className={
+              msg.loading
+                ? "animate-pulse"
+                : "max-w-[350px] overflow-hidden text-wrap"
+            }
+          >
             {msg.text}
             {etapaAtual === 4 &&
               etapaAtual < 5 &&
