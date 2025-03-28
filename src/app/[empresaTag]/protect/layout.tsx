@@ -24,7 +24,7 @@ export default async function ProtectedEmpresaLayout({
           <header className="animate-move-right-to-left">
             <NavigationMenu />
           </header>
-          <div className="absolute right-10 bottom-5 flex items-center justify-center">
+          <div className="absolute  z-2 right-10 bottom-5 flex items-center justify-center">
             <ChatSuspenso />
           </div>
           <div className="h-[100vh] w-[100vw] overflow-auto">{children}</div>

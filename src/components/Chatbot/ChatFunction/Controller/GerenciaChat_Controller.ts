@@ -76,13 +76,16 @@ export default class ChatController {
     setCountdown: (value: number | null) => void,
     setDataUserChamados: React.Dispatch<React.SetStateAction<string[]>>,
     dataUserChamados: string[],
-
     resetInterface: () => void,
+    setEtapaAtual: (etapa: number) => void,
   ): Promise<void> {
+
+    
     setDataUserChamados(dataUserChamados);
-    setCountdown(15);
+    setCountdown(5);
     setTimeout(() => {
-      resetInterface();
+    setEtapaAtual(0);
+    resetInterface();
     }, 5000);
   }
   async pegaMotivo(setorIdSelecionado: string, nomeMotivo: string) {

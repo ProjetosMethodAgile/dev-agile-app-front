@@ -25,17 +25,18 @@ export function Message() {
     <div className="h-110 overflow-auto overflow-x-hidden rounded-sm p-10">
       {messagesLogado.map((msg, index) => (
         <div
-          key={index}
-          className={
-            msg.loading
-              ? ""
-              : `relative flex w-[400px] gap-1 rounded-tl-2xl border border-amber-50 p-6 pl-[60px] break-words shadow-md ${
-                  msg.type === "user"
-                    ? "animate-move-left-to-right mt-3 ml-auto justify-end rounded-r-[15px] rounded-br-[50px] bg-blue-500 text-white duration-[2000ms]"
-                    : "animate-move-right-to-left from-primary-100 to-primary-150 mt-3 rounded-[15px] rounded-r-[15px] rounded-bl-[50px] bg-linear-to-r/srgb text-amber-50 duration-[500ms]"
-                }`
+        key={index}
+        className={
+          msg.loading
+          ? ""
+          : `relative flex w-[400px] gap-1 rounded-tl-2xl border border-amber-50 p-6 pl-[60px] break-words shadow-md ${
+            msg.type === "user"
+            ? "animate-move-left-to-right mt-3 ml-auto justify-end rounded-r-[15px] rounded-br-[50px] bg-blue-500 text-white duration-[2000ms]"
+            : "animate-move-right-to-left from-primary-100 to-primary-150 mt-3 rounded-[15px] rounded-r-[15px] rounded-bl-[50px] bg-linear-to-r/srgb text-amber-50"
+            }`
           }
-        >
+          >
+       
           {msg.type === "bot" && !msg.loading && (
             <Image
               src={amalfiszinho}
