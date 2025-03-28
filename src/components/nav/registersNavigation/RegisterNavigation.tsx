@@ -1,7 +1,7 @@
 "use client";
 import { RegisterNavProps } from "@/types/frontend/uiTypes";
-import { Circle } from "lucide-react";
-import React from "react";
+import { Circle, CircleCheck } from "lucide-react";
+import React, { act } from "react";
 
 type RegisterNavigationProps = {
   activeTab: string;
@@ -12,7 +12,7 @@ export default function RegisterNavigation({setActiveTab, activeTab}: RegisterNa
   const tabs: RegisterNavProps[] = [
     {
       name: "Informações",
-      icon: Circle,
+      icon: activeTab !== "informacoes" ? CircleCheck : Circle,
       id: "informacoes",
     },
     {
@@ -23,16 +23,16 @@ export default function RegisterNavigation({setActiveTab, activeTab}: RegisterNa
   ];
 
   return (
-    <ul className="flex flex-col gap-2 *:flex *:cursor-pointer *:items-center *:gap-2 
+    <ul className=" flex flex-col gap-2 *:flex *:cursor-pointer *:items-center *:gap-2 
     *:rounded-2xl *:px-5 *:py-2 ">
       {tabs.map((tab) => (
         <li
           key={tab.id}
           onClick={() => setActiveTab(tab.id)}
-          className={`${activeTab === tab.id ? "bg-primary-300/30" : ""} transition-all`}
+          className={`${activeTab === tab.id ? "dark:bg-primary-300/30 shadow-sm bg-primary-600 text-general" : ""} transition-all`}
         >
-          <tab.icon className="text-general size-5" />
-          <span className="text-general text-xl">{tab.name}</span>
+          <tab.icon className=" size-5 dark:text-general" />
+          <span className="text-xl font-semibold dark:text-general">{tab.name}</span>
         </li>
       ))}
     </ul>

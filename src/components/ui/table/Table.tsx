@@ -36,7 +36,7 @@ export default function Table<T extends { id: string | number }>({
                 {row[col.key] as React.ReactNode}
               </td>
             ))}
-            <TableActions />
+            <TableActions dataId={row.id} />
           </tr>
         ))}
       </tbody>

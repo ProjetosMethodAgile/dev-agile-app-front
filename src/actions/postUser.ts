@@ -78,7 +78,7 @@
        return {
          success: true,
          errors: [],
-         msg_success: "cadastro realizado com sucesso",
+         msg_success: "Usuario Cadastrado com sucesso",
        };
      } else {
        errors.push("Erro ao cadastrar, contate o administrador do sistema");

@@ -1,6 +1,6 @@
 import getPermissionsAll from "@/actions/getPermissionsAll";
 import getRolesAll from "@/actions/getRolesAll";
-import FormStepsUser from "@/components/formSteps/FormStepsUser";
+import FormStepsUser from "@/components/formSteps/createUser/FormStepsUser";
 // import FormStepsUser from "@/components/formSteps/FormStepsUser";
 import ScreenTitle from "@/components/titles/ScreenTitle";
 import { UserCheck } from "lucide-react";

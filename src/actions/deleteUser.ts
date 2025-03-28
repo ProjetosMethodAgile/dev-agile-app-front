@@ -2,11 +2,13 @@
 
 import { DELETE_USER_BY_ID } from "@/functions/api";
 import apiError from "@/functions/api-error";
-import { TokenData, UsuarioData} from "@/types/api/apiTypes";
+import { TokenData, UsuarioData } from "@/types/api/apiTypes";
 import jwt from "jsonwebtoken";
+import { revalidatePath, revalidateTag } from "next/cache";
 import { cookies } from "next/headers";
 
-export default async function deleteUser(userIdToDelete: string) {
+export default async function deleteUser(userIdToDelete: string | number) {
+  const errors: string[] = [];
   try {
     const token = (await cookies()).get("token")?.value;
     if (!token) throw new Error("Token não encontrado.");
@@ -16,27 +18,36 @@ export default async function deleteUser(userIdToDelete: string) {
     if (!usuarioData || !usuarioData.id || !usuarioData.empresa)
       throw new Error("Token inválido");
 
-    const { url } = DELETE_USER_BY_ID(userIdToDelete);
+    const { url } = DELETE_USER_BY_ID(String(userIdToDelete));
     const response = await fetch(url, {
       method: "DELETE",
       headers: {
+        "Content-Type": "application/json",
         Authorization: "Bearer " + token,
       },
       next: {
         tags: ["new-user"],
       },
     });
-    console.log(response);
-    if (!response.ok) throw new Error("Erro ao deletar usuário.");
-    const data = (await response.json()) as UsuarioData;
 
-    // Valida se o usuário possui a empresa contida no token
-    if (!data.usuario.empresa.some((e) => e.id === usuarioData.empresa.id)) {
-      throw new Error("Usuário não pertence à empresa autenticada.");
+    if (!response.ok) {
+      errors.push("Erro ao deletar, contate o administrador do sistema");
+      return {
+        success: false,
+        errors ,
+        msg_success: "",
+      };
     }
+    const data = (await response.json()) as UsuarioData;
+    revalidateTag("all-users")
 
-    return { data, ok: true, empresaToken: usuarioData.empresa };
+    return {
+      success: true,
+      errors: [],
+      msg_success: "Usuario Deletado com sucesso",
+    };
   } catch (error) {
-    return apiError(error);
+    apiError(error);
+    throw new Error("Ocorreu um erro, tente novamente.");
   }
 }
