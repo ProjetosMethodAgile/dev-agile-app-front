@@ -14,8 +14,8 @@ export default function FormButtonNavNext({
     type="submit"
     {...props}
     >
-      {Icon && <Icon className="text-gray-600 dark:text-gray-400" />}
       {direction}
+      {Icon && <Icon className=" dark:text-gray-400" />}
     </button>
   );
 }

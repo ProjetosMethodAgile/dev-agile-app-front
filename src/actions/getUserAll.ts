@@ -5,7 +5,7 @@ import apiError from "@/functions/api-error";
 import { UsuariosData } from "@/types/api/apiTypes";
 import { cookies } from "next/headers";
 
-//Busca todos os usuarios do sistema
+//Busca todos os usuarios do sistema baseado na empresa
 export default async function getUserAll() {
   try {
     const token = (await cookies()).get("token")?.value;
@@ -18,7 +18,6 @@ export default async function getUserAll() {
         Authorization: "Bearer " + token,
       },
       next: {
-        revalidate: 60,
         tags: ["all-users"],
       },
     });
