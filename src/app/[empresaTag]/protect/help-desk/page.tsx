@@ -3,7 +3,7 @@ import getSetoresHelpDeskForUser from "@/actions/HelpDesk/getSetoresHelpDeskForU
 import ScreenTitle from "@/components/titles/ScreenTitle";
 import iconsMap from "@/utils/iconsMap";
 import InputSelectHelpDesk from "@/components/HelpDesk/extraComponentsHelpDesk/InputSelectHelpDesk";
-import ContainerClientHelpDesk from "@/components/HelpDesk/extraComponentsHelpDesk/ContainerClientHelpDesk";
+import ContainerClientHelpDesk from "@/components/HelpDesk/extraComponentsHelpDesk/ContainerHelpDesk";
 
 export default async function EmpresaHomePage() {
   await validateScreenAccess("Help Desk");
@@ -23,7 +23,7 @@ export default async function EmpresaHomePage() {
         <div className="w-50">
           <InputSelectHelpDesk
             options={
-              data?.Setores.map((setor) => ({
+              data?.Setores?.map((setor) => ({
                 id: setor.id,
                 nome: setor.nome,
               })) || []

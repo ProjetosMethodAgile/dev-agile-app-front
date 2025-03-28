@@ -1,4 +1,3 @@
-// src/app/ContainerClientHelpDesk.tsx
 "use client";
 import { useGlobalContext } from "@/context/globalContext";
 import { Kanban } from "..";
@@ -7,11 +6,11 @@ import getCardsHelpDeskBySetorId from "@/actions/HelpDesk/getCardsHelpDeskBySeto
 import { useEffect, useState, useCallback } from "react";
 import { CardHelpDesk, ColumnsHelpDesk } from "@/types/api/apiTypes";
 import useKanbanWebSocket from "@/hooks/useKanbanWebSocket";
+import ModalCardHelpdesk from "./ModalCardHelpdesk/ModalCardHelpdesk";
 
-export default function ContainerClientHelpDesk(
-  props: React.ComponentProps<"div">,
-) {
-  const { currentSetor } = useGlobalContext();
+export default function ContainerHelpDesk(props: React.ComponentProps<"div">) {
+  const { currentSetor, openGlobalModal, closeGlobalModal } =
+    useGlobalContext();
   const [columns, setColumns] = useState<ColumnsHelpDesk[]>([]);
   const [cards, setCards] = useState<CardHelpDesk[]>([]);
   const [loading, setLoading] = useState(false);
@@ -71,8 +70,16 @@ export default function ContainerClientHelpDesk(
     };
   }, [currentSetor, ws, fetchData]);
 
-  if (loading) return <div>Carregando colunas...</div>;
+  async function openCurrentCard(currentCard: CardHelpDesk) {
+    openGlobalModal(
+      <ModalCardHelpdesk
+        cardId={currentCard.id}
+        closeModal={closeGlobalModal}
+      />,
+    );
+  }
 
+  if (loading) return <div>Carregando colunas...</div>;
   return (
     <div {...props}>
       <Kanban.Root>
@@ -91,6 +98,7 @@ export default function ContainerClientHelpDesk(
                     titleCard={card.titulo_chamado}
                     cardId={card.id}
                     key={card.id}
+                    openCard={() => openCurrentCard(card)}
                   />
                 ))}
             </Kanban.Column>

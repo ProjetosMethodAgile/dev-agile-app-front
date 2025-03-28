@@ -7,7 +7,7 @@ import { postSetorHelpDesk } from "@/actions/postSetorHelpDesk";
 import { redirect, useParams } from "next/navigation";
 import { useActionState } from "react";
 import { toast } from "react-toastify";
-import { ModalCadSetor } from "./ModalCadSetor"; // importe o componente criado
+import { ModalCadSetor } from "./ModalCadSetor";
 import SetorList from "./SetorList";
 
 export type SetorContainerProps = React.ComponentProps<"div">;
