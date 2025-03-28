@@ -2,26 +2,24 @@
 import { useGlobalContext } from "@/context/globalContext";
 import { Kanban } from "..";
 import getColumnsHelpDeskForUser from "@/actions/HelpDesk/getColumnsHelpDeskForUser";
+import getCardsHelpDeskBySetorId from "@/actions/HelpDesk/getCardsHelpDeskBySetorId";
 import { useEffect, useState, useCallback } from "react";
 import { CardHelpDesk, ColumnsHelpDesk } from "@/types/api/apiTypes";
-import getCardsHelpDeskBySetorId from "@/actions/HelpDesk/getCardsHelpDeskBySetorId";
-import useSocket from "@/hooks/useSocket";
+import useKanbanWebSocket from "@/hooks/useKanbanWebSocket";
+import ModalCardHelpdesk from "./ModalCardHelpdesk/ModalCardHelpdesk";
 
-export type ContainerClientHelpDeskProps = React.ComponentProps<"div">;
-
-export default function ContainerClientHelpDesk({
-  ...props
-}: ContainerClientHelpDeskProps) {
-  const { currentSetor } = useGlobalContext();
+export default function ContainerHelpDesk(props: React.ComponentProps<"div">) {
+  const { currentSetor, openGlobalModal, closeGlobalModal } =
+    useGlobalContext();
   const [columns, setColumns] = useState<ColumnsHelpDesk[]>([]);
   const [cards, setCards] = useState<CardHelpDesk[]>([]);
   const [loading, setLoading] = useState(false);
-  const socket = useSocket();
 
-  // Função para buscar dados do kanban
+  const ws = useKanbanWebSocket();
+
+  // Função para buscar dados do Kanban
   const fetchData = useCallback(async () => {
     if (!currentSetor) return;
-    setLoading(true);
     const { data } = await getColumnsHelpDeskForUser(currentSetor);
     if (data) {
       setColumns(data);
@@ -31,36 +29,57 @@ export default function ContainerClientHelpDesk({
       }
     } else {
       setColumns([]);
+      setCards([]);
     }
     setLoading(false);
   }, [currentSetor]);
 
+  // Função para atualizar o column_id de um card
+  const updateCardColumn = useCallback(
+    (cardId: string, newColumnId: string) => {
+      setCards((prevCards) =>
+        prevCards.map((card) =>
+          card.id === cardId ? { ...card, column_id: newColumnId } : card,
+        ),
+      );
+    },
+    [],
+  );
+
+  // Busca inicial
   useEffect(() => {
     fetchData();
   }, [currentSetor, fetchData]);
 
-  // Efeito para escutar os eventos do socket
+  // Escuta mensagens do WebSocket para atualizar a interface
   useEffect(() => {
-    if (!socket) return;
-    // Escuta os eventos do kanban e atualiza os dados
-    socket.on("cardCreated", fetchData);
-    socket.on("cardUpdated", fetchData);
-    socket.on("cardDeleted", fetchData);
-    socket.on("columnCreated", fetchData);
-    socket.on("columnUpdated", fetchData);
+    if (!ws) return;
 
-    // Limpeza: remove os ouvintes quando o componente desmontar ou socket mudar
-    return () => {
-      socket.off("cardCreated", fetchData);
-      socket.off("cardUpdated", fetchData);
-      socket.off("cardDeleted", fetchData);
-      socket.off("columnCreated", fetchData);
-      socket.off("columnUpdated", fetchData);
+    ws.onmessage = (event) => {
+      const data = JSON.parse(event.data);
+      if (
+        data.type === "cardCreated" ||
+        data.type === `cardCreated-${currentSetor}` ||
+        data.type === "cardUpdated" ||
+        data.type === "cardDeleted" ||
+        data.type === "columnCreated" ||
+        data.type === "columnUpdated"
+      ) {
+        fetchData();
+      }
     };
-  }, [socket, fetchData]);
+  }, [currentSetor, ws, fetchData]);
+
+  async function openCurrentCard(currentCard: CardHelpDesk) {
+    openGlobalModal(
+      <ModalCardHelpdesk
+        cardId={currentCard.id}
+        closeModal={closeGlobalModal}
+      />,
+    );
+  }
 
   if (loading) return <div>Carregando colunas...</div>;
-
   return (
     <div {...props}>
       <Kanban.Root>
@@ -70,6 +89,7 @@ export default function ContainerClientHelpDesk({
               title={column.nome}
               columnId={column.id}
               key={column.id}
+              onCardDrop={updateCardColumn} // Passa a função para atualizar o card
             >
               {cards
                 .filter((card) => card.column_id === column.id)
@@ -78,6 +98,7 @@ export default function ContainerClientHelpDesk({
                     titleCard={card.titulo_chamado}
                     cardId={card.id}
                     key={card.id}
+                    openCard={() => openCurrentCard(card)}
                   />
                 ))}
             </Kanban.Column>

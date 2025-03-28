@@ -4,7 +4,7 @@ import { validateCompanySession } from "@/app/lib/validateCompanySession";
 import { UserContextProvider } from "@/context/userContext";
 import { GlobalContextProvider } from "@/context/globalContext";
 import NavigationMenu from "@/components/NavigationMenu/NavigationMenu";
-
+import { ChatSuspenso } from "@/components/ChatSuspenso/ChatSuspenso";
 export default async function ProtectedEmpresaLayout({
   children,
   params,
@@ -17,7 +17,6 @@ export default async function ProtectedEmpresaLayout({
   const { user } = await validateCompanySession(empresaTag);
   // Obtém as permissões completas para o usuário logado
   const permissions = await getUserPermissions(user.usuario.id, empresaTag);
-
   return (
     <UserContextProvider user={user} permissions={permissions}>
       <GlobalContextProvider>
@@ -25,6 +24,9 @@ export default async function ProtectedEmpresaLayout({
           <header className="animate-move-right-to-left">
             <NavigationMenu />
           </header>
+          <div className="absolute right-10 bottom-5 flex items-center justify-center">
+            <ChatSuspenso />
+          </div>
           <div className="h-[100vh] w-[100vw] overflow-auto">{children}</div>
         </div>
       </GlobalContextProvider>

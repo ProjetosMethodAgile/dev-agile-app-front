@@ -44,6 +44,7 @@ export async function postSetorHelpDesk(
       body: JSON.stringify({
         nome: nomeSetor,
         empresa_id: usuarioData.empresa.id,
+        email_setor: usuarioData.emailSetor,
       }),
     });
     if (response.ok) {

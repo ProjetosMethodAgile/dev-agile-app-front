@@ -2,7 +2,6 @@
 import { redirect } from "next/navigation";
 import getUser from "@/actions/getUser";
 import getEmpresaByTag from "@/actions/getEmpresaByTag";
-import logout from "@/actions/logout";
 
 /**
  * Valida que:
@@ -22,7 +21,7 @@ export async function validateCompanySession(empresaTag: string) {
   // Obtém os dados do usuário (incluindo o objeto 'empresa' presente no token)
   const userResult = await getUser();
   if (!userResult.ok || !userResult.data) {
-    await logout(empresaTag);
+    // await logout(empresaTag);
     redirect(`/${empresaTag}/login`);
   }
 

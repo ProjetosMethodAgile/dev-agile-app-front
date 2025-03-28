@@ -17,6 +17,8 @@ export default async function getMotivoSetor(setorId: string) {
 
     if (!response.ok) throw new Error("Erro ao pegar os dados da empresa.");
     const data = (await response.json()) as EmpresaData;
+
+    
     return { data: data, ok: true };
   } catch (error) {
     return apiError(error);

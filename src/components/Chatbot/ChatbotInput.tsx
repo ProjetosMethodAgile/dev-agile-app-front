@@ -12,7 +12,7 @@ export default function ChatbotInput({
   const { setMessageUser, messageUser, etapaAtual, motivo } = useGlobalContext();
   const handleSendMessage = useHandleSendMessage();
 
-  if (etapaAtual === 1 || (etapaAtual === 2) ) {
+  if (etapaAtual === 1 || (etapaAtual === 2) || etapaAtual === 5  ) {
         if (motivo?.length === 0) {
           return (
             <div className={twMerge("mt-2", className)} {...props}>

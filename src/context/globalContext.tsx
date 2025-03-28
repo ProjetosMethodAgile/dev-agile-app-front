@@ -4,6 +4,7 @@ import Modal from "@/components/modal/Modal";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { fluxo } from "@/components/Chatbot/Fluxo";
+import { FluxoChatSuspenso } from "@/components/ChatSuspenso/ActionChatSuspenso/FluxoChatSuspenso";
 
 type Message = {
   text: string;
@@ -51,8 +52,21 @@ type IGlobalContext = {
   >;
   motivo: string[] | null;
   setMotivo: React.Dispatch<React.SetStateAction<string[] | null>>;
+  motivoID: string | null;
+  setMotivoID: React.Dispatch<React.SetStateAction<string | null>>;
+  motivoImage: string | null;
+  setMotivoImage: React.Dispatch<React.SetStateAction<string | null>>;
+  numChamado: string | null;
+  setNumChamado: React.Dispatch<React.SetStateAction<string | null>>;
+  setMotivoselecionado: React.Dispatch<React.SetStateAction<string>>;
+  motivoselecionado:string | null; 
   currentSetor: string;
   setCurrentSetor: React.Dispatch<React.SetStateAction<string>>;
+  messagesLogado:Message[];
+  setMessagesLogado: React.Dispatch<React.SetStateAction<Message[]>>;
+  
+  
+  
 };
 
 const GlobalContext = React.createContext<IGlobalContext | null>(null);
@@ -80,6 +94,8 @@ export function GlobalContextProvider({
   const [card, setCard] = useState<HTMLDivElement | null>(null);
   const [setorSelecionado, setSetorSelecionado] = useState<Setor | null>(null);
   const [setorHelpDesk, SetSetorHelpdesk] = useState<string>("");
+  const [motivoselecionado, setMotivoselecionado] = useState<string>("");
+
   const [messages, setMessages] = useState<Message[]>([
     {
       text: fluxo[0].pergunta,
@@ -91,6 +107,19 @@ export function GlobalContextProvider({
       type: "bot",
     },
   ]);
+  const [messagesLogado, setMessagesLogado] = useState<Message[]>([
+    {
+      text: FluxoChatSuspenso[0].pergunta,
+      time: new Date().toLocaleTimeString("pt-BR", {
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit",
+      }),
+      type: "bot",
+    },
+  ]);
+
+
   const [etapaAtual, setEtapaAtual] = useState<number>(0);
   const [messageUser, setMessageUser] = useState("");
 
@@ -103,6 +132,9 @@ export function GlobalContextProvider({
     setGlobalModalContent(null);
   };
   const [motivo, setMotivo] = useState<string[] | null>(null);
+  const [motivoID, setMotivoID] = useState<string | null>(null);
+  const [motivoImage, setMotivoImage] = useState<string | null>(null);
+  const [numChamado, setNumChamado] = useState<string | null>(null);
 
   //================HELP-DESK=========================//
 
@@ -136,6 +168,14 @@ export function GlobalContextProvider({
         SetSetorHelpdesk,
         currentSetor,
         setCurrentSetor,
+        motivoID, 
+        setMotivoID,
+        motivoImage,
+        setMotivoImage,
+        motivoselecionado, 
+        setMotivoselecionado,
+        numChamado, setNumChamado,
+        messagesLogado, setMessagesLogado
       }}
     >
       {children}

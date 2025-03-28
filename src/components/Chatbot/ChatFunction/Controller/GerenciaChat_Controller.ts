@@ -1,18 +1,13 @@
-// ChatController.ts
-import getKanbanColunaBySetorId from "@/actions/getKanbanColunaBySetorId";
 import getMotivoSetor from "@/actions/getMotivoSetor";
 import { MotivoHelpDesk } from "@/types/api/apiTypes";
 import React from "react";
 
 export default class ChatController {
-  /**
-   * Trata a seleção do setor e atualiza a etapa.
-   */
   async handleSectorSelection(
     setorId: string,
     setMotivo: (motivos: string[] | null) => void,
     setEtapaAtual: (etapa: number) => void,
-    SetSetorHelpdesk: React.Dispatch<React.SetStateAction<string>>,
+    setSetorHelpdesk: React.Dispatch<React.SetStateAction<string>>,
   ): Promise<void> {
     const response = await getMotivoSetor(setorId);
     if (Array.isArray(response.data)) {
@@ -20,19 +15,11 @@ export default class ChatController {
         (motivo: MotivoHelpDesk) => motivo.descricao,
       );
       setMotivo(motivos);
-      SetSetorHelpdesk(setorId);
+      setSetorHelpdesk(setorId);
     }
-
     setEtapaAtual(2);
   }
 
-  /**
-   * Valida o input do usuario
-   */
-
-  /**
-   * Valida o comprimento e conteúdo da mensagem.
-   */
   validateMessage(message: string): { valid: boolean; error?: string } {
     const trimmed = message.trim();
     if (!trimmed) {
@@ -53,9 +40,6 @@ export default class ChatController {
     return { valid: true };
   }
 
-  /**
-   * Envia a mensagem do usuário e limpa o input.
-   */
   sendUserMessage(
     text: string,
     sendMessage: (
@@ -70,13 +54,6 @@ export default class ChatController {
     setMessageUser("");
   }
 
-  /**
-   * Trata a ação de "voltar":
-   * - Envia a mensagem de voltar;
-   * - Limpa o input;
-   * - Exibe a mensagem de loading;
-   * - Ativa o contador de 5 segundos e, após esse tempo, reseta a interface.
-   */
   async handleBackAction(
     sendMessage: (
       newMessage: string,
@@ -90,9 +67,7 @@ export default class ChatController {
     sendMessage("voltar", "user");
     setMessageUser("");
     sendMessage("Escrevendo...", "bot", true);
-    // Ativa o contador de 5 segundos
     setCountdown(5);
-    // Após 5 segundos, reseta a interface
     setTimeout(() => {
       resetInterface();
     }, 5000);
@@ -101,20 +76,29 @@ export default class ChatController {
     setCountdown: (value: number | null) => void,
     setDataUserChamados: React.Dispatch<React.SetStateAction<string[]>>,
     dataUserChamados: string[],
+
     resetInterface: () => void,
   ): Promise<void> {
     setDataUserChamados(dataUserChamados);
-    console.log(dataUserChamados);
-
-    setCountdown(5);
+    setCountdown(15);
     setTimeout(() => {
       resetInterface();
     }, 5000);
   }
-
-  async buscaColunaKanbam(setor_id: string) {
-    const response = await getKanbanColunaBySetorId(setor_id);
-    const primeiraColuna = response.columns[0];
-    return primeiraColuna;
+  async pegaMotivo(setorIdSelecionado: string, nomeMotivo: string) {
+    const response = await getMotivoSetor(setorIdSelecionado);
+    if (Array.isArray(response.data)) {
+      const motivoEncontrado = response.data.find(
+        (motivo: MotivoHelpDesk) => motivo.descricao === nomeMotivo,
+      );
+      if (motivoEncontrado) {
+        return motivoEncontrado;
+      } else {
+        console.log("Motivo não encontrado");
+        return null;
+      }
+    }
   }
+
+
 }
