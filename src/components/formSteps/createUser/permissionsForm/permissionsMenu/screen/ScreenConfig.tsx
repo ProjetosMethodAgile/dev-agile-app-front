@@ -1,10 +1,10 @@
 import { Form } from "@/components/form";
-import { PermissaoCompletaData } from "@/types/api/apiTypes";
+import { PermissaoCompletaData, PermissoesRole } from "@/types/api/apiTypes";
 import { PermissionsState } from "../PermissionsMenu";
 import { ChevronDown, ChevronRight } from "lucide-react";
 
 type ScreenConfigProps = {
-  permissoesData: PermissaoCompletaData[];
+  permissoesData: PermissoesRole[];
   activeTab: string;
   actions: PermissionsState;
   handleClickScreen: (screen_id: string, screen_name: string) => void;
@@ -28,12 +28,12 @@ export default function ScreeConfig({
         if (screen.parent_id === null && screen.id === activeTab) {
           return (
             <div
-              className="border-primary-900 bg-primary-900/70 flex cursor-pointer items-center justify-between gap-4 rounded-2xl border-2 p-2"
+              className="border-primary-900 group bg-primary-900/70 flex cursor-pointer items-center justify-between gap-4 rounded-2xl border-2 p-2"
               key={screen.id}
               onClick={() => handleClickScreen(screen.id, screen.nome)}
             >
               <h3
-                className={`} cursor-pointer text-xl font-semibold`}
+                className={`cursor-pointer text-xl font-semibold group-hover:translate-x-2 transition-all`}
                 key={screen.nome}
               >
                 {screen.nome}

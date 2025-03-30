@@ -1,4 +1,5 @@
-import getUserAll from "@/actions/getUserAll";
+
+import getUsersByEmpresaId from "@/actions/getUsersByEmpresaId";
 import { validateScreenAccess } from "@/actions/validateScreenAccess";
 import ScreenTitle from "@/components/titles/ScreenTitle";
 import AddButton from "@/components/ui/button/RedirectButton";
@@ -6,16 +7,10 @@ import Table from "@/components/ui/table/Table";
 import { User } from "@/types/api/apiTypes";
 import iconsMap from "@/utils/iconsMap";
 
-export default async function UsuariosDoSistemaPage(
-  {
-    // params,
-  }: {
-    params: Promise<{ empresaTag: string }>;
-  },
-) {
-  // const { empresaTag } = await params;
+export default async function UsuariosDoSistemaPage() {
+
   await validateScreenAccess("Usuarios do sistema");
-  const { data, ok, error } = await getUserAll();
+  const { data, ok, error } = await getUsersByEmpresaId();
 
   if (!ok || !data) return <div>Não há dados para retornar: {error}</div>;
 

@@ -1,4 +1,4 @@
-import { PermissaoCompletaData } from "@/types/api/apiTypes";
+import { PermissoesRole } from "@/types/api/apiTypes";
 import { act } from "react";
 
 export default function PermissionsNavigationForm({
@@ -7,7 +7,7 @@ export default function PermissionsNavigationForm({
   setActiveTab,
   activeTab,
 }: {
-  permissionsData: PermissaoCompletaData[];
+  permissionsData: PermissoesRole[];
   children: React.ReactNode;
   setActiveTab: React.Dispatch<React.SetStateAction<string>>;
   activeTab: string;
@@ -15,23 +15,22 @@ export default function PermissionsNavigationForm({
   return (
     <nav className="flex-col">
       <div className="flex gap-4">
-        {permissionsData.map((screen) => {
-          if (screen.parent_id === null) {
-            return (
-              <h3
-                onClick={() => setActiveTab(screen.id)}
-                className={`cursor-pointer text-xl font-semibold ${activeTab === screen.id ? "text-primary-50 border-b-2" : "text-gray-600"}`}
-                key={screen.nome}
-              >
-                {screen.nome}
-              </h3>
-            );
-          }
-        })}
+        {permissionsData &&
+          permissionsData.map((screen) => {
+            if (screen.parent_id === null) {
+              return (
+                <h3
+                  onClick={() => setActiveTab(screen.id)}
+                  className={`cursor-pointer hover:text-primary-50 text-xl font-semibold ${activeTab === screen.id ? "text-primary-50 border-b-2" : "text-gray-600"}`}
+                  key={screen.nome}
+                >
+                  {screen.nome}
+                </h3>
+              );
+            }
+          })}
       </div>
-      <div className="flex h-[100vh] flex-col  p-3 text-lg">
-        {children}
-      </div>
+      <div className="flex h-[100vh] flex-col p-3 text-lg">{children}</div>
     </nav>
   );
 }
