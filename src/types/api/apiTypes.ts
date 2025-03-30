@@ -65,6 +65,13 @@ export type UserAcaoTela = {
   updatedAt: string;
 };
 
+export type PermissoesRole = {
+  id: string;
+  nome: string;
+  descricao: string;
+  parent_id: string;
+};
+
 export type PermissaoUserData = {
   permissao_id: string;
   acessos: PermissoesData;

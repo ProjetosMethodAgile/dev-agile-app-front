@@ -1,10 +1,10 @@
 import { Form } from "@/components/form";
-import { PermissaoCompletaData } from "@/types/api/apiTypes";
+import { PermissaoCompletaData, PermissoesRole } from "@/types/api/apiTypes";
 import { ChevronDown, ChevronRight } from "lucide-react";
 import { PermissionsState } from "../PermissionsMenu";
 
 type SubsScreenConfigProps = {
-  permissoesData: PermissaoCompletaData[];
+  permissoesData: PermissoesRole[];
   activeTab: string;
   actions: PermissionsState;
   handleClickScreen: (screen_id: string, screen_name: string) => void;
@@ -23,7 +23,7 @@ export default function SubScreenConfig({
 }: SubsScreenConfigProps) {
   return (
     <div>
-      {permissoesData.map((subScreen: PermissaoCompletaData) => {
+      {permissoesData.map((subScreen: PermissoesRole) => {
         if (
           subScreen.parent_id !== null &&
           subScreen.parent_id === activeTab &&
@@ -34,14 +34,14 @@ export default function SubScreenConfig({
           return (
             <div
               key={subScreen.id}
-              className="border-primary-600/40 ml-4 border-b-2 py-2"
+              className="border-primary-600/40 ml-4 border-b-2 py-2 group"
             >
               {/* Botão de alternar visibilidade */}
               <div
                 className="flex cursor-pointer items-center gap-2"
                 onClick={() => handleClickScreen(subScreen.id, subScreen.nome)}
               >
-                {subScreen.nome}
+                <h1 className="group-hover:translate-x-1 transition-all">{subScreen.nome}</h1>
                 {action?.isVisible ? <ChevronDown /> : <ChevronRight />}
               </div>
 

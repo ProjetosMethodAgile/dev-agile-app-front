@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useActionState, useEffect } from "react";
+import React, { useActionState, useEffect, useState } from "react";
 import { Form } from "../../form";
 import { toast } from "react-toastify";
 import { redirect } from "next/navigation";
@@ -14,20 +14,22 @@ import {
   Phone,
   UserCircle,
 } from "lucide-react";
-import { RoleData, PermissaoCompletaData } from "@/types/api/apiTypes";
+import {
+  RoleData,
+  PermissaoCompletaData,
+  PermissoesData,
+  PermissoesRole,
+} from "@/types/api/apiTypes";
 import PermissionsMenu from "./permissionsForm/permissionsMenu/PermissionsMenu";
 import { postUser } from "@/actions/postUser";
 import { useGlobalContext } from "@/context/globalContext";
+import getPermissionsByRoleId from "@/actions/getPermissionsByRoleId";
 
 type FormStepsUser = {
   rolesData: RoleData[];
-  permissoesData: PermissaoCompletaData[];
 };
 
-export default function FormStepsUser({
-  rolesData,
-  permissoesData,
-}: FormStepsUser) {
+export default function FormStepsUser({ rolesData }: FormStepsUser) {
   const [activeTab, setActiveTab] = React.useState("informacoes");
   const [currentRoles, setCurrentRoles] = React.useState<RoleData[] | []>(
     rolesData,
@@ -37,6 +39,19 @@ export default function FormStepsUser({
     senha: "",
     confirmar_senha: "",
   });
+  const [permissoesData, setPermissoesData] = useState<PermissoesRole[] | []>(
+    [],
+  );
+
+  function handleRoleChange(role_id: string) {
+    async function getPermissions() {
+      const { data } = await getPermissionsByRoleId(role_id);
+      if (data) {
+        setPermissoesData(data);
+      }
+    }
+    getPermissions();
+  }
 
   const [state, formAction] = useActionState(postUser, {
     errors: [],
@@ -58,11 +73,11 @@ export default function FormStepsUser({
   }, [state]);
 
   return (
-    <div className="flex gap-5 ">
+    <div className="flex gap-5">
       <RegisterNavigation setActiveTab={setActiveTab} activeTab={activeTab} />
       <Form.Root className="w-full" action={formAction}>
         <div className={` ${activeTab !== "informacoes" ? "hidden" : ""}`}>
-          <Form.Section  title="Dados do usuario">
+          <Form.Section title="Dados do usuario">
             <Form.InputText
               icon={UserCircle}
               inputId="nome"
@@ -138,6 +153,9 @@ export default function FormStepsUser({
               id="tipo_usuario"
               name="tipo_usuario"
               defaultOptionText="Selecione"
+              onChange={(id) => {
+                handleRoleChange(id);
+              }}
             />
           </Form.Section>
           <Form.Section title="Permissões">

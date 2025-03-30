@@ -1,9 +1,15 @@
-export const API_URL = "https://devagile.com.br/api";
-// export const API_URL = "http://localhost:3001/api";
+//export const API_URL = "https://devagile.com.br/api";
+export const API_URL = "http://localhost:3001/api";
 
 export function GET_PERMISSIONS_ALL() {
   return {
     url: API_URL + "/permissoes",
+  };
+}
+
+export function GET_PERMISSIONS_BY_ROLE_ID(id:string) {
+  return {
+    url: API_URL + `/permissoes/roles/${id}`,
   };
 }
 
@@ -140,6 +146,12 @@ export function POST_USUARIO() {
 export function GET_USER_ALL() {
   return {
     url: API_URL + `/usuarios`,
+  };
+}
+
+export function GET_USERS_BY_EMP_ID(id: string) {
+  return {
+    url: API_URL + `/usuarios/empresa/${id}`,
   };
 }
 

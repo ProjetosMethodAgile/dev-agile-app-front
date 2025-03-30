@@ -4,7 +4,7 @@ import NavComponent from "@/components/nav/nav";
 import TestSocketButton from "@/components/TestSocketButton/TestSocketButton";
 
 export default async function EmpresaHomePage() {
-  await validateScreenAccess("Help Desk");
+  await validateScreenAccess("Home");
 
   return (
     <main className="p-6">
