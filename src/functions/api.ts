@@ -96,6 +96,12 @@ export function POST_CHAMADO_KANBAN_COLUNA() {
   };
 }
 
+export function POST_AUTH_CHAMADO_KANBAN_COLUNA() {
+  return {
+    url: API_URL + `/helpdesk/card/auth`,
+  };
+}
+
 export function PUT_ORDEM_KANBAN_COLUNA() {
   return {
     url: API_URL + `/helpdesk/columnsBySetor`,

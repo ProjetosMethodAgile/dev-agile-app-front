@@ -100,6 +100,7 @@ export const useViewChatSuspenso = () => {
     setTitle(FluxoChatSuspenso[0].title);
     setSetorSelecionado(null);
   };
+
   const handleSendMessagechatSuspenso = async (
     text: string = messageUser,
     e?: React.MouseEvent<HTMLButtonElement>,
@@ -185,7 +186,7 @@ export const useViewChatSuspenso = () => {
       const descricao = dataUserChamados.slice(1).join(" ") || "";
       const status = "1";
 
-      const initTitle = `Chamado: Nº: ${numChamadoNow}\n${motivoNome}\n${motivoselecionado}`;
+      const initTitle = `Chamado: Nº: ${numChamadoNow} - \n${motivoselecionado}`;
       const chamado = new Chamado(
         setorHelpDesk,
         motivoImage ?? "",
@@ -203,10 +204,10 @@ export const useViewChatSuspenso = () => {
         chamado.getStatus(),
       );
 
-      controllerChamados.enviarChamado(
+      controllerChamados.enviarChamadoAuth(
         chamado.getSetorID(),
         chamado.getSrcImgCapa(),
-        `${chamado.getTitulo()} chamado de ${chamadoLogin.getNome()}`,
+        `${chamado.getTitulo()} - ${chamadoLogin.getNome()}`,
         chamado.getDescricao(),
         chamado.getStatus(),
       );
