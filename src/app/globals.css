@@ -1,0 +1,147 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&family=Roboto:wght@100;300;400;500;700;900&display=swap");
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* ================== Variáveis de Tema ================== */
+@theme {
+  /* Cores Primárias (Dark e Light) */
+  --color-primary-50: #afbad4;
+  --color-primary-200: #5a6b9b;
+  --color-primary-300: #0547a6;
+  --color-primary-500: #294281;
+  --color-primary-600: #14254f;
+  --color-primary-900: #07122e;
+  --color-primary-100: #0547a6;
+  --color-primary-150: #021b40;
+  --color-primary-170: #07122e;
+
+  --color-primary-l-100: #9bf2ff;
+  --color-custom-green-100: #cee7d1;
+  --color-custom-green-700: #1d7b40;
+  --color-custom-green-800: #10622f;
+
+  /* Cores de Texto */
+  --color-general: #afbad4;
+  --color-title: #d7dce8;
+  --color-placeholder: #8a8e8f;
+
+  /* Fontes */
+  --font-poppins: "Poppins", sans-serif;
+  --font-roboto: "Roboto", sans-serif;
+
+  /* Animações */
+  --animate-move-left-to-right: move-left-to-right 0.6s ease;
+  --animate-move-right-to-left: move-right-to-left 0.6s ease;
+  --animate-expandir: expandir 1s alternate ease;
+  --animate-move-low-move: low-move 5s infinite alternate ease;
+  --animate-slide-down: slideDown 0.5s ease-out forwards;
+  --animate-pulseBorder: pulseBord 0.5s ease-out forwards;
+}
+
+.mirror-container {
+  @apply animate-move-left-to-right dark:border-primary-600/70 border-primary-300 rounded-3xl border-2 bg-transparent p-5 backdrop-blur-2xl max-lg:mt-0 max-sm:min-w-full dark:bg-black/20;
+}
+
+/* Responsivo*/
+/* ================== Container ================== */
+@utility container {
+  padding: 2rem;
+}
+
+/* ================== Keyframes ================== */
+@keyframes low-move {
+  0% {
+    transform: translateY(200px);
+  }
+  100% {
+    transform: translateY(0);
+    transform: translateX(100px);
+  }
+}
+
+@keyframes move-left-to-right {
+  0% {
+    transform: translateX(25%);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes move-right-to-left {
+  0% {
+    transform: translateX(-25%);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes expandir {
+  0% {
+    width: 0;
+  }
+  100% {
+    width: 80%;
+  }
+}
+
+@keyframes slideDown {
+  0% {
+    transform: translateY(-20px); /* Posição inicial acima */
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0); /* Posição final */
+    opacity: 1;
+  }
+}
+@keyframes pulseBord {
+  0% {
+    border: 1px;
+    border-color: red;
+  }
+  50% {
+    border: 2px;
+  }
+  100% {
+    border-color: white;
+    border: 1px;
+  }
+}
+
+/* ================== Scrollbar ================== */
+*::-webkit-scrollbar {
+  width: 8px;
+}
+
+*::-webkit-scrollbar-track {
+  border-radius: 8px;
+  background-color: #c1c1c1;
+  box-shadow: inset 0 0 1px rgba(0, 0, 0, 0.3);
+}
+
+*::-webkit-scrollbar-thumb {
+  border-radius: 4px;
+  background-color: var(--color-primary-500);
+}
+
+/* ================== Autofill ================== */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+textarea:-webkit-autofill,
+textarea:-webkit-autofill:hover,
+textarea:-webkit-autofill:focus,
+select:-webkit-autofill,
+select:-webkit-autofill:hover,
+select:-webkit-autofill:focus {
+  color: white !important;
+  background-color: transparent !important;
+  transition: background-color 5000s ease-in-out 0s;
+}
