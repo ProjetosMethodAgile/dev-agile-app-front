@@ -107,6 +107,11 @@ export function POST_AUTH_CHAMADO_KANBAN_COLUNA() {
     url: API_URL + `/helpdesk/card/auth`,
   };
 }
+export function POST_REPLY_CHAMADO_KANBAN() {
+  return {
+    url: API_URL + `/helpdesk/message/reply`,
+  };
+}
 
 export function PUT_ORDEM_KANBAN_COLUNA() {
   return {

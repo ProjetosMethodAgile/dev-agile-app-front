@@ -301,8 +301,16 @@ export type CardHelpDeskSessao = {
       content_msg: string;
       createdAt: string;
       updatedAt: string;
+      message_id: string;
+      from_email: string;
+      to_email: string;
+      cc_email: string;
+      subject: string;
+      in_reply_to: string;
+      references_email: string;
       ClienteSessao: {
         nome: string;
+        email: string;
       };
       AtendenteMessage: {
         id: string;
