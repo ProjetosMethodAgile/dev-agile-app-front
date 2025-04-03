@@ -1,5 +1,5 @@
-//export const API_URL = "https://devagile.com.br/api";
-export const API_URL = "http://localhost:3001/api";
+export const API_URL = "https://devagile.com.br/api";
+// export const API_URL = "http://localhost:3001/api";
 
 export function GET_PERMISSIONS_ALL() {
   return {
@@ -7,7 +7,7 @@ export function GET_PERMISSIONS_ALL() {
   };
 }
 
-export function GET_PERMISSIONS_BY_ROLE_ID(id:string) {
+export function GET_PERMISSIONS_BY_ROLE_ID(id: string) {
   return {
     url: API_URL + `/permissoes/roles/${id}`,
   };

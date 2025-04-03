@@ -1,8 +1,6 @@
-import { PermissaoCompletaData, PermissoesRole } from "@/types/api/apiTypes";
+import { PermissoesRole } from "@/types/api/apiTypes";
 import React, { useState } from "react";
 import PermissionsNavigationForm from "../layout";
-import { ChevronDown, ChevronRight } from "lucide-react";
-import { Form } from "@/components/form";
 import SubScreenConfig from "./subscreen/SubScreenConfig";
 import ScreeConfig from "./screen/ScreenConfig";
 
@@ -89,9 +87,14 @@ export default function PermissionsMenu({
       };
     });
   }
- 
-  if(permissoesData && permissoesData.length < 1) return <div className="text-primary-200 col-span-3">Por Favor, Selecione um tipo de usuario</div>
-  
+
+  if (permissoesData && permissoesData.length < 1)
+    return (
+      <div className="text-primary-200 col-span-3">
+        Por Favor, Selecione um tipo de usuario
+      </div>
+    );
+
   return (
     <div className="col-span-full">
       <PermissionsNavigationForm

@@ -4,7 +4,7 @@ import { DELETE_USER_BY_ID } from "@/functions/api";
 import apiError from "@/functions/api-error";
 import { TokenData, UsuarioData } from "@/types/api/apiTypes";
 import jwt from "jsonwebtoken";
-import { revalidatePath, revalidateTag } from "next/cache";
+import { revalidateTag } from "next/cache";
 import { cookies } from "next/headers";
 
 export default async function deleteUser(userIdToDelete: string | number) {
@@ -34,12 +34,12 @@ export default async function deleteUser(userIdToDelete: string | number) {
       errors.push("Erro ao deletar, contate o administrador do sistema");
       return {
         success: false,
-        errors ,
+        errors,
         msg_success: "",
       };
     }
-    const data = (await response.json()) as UsuarioData;
-    revalidateTag("all-users")
+    (await response.json()) as UsuarioData;
+    revalidateTag("all-users");
 
     return {
       success: true,

@@ -1,5 +1,5 @@
 import { Form } from "@/components/form";
-import { PermissaoCompletaData, PermissoesRole } from "@/types/api/apiTypes";
+import { PermissoesRole } from "@/types/api/apiTypes";
 import { ChevronDown, ChevronRight } from "lucide-react";
 import { PermissionsState } from "../PermissionsMenu";
 
@@ -34,14 +34,16 @@ export default function SubScreenConfig({
           return (
             <div
               key={subScreen.id}
-              className="border-primary-600/40 ml-4 border-b-2 py-2 group"
+              className="border-primary-600/40 group ml-4 border-b-2 py-2"
             >
               {/* Botão de alternar visibilidade */}
               <div
                 className="flex cursor-pointer items-center gap-2"
                 onClick={() => handleClickScreen(subScreen.id, subScreen.nome)}
               >
-                <h1 className="group-hover:translate-x-1 transition-all">{subScreen.nome}</h1>
+                <h1 className="transition-all group-hover:translate-x-1">
+                  {subScreen.nome}
+                </h1>
                 {action?.isVisible ? <ChevronDown /> : <ChevronRight />}
               </div>
 
@@ -54,7 +56,7 @@ export default function SubScreenConfig({
                     onChange={() => handleToggleCrud(subScreen.id, "checked")}
                     id={subScreen.id}
                     name="checkbox[]"
-                    value={action}
+                    // value={action}
                   />
                   <Form.Checkbox
                     label={action.crud.create.name}

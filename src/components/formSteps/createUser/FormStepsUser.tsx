@@ -14,12 +14,7 @@ import {
   Phone,
   UserCircle,
 } from "lucide-react";
-import {
-  RoleData,
-  PermissaoCompletaData,
-  PermissoesData,
-  PermissoesRole,
-} from "@/types/api/apiTypes";
+import { RoleData, PermissoesRole } from "@/types/api/apiTypes";
 import PermissionsMenu from "./permissionsForm/permissionsMenu/PermissionsMenu";
 import { postUser } from "@/actions/postUser";
 import { useGlobalContext } from "@/context/globalContext";
@@ -31,10 +26,8 @@ type FormStepsUser = {
 
 export default function FormStepsUser({ rolesData }: FormStepsUser) {
   const [activeTab, setActiveTab] = React.useState("informacoes");
-  const [currentRoles, setCurrentRoles] = React.useState<RoleData[] | []>(
-    rolesData,
-  );
-  const { openGlobalModal, closeGlobalModal } = useGlobalContext();
+  const [currentRoles] = React.useState<RoleData[] | []>(rolesData);
+  const { closeGlobalModal } = useGlobalContext();
   const [senha, setSenha] = React.useState({
     senha: "",
     confirmar_senha: "",

@@ -1,5 +1,5 @@
 import { Form } from "@/components/form";
-import { PermissaoCompletaData, PermissoesRole } from "@/types/api/apiTypes";
+import { PermissoesRole } from "@/types/api/apiTypes";
 import { PermissionsState } from "../PermissionsMenu";
 import { ChevronDown, ChevronRight } from "lucide-react";
 
@@ -33,7 +33,7 @@ export default function ScreeConfig({
               onClick={() => handleClickScreen(screen.id, screen.nome)}
             >
               <h3
-                className={`cursor-pointer text-xl font-semibold group-hover:translate-x-2 transition-all`}
+                className={`cursor-pointer text-xl font-semibold transition-all group-hover:translate-x-2`}
                 key={screen.nome}
               >
                 {screen.nome}
@@ -46,7 +46,7 @@ export default function ScreeConfig({
                     onChange={() => handleToggleCrud(screen.id, "checked")}
                     id={screen.id}
                     name="checkbox[]"
-                    value={action}
+                    // value={action}
                   />
                   <Form.Checkbox
                     label={action.crud.create.name}

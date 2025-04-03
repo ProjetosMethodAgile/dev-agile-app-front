@@ -182,7 +182,7 @@ export const useViewChatSuspenso = () => {
 
       setNumChamado(numChamadoNow);
 
-      const motivoNome = dataUserChamados[0] || "";
+      // const motivoNome = dataUserChamados[0] || "";
       const descricao = dataUserChamados.slice(1).join(" ") || "";
       const status = "1";
 
