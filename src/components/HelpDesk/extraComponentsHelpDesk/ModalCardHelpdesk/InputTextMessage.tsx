@@ -4,7 +4,6 @@ import { CardHelpDeskSessao } from "@/types/api/apiTypes";
 import iconsMap from "@/utils/iconsMap";
 import { postReplyCardHelpdesk } from "@/actions/HelpDesk/postReplyCardHelpdesk";
 import { toast } from "react-toastify";
-import { useRouter } from "next/navigation";
 export type InputTextMessageProps = React.ComponentProps<"input"> & {
   message: string;
   setMessage: React.Dispatch<React.SetStateAction<string>>;
@@ -19,7 +18,6 @@ export default function InputTextMessage({
   att,
   ...props
 }: InputTextMessageProps) {
-  const router = useRouter();
   const Send = iconsMap["sendMessage"];
 
   async function handleSendMessage() {
@@ -37,7 +35,9 @@ export default function InputTextMessage({
         setMessage("");
         // Força a atualização da rota
         att();
-      } catch (error) {
+      } catch (e) {
+        console.log(e);
+
         toast.error("Erro ao enviar mensagem");
       }
     } else {
