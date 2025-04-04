@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Form } from "@/components/form";
 import { KanbanColumn, SetorHelpDesk } from "@/types/api/apiTypes";
 import iconsMap from "@/utils/iconsMap";
@@ -9,6 +9,8 @@ import KanbanCardGerenciar from "../kanban-gerenciar-sistema/kanbanCardGerenciar
 import getKanbanColunaBySetorId from "@/actions/getKanbanColunaBySetorId";
 import putOrdemColsHelpDesk from "@/actions/putOrdemColsHelpDesk";
 import { toast } from "react-toastify";
+import { useGlobalContext } from "@/context/globalContext";
+import { FolderPen, MessageCircleQuestion } from "lucide-react";
 
 type ModalEditSetorProps = {
   closeModal: () => void;
@@ -24,6 +26,8 @@ function Tab1Content({ setorProps }: { setorProps: SetorHelpDesk }) {
   const [columns, setColumns] = useState<KanbanColumn[]>([]);
   const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
   const [isEditing, setIsEditing] = useState(false);
+  const [formsModal , setFormsModal] =useState(false)
+  const [messagePanne , setMessagePanne] =useState(false)
 
   const handleDragStart = (
     e: React.DragEvent<HTMLDivElement>,
@@ -82,6 +86,16 @@ function Tab1Content({ setorProps }: { setorProps: SetorHelpDesk }) {
       toast.error("Ocorreu um erro inesperado. Tente novamente.");
     }
   }
+const handleAddKanbanSetor = ()=>{
+setFormsModal(!formsModal)
+}
+const onMouseEventPanne =()=>{
+  setMessagePanne(true)
+  setTimeout(()=>{
+    setMessagePanne(false)
+  },10000)
+}
+
 
   useEffect(() => {
     async function getColumnsSetor() {
@@ -118,11 +132,30 @@ function Tab1Content({ setorProps }: { setorProps: SetorHelpDesk }) {
             >
               <IconEdit />
             </div>
-            <div className="cursor-pointer rounded-xl bg-green-500 p-2 text-white hover:bg-green-600 active:scale-95">
-              <AddSetorBtn />
+            <div className="cursor-pointer rounded-xl bg-green-500 p-2 text-white hover:bg-green-600 active:scale-95" onClick={handleAddKanbanSetor}>
+              <AddSetorBtn/>
             </div>
           </div>
         </div>
+        {formsModal? 
+        
+        <div className="flex flex-col mt-5 w-[90%] gap-2">
+          <h1>Cria coluna</h1>
+         <label className=" border border-general rounded-[15px] p-2 pl-4 pr-4 flex justify-between" htmlFor="inputNameKanban">
+          <input id="inputNameKanban" type="text" placeholder="Digite o nome da coluna"  className="flex w-[90%] focus:outline-none focus:border-none "/>
+          <FolderPen className="text-amber-200" />
+         </label>
+         <label className="border border-general rounded-[15px] p-2 pl-4 pr-4 flex justify-between" htmlFor="acao">
+          <input id="acao" type="text" placeholder="Digite uma ação"  className="flex w-[90%] focus:outline-none focus:border-none "/>
+          <MessageCircleQuestion className="text-amber-200 " onMouseEnter={onMouseEventPanne}/>
+          {messagePanne&& <p className="absolute bottom-0 left-0 w-[100%] p-5 flex justify-center bg-primary-100 p-3.5 flex-wrap">Escolha a ação que deve ser executada quando o card chegar nesta coluna.</p>}
+         </label>
+     
+
+
+        </div>
+        
+        :
         <div className="bg-primary-150 flex max-w-130 overflow-x-auto rounded-[10px] p-5">
           <div className="flex gap-1">
             {columns.length ? (
@@ -152,6 +185,7 @@ function Tab1Content({ setorProps }: { setorProps: SetorHelpDesk }) {
             )}
           </div>
         </div>
+        }
         {isEditing && (
           <div className="mt-4 flex justify-end">
             <button
