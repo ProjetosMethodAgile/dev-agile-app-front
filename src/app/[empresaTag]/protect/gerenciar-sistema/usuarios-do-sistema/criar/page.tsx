@@ -15,15 +15,14 @@ const CriarUsuarioPage = async () => {
 
   if (!roles.ok)
     throw new Error(roles.error || "Não foi possivel obter as Roles");
-/*   if (!permissoes.ok)
-    throw new Error(permissoes.error || "Não foi possivel obter as Permissoes"); */
+
 
   return (
     <div className="container">
       <ScreenTitle title="Usuarios do sistema - Cadastro" icon={UserCheck} />
        <FormStepsUser
         rolesData={roles.data || []}
-    /*     permissoesData={permissoes.data || []} */
+
       /> 
     </div>
   );

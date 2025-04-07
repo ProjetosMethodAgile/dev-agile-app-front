@@ -30,7 +30,7 @@ export default function PermissionsNavigationForm({
             }
           })}
       </div>
-      <div className="flex h-[100vh] flex-col p-3 text-lg">{children}</div>
+      <div className="flex  flex-col p-3 text-lg">{children}</div>
     </nav>
   );
 }
