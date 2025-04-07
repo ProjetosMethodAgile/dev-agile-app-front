@@ -1,6 +1,6 @@
 "use client";
 
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { Form } from "@/components/form";
 import { KanbanColumn, SetorHelpDesk } from "@/types/api/apiTypes";
 import iconsMap from "@/utils/iconsMap";
@@ -28,6 +28,8 @@ function Tab1Content({ setorProps }: { setorProps: SetorHelpDesk }) {
   const [isEditing, setIsEditing] = useState(false);
   const [formsModal , setFormsModal] =useState(false)
   const [messagePanne , setMessagePanne] =useState(false)
+  const [messagePanneTetx , setMessagePaneText] =useState("")
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const handleDragStart = (
     e: React.DragEvent<HTMLDivElement>,
@@ -89,14 +91,25 @@ function Tab1Content({ setorProps }: { setorProps: SetorHelpDesk }) {
 const handleAddKanbanSetor = ()=>{
 setFormsModal(!formsModal)
 }
-const onMouseEventPanne =()=>{
-  setMessagePanne(true)
-  setTimeout(()=>{
-    setMessagePanne(false)
-  },10000)
+const onMouseEventPanne = (data: string) => {
+  const SELECT_MESSAGE = "Escolha a ação que deve ser executada quando o card chegar nesta coluna.";
+  const DEFAULT_MESSAGE = "Responsavel pela identificação de sua coluna";
+  console.log(data);
+  
+  const message = data === "Select" ? SELECT_MESSAGE : DEFAULT_MESSAGE;
+  setMessagePaneText(message);
+  setMessagePanne(true);
+  
+  setTimeout(() => {
+    setMessagePanne(false);
+  }, 15000);
+};
+
+
+const onMouseOutFunc = ()=>{
+  setMessagePaneText("");
+  setMessagePanne(false);
 }
-
-
   useEffect(() => {
     async function getColumnsSetor() {
       const response = await getKanbanColunaBySetorId(setorProps.id);
@@ -142,17 +155,21 @@ const onMouseEventPanne =()=>{
         <div className="flex flex-col mt-5 w-[90%] gap-2">
           <h1>Cria coluna</h1>
          <label className=" border border-general rounded-[15px] p-2 pl-4 pr-4 flex justify-between" htmlFor="inputNameKanban">
-          <input id="inputNameKanban" type="text" placeholder="Digite o nome da coluna"  className="flex w-[90%] focus:outline-none focus:border-none "/>
-          <FolderPen className="text-amber-200" />
+          <input id="inputNameKanban" type="text" placeholder="Digite o nome da coluna"  className="flex w-[90%] focus:outline-none focus:border-none " onMouseEnter={()=>onMouseEventPanne("Coluna")}/>
+          <FolderPen className="text-amber-200  hover:text-custom-green-100 hover:scale-105 cursor-pointer"  onMouseOut={onMouseOutFunc}   onClick={()=> onMouseEventPanne("column")}/>
          </label>
          <label className="border border-general rounded-[15px] p-2 pl-4 pr-4 flex justify-between" htmlFor="acao">
-          <input id="acao" type="text" placeholder="Digite uma ação"  className="flex w-[90%] focus:outline-none focus:border-none "/>
-          <MessageCircleQuestion className="text-amber-200 " onMouseEnter={onMouseEventPanne}/>
-          {messagePanne&& <p className="absolute bottom-0 left-0 w-[100%] p-5 flex justify-center bg-primary-100 p-3.5 flex-wrap">Escolha a ação que deve ser executada quando o card chegar nesta coluna.</p>}
+
+          <select name="" id="" className="flex w-[90%] focus:outline-none focus:border-none ">
+            <option value=""  >Selecione uma opção</option>
+            <option value=""  >Enviar Email</option>
+          </select>
+        
+          <MessageCircleQuestion className="text-amber-200 hover:text-custom-green-100 hover:scale-105 cursor-pointer" onClick={()=> onMouseEventPanne("Select")} onMouseOut={onMouseOutFunc}/>
+          {messagePanne&& <p className="absolute bottom-0 left-0 w-[100%] p-5 flex justify-center bg-primary-100 p-3.5 flex-wrap ">{messagePanneTetx}</p>}
          </label>
-     
-
-
+         <input type="button" value={'Cadastrar'} className=" w-[100%] rounded-[10px] bg-primary-300 p-1 flex text-center border border-amber-50" />
+  
         </div>
         
         :
