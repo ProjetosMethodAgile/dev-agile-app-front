@@ -15,7 +15,7 @@ export default function FormSection({
   return (
     <div
       className={twMerge(
-        "border-primary-300/20 grid grid-cols-4 item gap-3 border-b-1 pb-7 mb-7",
+        "border-primary-300/20 grid grid-cols-4  gap-3 border-b-1 pb-7 mb-7",
         className,
       )}
       {...props}

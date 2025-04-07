@@ -1,4 +1,4 @@
-import deleteUser from "@/actions/deleteUser";
+/* import deleteUser from "@/actions/deleteUser";
 import { Pencil, Trash2 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -41,3 +41,4 @@ export default function TableActions({ dataId }: { dataId: string | number }) {
     </td>
   );
 }
+ */

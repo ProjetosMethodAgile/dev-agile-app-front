@@ -26,9 +26,14 @@ type FormStepsUser = {
 
 export default function FormStepsUser({ rolesData }: FormStepsUser) {
   const [activeTab, setActiveTab] = React.useState("informacoes");
-  const [currentRoles] = React.useState<RoleData[] | []>(rolesData);
-  const { closeGlobalModal } = useGlobalContext();
-  const [senha, setSenha] = React.useState({
+  const [currentRoles, setCurrentRoles] = React.useState<RoleData[] | []>(
+    rolesData,
+  );
+  const { openGlobalModal, closeGlobalModal } = useGlobalContext();
+  const [usersData, setUsersData] = React.useState({
+    nome: "",
+    contato: "",
+    email: "",
     senha: "",
     confirmar_senha: "",
   });
@@ -77,6 +82,13 @@ export default function FormStepsUser({ rolesData }: FormStepsUser) {
               name="nome"
               label="Nome"
               className="col-span-2"
+              value={usersData.nome}
+              onChange={(e) =>
+                setUsersData({
+                  ...usersData,
+                  nome: (e.target as HTMLInputElement).value,
+                })
+              }
             />
             <Form.InputText
               icon={Phone}
@@ -84,6 +96,13 @@ export default function FormStepsUser({ rolesData }: FormStepsUser) {
               name="contato"
               label="Contato"
               className="col-span-1"
+              value={usersData.contato}
+              onChange={(e) =>
+                setUsersData({
+                  ...usersData,
+                  contato: (e.target as HTMLInputElement).value,
+                })
+              }
             />
           </Form.Section>
           <Form.Section title="Acesso ao sistema">
@@ -94,6 +113,13 @@ export default function FormStepsUser({ rolesData }: FormStepsUser) {
               name="email"
               label="Email"
               className="col-span-2"
+              value={usersData.email}
+              onChange={(e) =>
+                setUsersData({
+                  ...usersData,
+                  email: (e.target as HTMLInputElement).value,
+                })
+              }
             />
             <Form.InputText
               icon={KeyRound}
@@ -101,10 +127,10 @@ export default function FormStepsUser({ rolesData }: FormStepsUser) {
               type="password"
               name="senha"
               label="Senha"
-              value={senha.senha}
+              value={usersData.senha}
               onChange={(e) =>
-                setSenha({
-                  ...senha,
+                setUsersData({
+                  ...usersData,
                   senha: (e.target as HTMLInputElement).value,
                 })
               }
@@ -115,10 +141,10 @@ export default function FormStepsUser({ rolesData }: FormStepsUser) {
               type="password"
               name="senha"
               label="Confirmar Senha"
-              value={senha.confirmar_senha}
+              value={usersData.confirmar_senha}
               onChange={(e) =>
-                setSenha({
-                  ...senha,
+                setUsersData({
+                  ...usersData,
                   confirmar_senha: (e.target as HTMLInputElement).value,
                 })
               }
@@ -128,7 +154,13 @@ export default function FormStepsUser({ rolesData }: FormStepsUser) {
             type="submit"
             onClick={(e) => {
               e.preventDefault();
-              if (senha.senha !== senha.confirmar_senha) {
+              if (!usersData.nome || !usersData.email || !usersData.senha) {
+                if (!usersData.nome) toast.error("Nome é obrigatório.");
+                if (!usersData.email) toast.error("Email é obrigatório.");
+                if (!usersData.senha) toast.error("Senha é obrigatório.");
+                if (usersData.senha !== usersData.confirmar_senha)
+                  toast.error("As senhas não coincidem");
+              } else if (usersData.senha !== usersData.confirmar_senha) {
                 toast.error("As senhas não coincidem");
               } else {
                 setActiveTab("permissoes");

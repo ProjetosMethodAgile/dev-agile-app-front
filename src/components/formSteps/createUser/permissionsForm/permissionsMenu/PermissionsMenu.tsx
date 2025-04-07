@@ -1,24 +1,25 @@
 import { PermissoesRole } from "@/types/api/apiTypes";
 import React, { useState } from "react";
 import PermissionsNavigationForm from "../layout";
-import SubScreenConfig from "./subscreen/SubScreenConfig";
 import ScreeConfig from "./screen/ScreenConfig";
+import SubScreenConfig from "./subscreen/SubScreenConfig";
 
 type PermissionsMenuProps = {
   permissoesData: PermissoesRole[];
 };
 
+type CrudPermissions = {
+  create: boolean;
+  update: boolean;
+  delete: boolean;
+};
+
 export type PermissionsState = {
-  [screen_id: string]: {
-    screen_id: string;
-    screen_name: string;
-    isVisible: boolean;
-    crud: {
-      checked: boolean;
-      create: { name: string; status: boolean };
-      update: { name: string; status: boolean };
-      delete: { name: string; status: boolean };
-    };
+  [screenId: string]: {
+    screenId: string;
+    screenName: string;
+    access: boolean;
+    crud: CrudPermissions;
   };
 };
 
@@ -28,75 +29,71 @@ export default function PermissionsMenu({
   const [activeTab, setActiveTab] = useState("informacoes");
   const [actions, setActions] = useState<PermissionsState>({});
 
-  // Alternar visibilidade e ativar "Acessar"
-  function handleClickScreen(screen_id: string, screen_name: string) {
-    setActions((prev) => ({
-      ...prev,
-      [screen_id]: prev[screen_id]
-        ? {
-            ...prev[screen_id],
-            isVisible: !prev[screen_id].isVisible,
-          }
-        : {
-            screen_id,
-            screen_name,
-            isVisible: true,
-            crud: {
-              checked: false, // Ao abrir, "Acessar" já fica marcado
-              create: { name: "Criar", status: false },
-              update: { name: "Atualizar", status: false },
-              delete: { name: "Deletar", status: false },
-            },
-          },
-    }));
-  }
-
-  // Alternar estados dos checkboxes de CRUD
   function handleToggleCrud(
-    screen_id: string,
-    crudType: "create" | "update" | "delete" | "checked",
+    screenId: string,
+    screenName: string,
+    crudType: "access" | "update" | "delete" | "create",
   ) {
     setActions((prev) => {
-      if (!prev[screen_id]) return prev;
+      const current = prev[screenId] || {
+        screenName,
+        screenId,
+        access: false,
+        crud: { create: false, update: false, delete: false },
+      };
 
-      if (crudType === "checked") {
-        return {
-          ...prev,
-          [screen_id]: {
-            ...prev[screen_id],
-            crud: {
-              ...prev[screen_id].crud,
-              checked: !prev[screen_id].crud.checked, // Alteração para "Acessar"
-            },
+      let updatedActions = { ...prev };
+
+      if (crudType === "access") {
+        const isAccessing = !current.access;
+
+        if (isAccessing) {
+          // Se estiver acessando, adiciona de volta ao objeto
+          updatedActions[screenId] = {
+            screenName,
+            screenId,
+            access: true,
+            crud: current.crud, // Mantém estado atual do CRUD
+          };
+        } else {
+          // Se estiver desmarcando, remove a tela do objeto
+          delete updatedActions[screenId];
+
+          // Também remove todas as SubScreens relacionadas
+          Object.keys(updatedActions).forEach((key) => {
+            if (
+              permissoesData.find((p) => p.id === key)?.parent_id === screenId
+            ) {
+              delete updatedActions[key];
+            }
+          });
+        }
+      } else if (current.access) {
+        // Se "Acessar" estiver ativado, permite modificar CRUD normalmente
+        updatedActions[screenId] = {
+          ...current,
+          crud: {
+            ...current.crud,
+            [crudType]: !current.crud[crudType],
           },
         };
       }
 
-      return {
-        ...prev,
-        [screen_id]: {
-          ...prev[screen_id],
-          crud: {
-            ...prev[screen_id].crud,
-            [crudType]: {
-              ...prev[screen_id].crud[crudType],
-              status: !prev[screen_id].crud[crudType].status,
-            },
-          },
-        },
-      };
+      return updatedActions;
     });
   }
-
-  if (permissoesData && permissoesData.length < 1)
+  console.log("actions", actions);
+  if (!permissoesData || permissoesData.length === 0) {
     return (
       <div className="text-primary-200 col-span-3">
-        Por Favor, Selecione um tipo de usuario
+        Por favor, selecione um tipo de usuário
       </div>
     );
+  }
+
 
   return (
-    <div className="col-span-full">
+    <div className="col-span-full  ">
       <PermissionsNavigationForm
         setActiveTab={setActiveTab}
         activeTab={activeTab}
@@ -105,14 +102,12 @@ export default function PermissionsMenu({
         <ScreeConfig
           actions={actions}
           activeTab={activeTab}
-          handleClickScreen={handleClickScreen}
           handleToggleCrud={handleToggleCrud}
           permissoesData={permissoesData}
         />
         <SubScreenConfig
           actions={actions}
           activeTab={activeTab}
-          handleClickScreen={handleClickScreen}
           handleToggleCrud={handleToggleCrud}
           permissoesData={permissoesData}
         />
