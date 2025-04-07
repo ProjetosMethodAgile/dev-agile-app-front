@@ -3,17 +3,9 @@ import { validateScreenAccess } from "@/actions/validateScreenAccess";
 import { Form } from "@/components/form";
 import ScreenTitle from "@/components/titles/ScreenTitle";
 import AddButton from "@/components/ui/button/RedirectButton";
-import Table from "@/components/ui/table/Table";
 import UsuariosCards from "@/components/Usuarios/UsuariosCards";
-import { User } from "@/types/api/apiTypes";
 import iconsMap from "@/utils/iconsMap";
-import {
-  EllipsisVertical,
-  GripHorizontal,
-  Option,
-  Search,
-  User2,
-} from "lucide-react";
+import { Search } from "lucide-react";
 
 export default async function UsuariosDoSistemaPage() {
   await validateScreenAccess("Usuarios do sistema");
