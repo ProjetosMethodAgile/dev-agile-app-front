@@ -154,7 +154,7 @@ export default function ModalCardHelpdesk({
             <div className="bg-primary-150 rounded-2xl p-3">
               <span className="flex flex-wrap gap-1">
                 <span>Solicitante: </span>
-                {card?.CardSessao.MessageSessao[0].ClienteSessao?.nome ||
+                {card?.CardSessao.MessageSessao.at(-1)?.ClienteSessao?.nome ||
                   "solicitante externo"}
               </span>
               <span className="flex flex-wrap gap-1">

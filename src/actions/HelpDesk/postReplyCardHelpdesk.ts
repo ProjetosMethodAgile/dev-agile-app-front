@@ -47,11 +47,14 @@ export async function postReplyCardHelpdesk(
     revalidateTag("helpdesk-columns");
     revalidateTag("helpdesk-cards");
 
+    console.log(response);
+
     if (!response.ok) {
       return { msg_success: "erro", success: false, status: response.status };
     }
 
     const data = await response.json();
+    console.log(data);
 
     return data;
   } catch (err) {

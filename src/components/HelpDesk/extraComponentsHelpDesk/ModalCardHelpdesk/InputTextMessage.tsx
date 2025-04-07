@@ -21,12 +21,15 @@ export default function InputTextMessage({
   const Send = iconsMap["sendMessage"];
 
   async function handleSendMessage() {
+    console.log(cardData);
+
     const message_id = cardData?.CardSessao.MessageSessao.at(-1)?.message_id;
     const to_email =
       cardData?.CardSessao.MessageSessao.at(-1)?.ClienteSessao.email;
     if (!message.length) {
       toast.error("Escreva sua resposta antes de enviar a mensagem");
     }
+    console.log(message_id, to_email);
 
     if (message_id && to_email) {
       try {
