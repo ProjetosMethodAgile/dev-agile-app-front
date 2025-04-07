@@ -1,4 +1,4 @@
-import { PermissaoCompletaData, PermissoesRole } from "@/types/api/apiTypes";
+import { PermissoesRole } from "@/types/api/apiTypes";
 import React, { useState } from "react";
 import PermissionsNavigationForm from "../layout";
 import ScreeConfig from "./screen/ScreenConfig";
@@ -82,7 +82,6 @@ export default function PermissionsMenu({
       return updatedActions;
     });
   }
-
   console.log("actions", actions);
   if (!permissoesData || permissoesData.length === 0) {
     return (
@@ -91,6 +90,7 @@ export default function PermissionsMenu({
       </div>
     );
   }
+
 
   return (
     <div className="col-span-full  ">

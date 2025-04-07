@@ -1,5 +1,5 @@
 import { Form } from "@/components/form";
-import { PermissaoCompletaData, PermissoesRole } from "@/types/api/apiTypes";
+import { PermissoesRole } from "@/types/api/apiTypes";
 import { ChevronDown, ChevronRight } from "lucide-react";
 import { PermissionsState } from "../PermissionsMenu";
 

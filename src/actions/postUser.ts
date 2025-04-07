@@ -3,16 +3,17 @@ import apiError from "@/functions/api-error";
 import { cookies } from "next/headers";
 import jwt from "jsonwebtoken";
 import { TokenData } from "@/types/api/apiTypes";
+
 import { POST_USUARIO } from "@/functions/api";
 import { revalidateTag } from "next/cache";
 
-// Define explicitamente o tipo de retorno esperado
 export async function postUser(
   state:
     | { errors: string[]; msg_success: string; success: boolean }
     | undefined,
   formData: FormData,
 ): Promise<{ errors: string[]; msg_success: string; success: boolean }> {
+
   try {
     const nome = formData.get("nome") as string;
     const contato = formData.get("contato") as string;
@@ -93,7 +94,6 @@ export async function postUser(
         empresa_id: usuarioData.empresa.id,
       }),
     });
-
     if (response.ok) {
       revalidateTag("new-user");
       return {
