@@ -29,7 +29,7 @@ export default function FormStepsUser({ rolesData }: FormStepsUser) {
   const [currentRoles, setCurrentRoles] = React.useState<RoleData[] | []>(
     rolesData,
   );
-  const { openGlobalModal, closeGlobalModal } = useGlobalContext();
+  const { closeGlobalModal } = useGlobalContext();
   const [usersData, setUsersData] = React.useState({
     nome: "",
     contato: "",
@@ -174,6 +174,7 @@ export default function FormStepsUser({ rolesData }: FormStepsUser) {
           <Form.Section title="Perfil">
             <Form.InputSelect
               options={currentRoles}
+              setOptions={setCurrentRoles}
               label="Tipo de usuario"
               id="tipo_usuario"
               name="tipo_usuario"

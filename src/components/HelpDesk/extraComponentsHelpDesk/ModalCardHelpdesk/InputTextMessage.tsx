@@ -25,7 +25,7 @@ export default function InputTextMessage({
 
     const message_id = cardData?.CardSessao.MessageSessao.at(-1)?.message_id;
     const to_email =
-      cardData?.CardSessao.MessageSessao.at(-1)?.ClienteSessao.email;
+      cardData?.CardSessao.MessageSessao[0]?.ClienteSessao?.email;
     if (!message.length) {
       toast.error("Escreva sua resposta antes de enviar a mensagem");
     }
@@ -40,7 +40,6 @@ export default function InputTextMessage({
         att();
       } catch (e) {
         console.log(e);
-
         toast.error("Erro ao enviar mensagem");
       }
     } else {
