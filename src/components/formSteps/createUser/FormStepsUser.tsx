@@ -51,6 +51,26 @@ export default function FormStepsUser({ rolesData }: FormStepsUser) {
     getPermissions();
   }
 
+  function inputsValidate(
+    e: React.MouseEvent<HTMLElement> | React.FormEvent<HTMLFormElement>,
+  ) {
+    e.preventDefault();
+    if (!usersData.nome || !usersData.email || !usersData.senha) {
+      if (!usersData.nome) toast.error("Nome é obrigatório.");
+      if (!usersData.email) toast.error("Email é obrigatório.");
+      if (!usersData.senha) toast.error("Senha é obrigatório.");
+      if (usersData.senha !== usersData.confirmar_senha)
+        toast.error("As senhas não coincidem");
+      return false;
+    } else if (usersData.senha !== usersData.confirmar_senha) {
+      toast.error("As senhas não coincidem");
+      return false;
+    } else {
+      setActiveTab("permissoes");
+      return true;
+    }
+  }
+
   const [state, formAction] = useActionState(postUser, {
     errors: [],
     msg_success: "",
@@ -72,7 +92,11 @@ export default function FormStepsUser({ rolesData }: FormStepsUser) {
 
   return (
     <div className="flex gap-5">
-      <RegisterNavigation setActiveTab={setActiveTab} activeTab={activeTab} />
+      <RegisterNavigation
+        inputsValidate={inputsValidate}
+        setActiveTab={setActiveTab}
+        activeTab={activeTab}
+      />
       <Form.Root className="w-full" action={formAction}>
         <div className={` ${activeTab !== "informacoes" ? "hidden" : ""}`}>
           <Form.Section title="Dados do usuario">
@@ -152,20 +176,7 @@ export default function FormStepsUser({ rolesData }: FormStepsUser) {
           </Form.Section>
           <Form.ButtonNext
             type="submit"
-            onClick={(e) => {
-              e.preventDefault();
-              if (!usersData.nome || !usersData.email || !usersData.senha) {
-                if (!usersData.nome) toast.error("Nome é obrigatório.");
-                if (!usersData.email) toast.error("Email é obrigatório.");
-                if (!usersData.senha) toast.error("Senha é obrigatório.");
-                if (usersData.senha !== usersData.confirmar_senha)
-                  toast.error("As senhas não coincidem");
-              } else if (usersData.senha !== usersData.confirmar_senha) {
-                toast.error("As senhas não coincidem");
-              } else {
-                setActiveTab("permissoes");
-              }
-            }}
+            onClick={inputsValidate}
             direction="Continuar"
             icon={ChevronRight}
           />
