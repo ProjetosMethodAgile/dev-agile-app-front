@@ -1,5 +1,6 @@
 import { PermissaoCompletaData } from "@/types/api/apiTypes";
 import { ChangeEvent } from "react";
+import { PermissionsState } from "../formSteps/createUser/permissionsForm/permissionsMenu/PermissionsMenu";
 
 type FormCheckboxProps = {
   label: string;
@@ -7,7 +8,7 @@ type FormCheckboxProps = {
   checked?: boolean;
   name?: string;
   onChange?: (event: ChangeEvent<HTMLInputElement>) => void;
-  value?: PermissaoCompletaData;
+  value?: PermissionsState;
   disabled?: boolean;
 };
 

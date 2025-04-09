@@ -6,6 +6,7 @@ import { useEffect, useRef, useState } from "react";
 import formatDateSimple from "@/utils/formatDateSimple";
 import Image from "next/image";
 import InputTextMessage from "./InputTextMessage";
+import useKanbanWebSocket from "@/hooks/useKanbanWebSocket";
 
 export type ModalCardHelpdeskProps = React.ComponentProps<"form"> & {
   cardId: string;
@@ -24,6 +25,7 @@ export default function ModalCardHelpdesk({
   const [message, setMessage] = useState("");
   // Ref para o final da lista de mensagens
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const ws = useKanbanWebSocket();
 
   async function getCardData() {
     setLoading(true);
@@ -33,6 +35,20 @@ export default function ModalCardHelpdesk({
     }
     setLoading(false);
   }
+
+  useEffect(() => {
+    console.log(card);
+  }, [card]);
+
+  useEffect(() => {
+    if (!ws) return;
+    ws.onmessage = (event) => {
+      const data = JSON.parse(event.data);
+      if (data.type === "cardUpdated") {
+        getCardData();
+      }
+    };
+  }, [card, ws]);
 
   useEffect(() => {
     getCardData();
@@ -94,38 +110,32 @@ export default function ModalCardHelpdesk({
                 <div className="mb-2 flex-1 overflow-y-auto">
                   {card?.CardSessao.MessageSessao &&
                   card.CardSessao.MessageSessao.length > 0
-                    ? card.CardSessao.MessageSessao.slice()
-                        .sort((a, b) => {
-                          const dateA = new Date(a.createdAt).getTime();
-                          const dateB = new Date(b.createdAt).getTime();
-                          return dateA - dateB;
-                        })
-                        .map((msg, index) => {
-                          const isAtendente = Boolean(msg.AtendenteMessage);
-                          const senderName = isAtendente
-                            ? msg.AtendenteMessage.UsuarioAtendente.nome
-                            : msg.ClienteSessao?.nome || "Cliente Externo";
-                          return (
-                            <div
-                              key={index}
-                              className={`mb-4 rounded p-2 shadow ${
-                                isAtendente ? "bg-blue-200" : "bg-yellow-100"
-                              }`}
-                            >
-                              <div className="flex items-center justify-between">
-                                <span className="text-primary-150 text-sm font-bold">
-                                  {senderName}
-                                </span>
-                                <span className="text-xs text-gray-500">
-                                  {formatDateSimple(msg.createdAt)}
-                                </span>
-                              </div>
-                              <p className="mt-1 text-base text-gray-700">
-                                {msg.content_msg}
-                              </p>
+                    ? card.CardSessao.MessageSessao.map((msg, index) => {
+                        const isAtendente = Boolean(msg.AtendenteMessage);
+                        const senderName = isAtendente
+                          ? msg.AtendenteMessage.UsuarioAtendente.nome
+                          : msg.ClienteSessao?.nome || "Cliente Externo";
+                        return (
+                          <div
+                            key={index}
+                            className={`mb-4 rounded p-2 shadow ${
+                              isAtendente ? "bg-blue-200" : "bg-yellow-100"
+                            }`}
+                          >
+                            <div className="flex items-center justify-between">
+                              <span className="text-primary-150 text-sm font-bold">
+                                {senderName}
+                              </span>
+                              <span className="text-xs text-gray-500">
+                                {formatDateSimple(msg.createdAt)}
+                              </span>
                             </div>
-                          );
-                        })
+                            <p className="mt-1 text-base text-gray-700">
+                              {msg.content_msg}
+                            </p>
+                          </div>
+                        );
+                      })
                     : null}
                   {/* Elemento que marca o final das mensagens */}
                   <div ref={messagesEndRef} />
@@ -154,7 +164,7 @@ export default function ModalCardHelpdesk({
             <div className="bg-primary-150 rounded-2xl p-3">
               <span className="flex flex-wrap gap-1">
                 <span>Solicitante: </span>
-                {card?.CardSessao.MessageSessao.at(-1)?.ClienteSessao?.nome ||
+                {card?.CardSessao.MessageSessao.at(0)?.ClienteSessao?.nome ||
                   "solicitante externo"}
               </span>
               <span className="flex flex-wrap gap-1">
