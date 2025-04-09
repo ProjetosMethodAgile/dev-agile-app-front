@@ -23,7 +23,7 @@ export default function UsuarioCard({ user }: { user: User }) {
       <div className="mt-2 flex items-center justify-between">
         <span className="bg-primary-500 rounded-2xl p-2 text-sm">
           {user.usuario_roles.map((role) => (
-            <div>{role.nome}</div>
+            <div key={role.id}>{role.nome}</div>
           ))}
         </span>
         <span className="hover:border-primary-50 border-b-2 border-transparent hover:cursor-pointer">
