@@ -1,12 +1,14 @@
+"use client";
 import getCardHelpDeskId from "@/actions/HelpDesk/getCardHelpDeskId";
 import { Form } from "@/components/form";
 import { CardHelpDeskSessao } from "@/types/api/apiTypes";
 import iconsMap from "@/utils/iconsMap";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
 import formatDateSimple from "@/utils/formatDateSimple";
 import Image from "next/image";
 import InputTextMessage from "./InputTextMessage";
-import useKanbanWebSocket from "@/hooks/useKanbanWebSocket";
+// Importa o hook do contexto WebSocket
+import { useWebSocket } from "@/context/WebSocketContext";
 
 export type ModalCardHelpdeskProps = React.ComponentProps<"form"> & {
   cardId: string;
@@ -24,35 +26,42 @@ export default function ModalCardHelpdesk({
   const [card, setCard] = useState<CardHelpDeskSessao | null>(null);
   const [message, setMessage] = useState("");
   // Ref para o final da lista de mensagens
-  const messagesEndRef = useRef<HTMLDivElement>(null);
-  const ws = useKanbanWebSocket();
+  const messagesEndRef = useRef<HTMLDivElement | null>(null);
+  const { ws } = useWebSocket();
 
-  async function getCardData() {
+  // Envolvendo a função getCardData com useCallback para estabilizá-la
+  const getCardData = useCallback(async () => {
     setLoading(true);
-    const data = await getCardHelpDeskId(cardId);
-    if (data.data && data.ok) {
-      setCard(data.data);
+    try {
+      const data = await getCardHelpDeskId(cardId);
+      if (data.data && data.ok) {
+        setCard(data.data);
+      }
+    } catch (error) {
+      console.error("Erro ao buscar os dados do card", error);
     }
     setLoading(false);
-  }
+  }, [cardId]);
 
+  // Busca os dados do card ao carregar ou ao mudar o cardId
   useEffect(() => {
-    console.log(card);
-  }, [card]);
+    getCardData();
+  }, [cardId, getCardData]);
 
+  // Atualiza o card se houver mensagem de atualização enviada pelo WebSocket
   useEffect(() => {
     if (!ws) return;
-    ws.onmessage = (event) => {
+    const messageHandler = (event: MessageEvent) => {
       const data = JSON.parse(event.data);
       if (data.type === "cardUpdated") {
         getCardData();
       }
     };
-  }, [card, ws]);
-
-  useEffect(() => {
-    getCardData();
-  }, [cardId]);
+    ws.addEventListener("message", messageHandler);
+    return () => {
+      ws.removeEventListener("message", messageHandler);
+    };
+  }, [ws, getCardData]);
 
   // Sempre que as mensagens mudarem, rola para o final
   useEffect(() => {
@@ -146,7 +155,6 @@ export default function ModalCardHelpdesk({
                   message={message}
                   setMessage={setMessage}
                   cardData={card}
-                  att={getCardData}
                 />
               </div>
             </div>

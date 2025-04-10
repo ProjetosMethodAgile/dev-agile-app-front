@@ -1,3 +1,5 @@
+import Image from "next/image";
+
 type LogoFormProps = React.ComponentProps<"div"> & {
   src: string;
   alt: string;
@@ -6,10 +8,14 @@ type LogoFormProps = React.ComponentProps<"div"> & {
 export default function FormLogo({ src, alt, ...props }: LogoFormProps) {
   return (
     <div {...props}>
-      <img
+      <Image
         src={src}
         alt={alt}
-        className="h-15 items-center justify-self-center"
+        width={1200}
+        height={600}
+        quality={100}
+        sizes="100vw"
+        className="h-20 w-auto items-center justify-self-center"
       />
     </div>
   );

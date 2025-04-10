@@ -1,4 +1,3 @@
-import { PermissaoCompletaData } from "@/types/api/apiTypes";
 import { ChangeEvent } from "react";
 import { PermissionsState } from "../formSteps/createUser/permissionsForm/permissionsMenu/PermissionsMenu";
 

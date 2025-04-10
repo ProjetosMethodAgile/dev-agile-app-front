@@ -1,10 +1,9 @@
-// src/components/TestSocketButton.tsx
 "use client";
 import React from "react";
-import useKanbanWebSocket from "@/hooks/useKanbanWebSocket";
+import { useWebSocket } from "@/context/WebSocketContext";
 
 export default function TestSocketButton() {
-  const ws = useKanbanWebSocket();
+  const { ws } = useWebSocket();
 
   const handleClick = () => {
     if (ws && ws.readyState === WebSocket.OPEN) {

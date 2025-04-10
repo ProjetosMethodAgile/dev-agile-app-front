@@ -1,6 +1,6 @@
-'use client'
+"use client";
 
-import { User, UsuariosData } from "@/types/api/apiTypes";
+import { User } from "@/types/api/apiTypes";
 import { Form } from "../form";
 import ScreenTitle from "../titles/ScreenTitle";
 import UsuariosCards from "./UsuariosCards";
