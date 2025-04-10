@@ -3,8 +3,8 @@ import { Form } from "@/components/form";
 import iconsMap from "@/utils/iconsMap";
 import { useGlobalContext } from "@/context/globalContext";
 import { useEffect, useState } from "react";
-import { postSetorHelpDesk } from "@/actions/postSetorHelpDesk";
-import { redirect, useParams } from "next/navigation";
+import { postSetorHelpDesk } from "@/actions/HelpDesk/postSetorHelpDesk";
+import { redirect, useParams, usePathname } from "next/navigation";
 import { useActionState } from "react";
 import { toast } from "react-toastify";
 import { ModalCadSetor } from "./ModalCadSetor";
@@ -15,6 +15,7 @@ export type SetorContainerProps = React.ComponentProps<"div">;
 export default function SetorContainer({ ...props }: SetorContainerProps) {
   const [search, setSearch] = useState("");
   const AddSetorBtn = iconsMap["add"];
+  const pathname = usePathname();
 
   const { openGlobalModal, closeGlobalModal } = useGlobalContext();
   const { empresaTag } = useParams();
@@ -33,7 +34,7 @@ export default function SetorContainer({ ...props }: SetorContainerProps) {
     if (state?.success) {
       toast.success(state.msg_success);
       closeGlobalModal();
-      redirect("/devagile/protect/gerenciar-sistema/configurar-help-desk");
+      redirect(pathname);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state]);

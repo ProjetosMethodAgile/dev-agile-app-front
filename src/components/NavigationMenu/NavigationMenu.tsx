@@ -8,37 +8,48 @@ import { PermissaoCompletaData } from "@/types/api/apiTypes";
 import { House, PanelRightClose, UserRound, LogOut } from "lucide-react";
 import iconsMap from "@/utils/iconsMap";
 import { toast } from "react-toastify";
-import useKanbanWebSocket from "@/hooks/useKanbanWebSocket";
+import { useWebSocket } from "@/context/WebSocketContext";
 import getSetoresHelpDeskForUser from "@/actions/HelpDesk/getSetoresHelpDeskForUser";
 
 export default function NavigationMenu() {
   const { user, permissions } = useUser();
   const [isExpanded, setIsExpanded] = useState(false);
-  const navRef = useRef(null);
+  const navRef = useRef<HTMLDivElement | null>(null);
   const pathname = usePathname();
-  const ws = useKanbanWebSocket();
+  const { ws } = useWebSocket();
 
-  // Chamada de hooks incondicionalmente
   useEffect(() => {
-    async function getSetores() {
-      if (!ws) return;
-      const { data } = await getSetoresHelpDeskForUser();
+    if (!ws) return;
 
-      ws.onmessage = async (event) => {
-        const parsedData = JSON.parse(event.data);
-        data?.Setores.forEach((setor) => {
-          if (parsedData.type === `cardCreated-${setor.id}`) {
-            toast.warning(
-              `UM NOVO CHAMADO FOI ABERTO PARA O SETOR: ${setor.nome}`,
-            );
-          }
-        });
-      };
-    }
-    getSetores();
+    let isMounted = true;
+    const setupMessageHandler = async () => {
+      try {
+        const { data } = await getSetoresHelpDeskForUser();
+        ws.onmessage = (event) => {
+          if (!isMounted) return;
+          const parsedData = JSON.parse(event.data);
+          data?.Setores.forEach((setor) => {
+            if (parsedData.type === `cardCreated-${setor.id}`) {
+              toast.warning(
+                `UM NOVO CHAMADO FOI ABERTO PARA O SETOR: ${setor.nome}`,
+              );
+            }
+          });
+        };
+      } catch (error) {
+        console.error("Erro ao obter setores", error);
+      }
+    };
+
+    setupMessageHandler();
+
+    return () => {
+      isMounted = false;
+      // Opcionalmente, removemos o handler para evitar vazamentos
+      if (ws) ws.onmessage = null;
+    };
   }, [ws]);
 
-  // Verificação de empresa após as chamadas dos hooks
   const empresaTag = user?.usuario.empresa?.[0]?.tag;
   if (!empresaTag) {
     return <div>Empresa não definida.</div>;

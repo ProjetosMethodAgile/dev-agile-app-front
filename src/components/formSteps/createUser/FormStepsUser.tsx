@@ -88,6 +88,7 @@ export default function FormStepsUser({ rolesData }: FormStepsUser) {
       closeGlobalModal();
       redirect("/devagile/protect/gerenciar-sistema/usuarios-do-sistema");
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state]);
 
   return (

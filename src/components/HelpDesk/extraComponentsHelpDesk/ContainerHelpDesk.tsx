@@ -5,7 +5,8 @@ import getColumnsHelpDeskForUser from "@/actions/HelpDesk/getColumnsHelpDeskForU
 import getCardsHelpDeskBySetorId from "@/actions/HelpDesk/getCardsHelpDeskBySetorId";
 import { useEffect, useState, useCallback } from "react";
 import { CardHelpDesk, ColumnsHelpDesk } from "@/types/api/apiTypes";
-import useKanbanWebSocket from "@/hooks/useKanbanWebSocket";
+// Importa o hook do contexto – useWebSocket exportado pelo provider
+import { useWebSocket } from "@/context/WebSocketContext";
 import ModalCardHelpdesk from "./ModalCardHelpdesk/ModalCardHelpdesk";
 
 export default function ContainerHelpDesk(props: React.ComponentProps<"div">) {
@@ -15,48 +16,43 @@ export default function ContainerHelpDesk(props: React.ComponentProps<"div">) {
   const [cards, setCards] = useState<CardHelpDesk[]>([]);
   const [loading, setLoading] = useState(false);
 
-  const ws = useKanbanWebSocket();
+  const { ws } = useWebSocket();
 
   // Função para buscar dados do Kanban
   const fetchData = useCallback(async () => {
     if (!currentSetor) return;
-    const { data } = await getColumnsHelpDeskForUser(currentSetor);
-    if (data) {
-      setColumns(data);
-      const cardResponse = await getCardsHelpDeskBySetorId(currentSetor);
-      if (cardResponse && cardResponse.data) {
-        setCards(cardResponse.data);
+    setLoading(true);
+    try {
+      const { data } = await getColumnsHelpDeskForUser(currentSetor);
+      if (data) {
+        setColumns(data);
+        const cardResponse = await getCardsHelpDeskBySetorId(currentSetor);
+        if (cardResponse && cardResponse.data) {
+          setCards(cardResponse.data);
+        }
+      } else {
+        setColumns([]);
+        setCards([]);
       }
-    } else {
-      setColumns([]);
-      setCards([]);
+    } catch (err) {
+      console.error("Erro na busca dos dados do Kanban:", err);
     }
     setLoading(false);
   }, [currentSetor]);
 
-  // Função para atualizar o column_id de um card
-  const updateCardColumn = useCallback(
-    (cardId: string, newColumnId: string) => {
-      setCards((prevCards) =>
-        prevCards.map((card) =>
-          card.id === cardId ? { ...card, column_id: newColumnId } : card,
-        ),
-      );
-    },
-    [],
-  );
-
-  // Busca inicial
+  // Busca inicial ao alterar o setor
   useEffect(() => {
     fetchData();
   }, [currentSetor, fetchData]);
 
-  // Escuta mensagens do WebSocket para atualizar a interface
+  // Escuta as mensagens do WebSocket para atualizar a interface
   useEffect(() => {
     if (!ws) return;
 
-    ws.onmessage = (event) => {
+    const messageHandler = (event: MessageEvent) => {
       const data = JSON.parse(event.data);
+      // Se a mensagem for de criação, atualização, exclusão ou modificação de coluna,
+      // refaz a busca dos dados
       if (
         data.type === "cardCreated" ||
         data.type === `cardCreated-${currentSetor}` ||
@@ -68,8 +64,14 @@ export default function ContainerHelpDesk(props: React.ComponentProps<"div">) {
         fetchData();
       }
     };
+
+    ws.addEventListener("message", messageHandler);
+    return () => {
+      ws.removeEventListener("message", messageHandler);
+    };
   }, [currentSetor, ws, fetchData]);
 
+  // Abre o modal com o card atual
   async function openCurrentCard(currentCard: CardHelpDesk) {
     openGlobalModal(
       <ModalCardHelpdesk
@@ -89,13 +91,21 @@ export default function ContainerHelpDesk(props: React.ComponentProps<"div">) {
               title={column.nome}
               columnId={column.id}
               key={column.id}
-              onCardDrop={updateCardColumn} // Passa a função para atualizar o card
+              onCardDrop={(cardId: string, newColumnId: string) =>
+                setCards((prevCards) =>
+                  prevCards.map((card) =>
+                    card.id === cardId
+                      ? { ...card, column_id: newColumnId }
+                      : card,
+                  ),
+                )
+              }
             >
               {cards
                 .filter((card) => card.column_id === column.id)
                 .map((card) => (
                   <Kanban.Card
-                    titleCard={card.titulo_chamado}
+                    card={card}
                     cardId={card.id}
                     key={card.id}
                     openCard={() => openCurrentCard(card)}

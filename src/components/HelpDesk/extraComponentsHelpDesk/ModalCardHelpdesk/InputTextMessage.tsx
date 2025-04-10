@@ -8,14 +8,12 @@ export type InputTextMessageProps = React.ComponentProps<"input"> & {
   message: string;
   setMessage: React.Dispatch<React.SetStateAction<string>>;
   cardData?: CardHelpDeskSessao | null;
-  att: () => void;
 };
 
 export default function InputTextMessage({
   message,
   setMessage,
   cardData,
-  att,
   ...props
 }: InputTextMessageProps) {
   const Send = iconsMap["sendMessage"];
@@ -37,7 +35,6 @@ export default function InputTextMessage({
         // Atualize o estado local, se necessário:
         setMessage("");
         // Força a atualização da rota
-        att();
       } catch (e) {
         console.log(e);
         toast.error("Erro ao enviar mensagem");

@@ -1,7 +1,7 @@
 "use client";
 import { RegisterNavProps } from "@/types/frontend/uiTypes";
 import { Circle, CircleCheck } from "lucide-react";
-import React, { FormEvent, useState } from "react";
+import React from "react";
 
 type RegisterNavigationProps = {
   activeTab: string;
@@ -28,7 +28,6 @@ export default function RegisterNavigation({
       id: "permissoes",
     },
   ];
-  const [validate, setValidate] = useState(false);
 
   return (
     <ul className="flex flex-col gap-2 *:flex *:cursor-pointer *:items-center *:gap-2 *:rounded-2xl *:px-5 *:py-2">
@@ -36,15 +35,18 @@ export default function RegisterNavigation({
         <li
           key={tab.id}
           onClick={(e) => {
-            const validate = inputsValidate(e);
-            if (validate) {
+            const isValid = inputsValidate(e);
+            if (isValid) {
               setActiveTab(tab.id);
-              setValidate(true);
             }
           }}
-          className={`${activeTab === tab.id ? "dark:bg-primary-300/30 bg-primary-600 text-general shadow-sm" : ""} transition-all`}
+          className={`${
+            activeTab === tab.id
+              ? "dark:bg-primary-300/30 bg-primary-600 text-general shadow-sm"
+              : ""
+          } transition-all`}
         >
-          <tab.icon className="dark:text-general size-5 rounded-full " />
+          <tab.icon className="dark:text-general size-5 rounded-full" />
           <span className="dark:text-general text-xl font-semibold">
             {tab.name}
           </span>
