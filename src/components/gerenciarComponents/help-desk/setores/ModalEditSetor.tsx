@@ -11,6 +11,7 @@ import putOrdemColsHelpDesk from "@/actions/putOrdemColsHelpDesk";
 import { toast } from "react-toastify";
 import { useGlobalContext } from "@/context/globalContext";
 import { FolderPen, MessageCircleQuestion } from "lucide-react";
+import { BUSCA_ACOES_COLUNA } from "@/actions/HelpDesk/AcoesColuna/getAcaoColuna";
 
 type ModalEditSetorProps = {
   closeModal: () => void;
@@ -30,6 +31,14 @@ function Tab1Content({ setorProps }: { setorProps: SetorHelpDesk }) {
   const [messagePanne , setMessagePanne] =useState(false)
   const [messagePanneTetx , setMessagePaneText] =useState("")
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const options = [
+    { value: "", label: "Selecione uma opção" },
+    { value: "email", label: "Enviar Email" }
+  ];
+
+
+
+
 
   const handleDragStart = (
     e: React.DragEvent<HTMLDivElement>,
@@ -122,6 +131,15 @@ const onMouseOutFunc = ()=>{
     getColumnsSetor();
   }, [setorProps.id]);
 
+
+
+  useEffect(()=>{
+    async function buscaAcoesColuna(){
+      const result = await BUSCA_ACOES_COLUNA()
+   
+    }
+    buscaAcoesColuna()
+    },[])
   return (
     <div className="animate-move-left-to-right min-h-90 min-w-130">
       <div className="mb-2 flex items-center gap-2">
@@ -155,17 +173,24 @@ const onMouseOutFunc = ()=>{
         <div className="flex flex-col mt-5 w-[90%] gap-2">
           <h1>Cria coluna</h1>
          <label className=" border border-general rounded-[15px] p-2 pl-4 pr-4 flex justify-between" htmlFor="inputNameKanban">
-          <input id="inputNameKanban" type="text" placeholder="Digite o nome da coluna"  className="flex w-[90%] focus:outline-none focus:border-none " onMouseEnter={()=>onMouseEventPanne("Coluna")}/>
-          <FolderPen className="text-amber-200  hover:text-custom-green-100 hover:scale-105 cursor-pointer"  onMouseOut={onMouseOutFunc}   onClick={()=> onMouseEventPanne("column")}/>
+          <input id="inputNameKanban" type="text" placeholder="Digite o nome da coluna"  className="flex w-[90%] focus:outline-none focus:border-none "/>
+          <FolderPen className="text-amber-200  hover:text-custom-green-100 hover:scale-105 cursor-pointer"  onMouseOut={onMouseOutFunc}   onMouseMove={()=> onMouseEventPanne("column")}/>
          </label>
          <label className="border border-general rounded-[15px] p-2 pl-4 pr-4 flex justify-between" htmlFor="acao">
 
-          <select name="" id="" className="flex w-[90%] focus:outline-none focus:border-none ">
-            <option value=""  >Selecione uma opção</option>
-            <option value=""  >Enviar Email</option>
-          </select>
+         <select 
+      name="opcoes" 
+      id="opcoes" 
+      className="flex w-[90%] focus:outline-none focus:border-none"
+    >
+      {options.map((option, index) => (
+        <option key={index} value={option.value}>
+          {option.label}
+        </option>
+      ))}
+    </select>
         
-          <MessageCircleQuestion className="text-amber-200 hover:text-custom-green-100 hover:scale-105 cursor-pointer" onClick={()=> onMouseEventPanne("Select")} onMouseOut={onMouseOutFunc}/>
+          <MessageCircleQuestion className="text-amber-200 hover:text-custom-green-100 hover:scale-105 cursor-pointer " onMouseMove={()=> onMouseEventPanne("Select")} onMouseOut={onMouseOutFunc}/>
           {messagePanne&& <p className="absolute bottom-0 left-0 w-[100%] p-5 flex justify-center bg-primary-100 p-3.5 flex-wrap ">{messagePanneTetx}</p>}
          </label>
          <input type="button" value={'Cadastrar'} className=" w-[100%] rounded-[10px] bg-primary-300 p-1 flex text-center border border-amber-50" />
