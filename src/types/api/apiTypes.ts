@@ -276,6 +276,14 @@ export type CardHelpDesk = {
   ColumnsCard: KanbanColumn;
   CardSessao: {
     id: string;
+    atendentesVinculados: {
+      createdAt: string;
+      KanbanSessoesAtendentes: {
+        id: string;
+        atenden: string;
+        visuali: boolean;
+      };
+    }[];
   };
   messagesCount: string;
   attachmentsCount: string;

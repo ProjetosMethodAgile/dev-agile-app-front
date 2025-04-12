@@ -68,6 +68,10 @@ export default function ModalCardHelpdesk({
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [card?.CardSessao.MessageSessao]);
 
+  useEffect(() => {
+    console.log(card);
+  }, [card]);
+
   return (
     <Form.Root
       className="max-h-[90dvh] overflow-x-hidden overflow-y-auto"

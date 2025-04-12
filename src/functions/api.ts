@@ -1,5 +1,5 @@
-export const API_URL = "https://devagile.com.br/api";
-// export const API_URL = "http://localhost:3001/api";
+// export const API_URL = "https://devagile.com.br/api";
+export const API_URL = "http://localhost:3001/api";
 
 export function GET_PERMISSIONS_ALL() {
   return {

@@ -18,6 +18,9 @@ export default function ContainerHelpDesk(props: React.ComponentProps<"div">) {
 
   const { ws } = useWebSocket();
 
+  useEffect(() => {
+    console.log(cards);
+  }, [cards]);
   // Função para buscar dados do Kanban
   const fetchData = useCallback(async () => {
     if (!currentSetor) return;
