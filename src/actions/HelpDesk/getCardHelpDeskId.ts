@@ -5,6 +5,7 @@ import { cookies } from "next/headers";
 import jwt from "jsonwebtoken";
 import apiError from "@/functions/api-error";
 import { GET_KANBAN_CARD_BY_ID } from "@/functions/api";
+import { revalidateTag } from "next/cache";
 
 export default async function getCardHelpDeskId(id: string) {
   try {
@@ -25,7 +26,22 @@ export default async function getCardHelpDeskId(id: string) {
         tags: ["helpdesk-cards"],
       },
     });
+    revalidateTag("helpdesk-cards");
     const card: CardHelpDeskSessao = await response.json();
+
+    // Aplicando filtro por data nas mensagens (ordenando-as de forma crescente)
+    if (
+      card &&
+      card.CardSessao &&
+      Array.isArray(card.CardSessao.MessageSessao)
+    ) {
+      card.CardSessao.MessageSessao.sort((a, b) => {
+        const dateA = new Date(a.createdAt).getTime();
+        const dateB = new Date(b.createdAt).getTime();
+        return dateA - dateB;
+      });
+    }
+
     return { data: card, ok: true, error: "" };
   } catch (error) {
     return apiError(error);

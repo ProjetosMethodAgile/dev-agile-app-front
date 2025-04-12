@@ -13,7 +13,6 @@ export async function postUser(
     | undefined,
   formData: FormData,
 ): Promise<{ errors: string[]; msg_success: string; success: boolean }> {
-
   try {
     const nome = formData.get("nome") as string;
     const contato = formData.get("contato") as string;
@@ -36,6 +35,7 @@ export async function postUser(
             }
           >;
         } catch (e) {
+          console.log(e);
           console.error("Erro ao fazer parse do JSON:", permission);
           return null;
         }

@@ -276,6 +276,11 @@ export type CardHelpDesk = {
   createdAt: string;
   updateAt: string;
   ColumnsCard: KanbanColumn;
+  CardSessao: {
+    id: string;
+  };
+  messagesCount: string;
+  attachmentsCount: string;
 };
 
 //card com mais detalhes e todo corpo de conversas

@@ -41,7 +41,7 @@ export function ModalCadSetor({
         label="Email do Setor"
         name="email_setor"
         placeholder="suporte@empresa.com"
-        type="email" // Adiciona a validação nativa do HTML para emails
+        type="email"
         className="my-5"
       />
       <Form.InputText

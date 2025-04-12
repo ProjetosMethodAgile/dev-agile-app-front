@@ -42,7 +42,7 @@ export default function PermissionsMenu({
         crud: { create: false, update: false, delete: false },
       };
 
-      let updatedActions = { ...prev };
+      const updatedActions = { ...prev };
 
       if (crudType === "access") {
         const isAccessing = !current.access;
@@ -91,9 +91,8 @@ export default function PermissionsMenu({
     );
   }
 
-
   return (
-    <div className="col-span-full  ">
+    <div className="col-span-full">
       <PermissionsNavigationForm
         setActiveTab={setActiveTab}
         activeTab={activeTab}

@@ -1,11 +1,14 @@
+"use client";
 import getCardHelpDeskId from "@/actions/HelpDesk/getCardHelpDeskId";
 import { Form } from "@/components/form";
 import { CardHelpDeskSessao } from "@/types/api/apiTypes";
 import iconsMap from "@/utils/iconsMap";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
 import formatDateSimple from "@/utils/formatDateSimple";
 import Image from "next/image";
 import InputTextMessage from "./InputTextMessage";
+// Importa o hook do contexto WebSocket
+import { useWebSocket } from "@/context/WebSocketContext";
 
 export type ModalCardHelpdeskProps = React.ComponentProps<"form"> & {
   cardId: string;
@@ -23,20 +26,42 @@ export default function ModalCardHelpdesk({
   const [card, setCard] = useState<CardHelpDeskSessao | null>(null);
   const [message, setMessage] = useState("");
   // Ref para o final da lista de mensagens
-  const messagesEndRef = useRef<HTMLDivElement>(null);
+  const messagesEndRef = useRef<HTMLDivElement | null>(null);
+  const { ws } = useWebSocket();
 
-  async function getCardData() {
+  // Envolvendo a função getCardData com useCallback para estabilizá-la
+  const getCardData = useCallback(async () => {
     setLoading(true);
-    const data = await getCardHelpDeskId(cardId);
-    if (data.data && data.ok) {
-      setCard(data.data);
+    try {
+      const data = await getCardHelpDeskId(cardId);
+      if (data.data && data.ok) {
+        setCard(data.data);
+      }
+    } catch (error) {
+      console.error("Erro ao buscar os dados do card", error);
     }
     setLoading(false);
-  }
+  }, [cardId]);
 
+  // Busca os dados do card ao carregar ou ao mudar o cardId
   useEffect(() => {
     getCardData();
-  }, [cardId]);
+  }, [cardId, getCardData]);
+
+  // Atualiza o card se houver mensagem de atualização enviada pelo WebSocket
+  useEffect(() => {
+    if (!ws) return;
+    const messageHandler = (event: MessageEvent) => {
+      const data = JSON.parse(event.data);
+      if (data.type === "cardUpdated") {
+        getCardData();
+      }
+    };
+    ws.addEventListener("message", messageHandler);
+    return () => {
+      ws.removeEventListener("message", messageHandler);
+    };
+  }, [ws, getCardData]);
 
   // Sempre que as mensagens mudarem, rola para o final
   useEffect(() => {
@@ -94,38 +119,32 @@ export default function ModalCardHelpdesk({
                 <div className="mb-2 flex-1 overflow-y-auto">
                   {card?.CardSessao.MessageSessao &&
                   card.CardSessao.MessageSessao.length > 0
-                    ? card.CardSessao.MessageSessao.slice()
-                        .sort((a, b) => {
-                          const dateA = new Date(a.createdAt).getTime();
-                          const dateB = new Date(b.createdAt).getTime();
-                          return dateA - dateB;
-                        })
-                        .map((msg, index) => {
-                          const isAtendente = Boolean(msg.AtendenteMessage);
-                          const senderName = isAtendente
-                            ? msg.AtendenteMessage.UsuarioAtendente.nome
-                            : msg.ClienteSessao?.nome || "Cliente Externo";
-                          return (
-                            <div
-                              key={index}
-                              className={`mb-4 rounded p-2 shadow ${
-                                isAtendente ? "bg-blue-200" : "bg-yellow-100"
-                              }`}
-                            >
-                              <div className="flex items-center justify-between">
-                                <span className="text-primary-150 text-sm font-bold">
-                                  {senderName}
-                                </span>
-                                <span className="text-xs text-gray-500">
-                                  {formatDateSimple(msg.createdAt)}
-                                </span>
-                              </div>
-                              <p className="mt-1 text-base text-gray-700">
-                                {msg.content_msg}
-                              </p>
+                    ? card.CardSessao.MessageSessao.map((msg, index) => {
+                        const isAtendente = Boolean(msg.AtendenteMessage);
+                        const senderName = isAtendente
+                          ? msg.AtendenteMessage.UsuarioAtendente.nome
+                          : msg.ClienteSessao?.nome || "Cliente Externo";
+                        return (
+                          <div
+                            key={index}
+                            className={`mb-4 rounded p-2 shadow ${
+                              isAtendente ? "bg-blue-200" : "bg-yellow-100"
+                            }`}
+                          >
+                            <div className="flex items-center justify-between">
+                              <span className="text-primary-150 text-sm font-bold">
+                                {senderName}
+                              </span>
+                              <span className="text-xs text-gray-500">
+                                {formatDateSimple(msg.createdAt)}
+                              </span>
                             </div>
-                          );
-                        })
+                            <p className="mt-1 text-base text-gray-700">
+                              {msg.content_msg}
+                            </p>
+                          </div>
+                        );
+                      })
                     : null}
                   {/* Elemento que marca o final das mensagens */}
                   <div ref={messagesEndRef} />
@@ -136,7 +155,6 @@ export default function ModalCardHelpdesk({
                   message={message}
                   setMessage={setMessage}
                   cardData={card}
-                  att={getCardData}
                 />
               </div>
             </div>
@@ -154,7 +172,7 @@ export default function ModalCardHelpdesk({
             <div className="bg-primary-150 rounded-2xl p-3">
               <span className="flex flex-wrap gap-1">
                 <span>Solicitante: </span>
-                {card?.CardSessao.MessageSessao.at(-1)?.ClienteSessao?.nome ||
+                {card?.CardSessao.MessageSessao.at(0)?.ClienteSessao?.nome ||
                   "solicitante externo"}
               </span>
               <span className="flex flex-wrap gap-1">
