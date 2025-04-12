@@ -19,6 +19,7 @@ export async function postUser(
     const contato = formData.get("contato") as string;
     const email = formData.get("email") as string;
     const senha = formData.get("senha") as string;
+    const status = 'Ativo'
     const tipoUsuario = formData.get("tipo_usuario") as string;
     const permissionsCheckbox = formData.getAll("checkbox[]") as string[];
 
@@ -89,6 +90,7 @@ export async function postUser(
         email,
         contato,
         senha,
+        status,
         roles_id: [tipoUsuario],
         permissoes: permissionsComplete,
         empresa_id: usuarioData.empresa.id,

@@ -102,6 +102,7 @@ export type User = {
   nome: string;
   email: string;
   contato: string;
+  status: 'Ativo' | 'Inativo';
   empresa?: EmpresaData[];
   usuario_roles: RoleData[];
   permissoes: PermissaoCompletaData[];
@@ -116,6 +117,7 @@ export type UsuariosData = {
     nome: string;
     email: string;
     contato: string;
+    status: 'Ativo' | 'Inativo';
     empresa: EmpresaData[];
     usuario_roles: RoleData[];
     // As permissões agora vêm agrupadas e completas (com acessos, ações e subtelas)

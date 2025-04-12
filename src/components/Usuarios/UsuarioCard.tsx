@@ -1,7 +1,9 @@
 import { User } from "@/types/api/apiTypes";
 import { EllipsisVertical, User2 } from "lucide-react";
+import { useState } from "react";
 
 export default function UsuarioCard({ user }: { user: User }) {
+  const [showTooltip, setShowTooltip] = useState(false);
   return (
     <div
       key={user.id}
@@ -11,7 +13,20 @@ export default function UsuarioCard({ user }: { user: User }) {
         <div className="ml-2 flex items-center gap-4">
           <User2 className="bg-primary-300 size-10 min-w-10 rounded-full p-1" />
           <div className="flex flex-col">
-            <span className="justify-self-start">{user.nome}</span>
+            <span className="flex  items-center gap-2 justify-self-start">
+              {user.nome}
+              <span
+                onMouseEnter={() => setShowTooltip(true)}
+                onMouseLeave={() => setShowTooltip(false)}
+                className={`block relative  size-2 cursor-pointer  rounded-full ${user.status === "Ativo" ? "bg-green-600" : "bg-red-600"}`}
+              >
+                {showTooltip && (
+                  <div className="absolute z-10 left-2 top-1 transition-all rounded bg-gray-800 px-2 py-1 text-xs whitespace-nowrap text-white shadow-md">
+                    {user.status}
+                  </div>
+                )}
+              </span>
+            </span>
             <span className="max-w-50 truncate text-sm">{user.email}</span>
           </div>
         </div>
