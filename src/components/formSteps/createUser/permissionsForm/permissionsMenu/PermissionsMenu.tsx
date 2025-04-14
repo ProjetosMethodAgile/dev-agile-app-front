@@ -82,7 +82,7 @@ export default function PermissionsMenu({
       return updatedActions;
     });
   }
-  console.log("actions", actions);
+
   if (!permissoesData || permissoesData.length === 0) {
     return (
       <div className="text-primary-200 col-span-3">

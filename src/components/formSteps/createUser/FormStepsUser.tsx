@@ -131,6 +131,16 @@ export default function FormStepsUser({ rolesData }: FormStepsUser) {
             />
           </Form.Section>
           <Form.Section title="Acesso ao sistema">
+            {/* <Form.InputSelect
+              options={[
+                { id: "ativo", nome: "Ativo" },
+                { id: "inativo", nome: "Inativo" },
+              ]}
+              label="Status"
+              id="status"
+              name="status"
+              defaultOptionText="Ativo"
+            /> */}
             <Form.InputText
               icon={MailIcon}
               inputId="email"
