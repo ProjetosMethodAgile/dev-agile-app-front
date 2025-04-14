@@ -29,7 +29,7 @@ export async function BUSCA_ACOES_COLUNA() {
     });
 
     if (!response.ok) {
-      throw new Error(`Erro ao buscar ações: ${response.statusText}`);
+      throw new Error(`Erro ao buscar ações`);
     }
 
     const acaoColuna: AcaoColuna = await response.json();
