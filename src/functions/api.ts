@@ -113,12 +113,6 @@ export function POST_REPLY_CHAMADO_KANBAN() {
   };
 }
 
-export function POST_VINCULA_ATEND_CARD(sessao_id: string) {
-  return {
-    url: API_URL + `/helpdesk/atendente/card/${sessao_id}`,
-  };
-}
-
 export function PUT_ORDEM_KANBAN_COLUNA() {
   return {
     url: API_URL + `/helpdesk/columnsBySetor`,

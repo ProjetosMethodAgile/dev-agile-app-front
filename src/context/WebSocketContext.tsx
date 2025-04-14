@@ -11,8 +11,7 @@ import React, {
 } from "react";
 
 const SOCKET_URL = "wss://devagile.com.br/socket/";
-// const SOCKET_URL = "ws://localhost:3001/socket";
-
+//const SOCKET_URL = "ws://localhost:3001/socket";
 // 10 minutos de inatividade
 const INACTIVITY_LIMIT = 10 * 60 * 1000;
 // Checa a cada 10 segundos
