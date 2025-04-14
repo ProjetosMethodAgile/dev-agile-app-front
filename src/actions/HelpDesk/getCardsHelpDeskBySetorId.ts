@@ -5,6 +5,7 @@ import { cookies } from "next/headers";
 import jwt from "jsonwebtoken";
 import apiError from "@/functions/api-error";
 import { GET_KANBAN_CARDS_BY_SETOR_ID } from "@/functions/api";
+import { revalidateTag } from "next/cache";
 
 export default async function getCardsHelpDeskBySetorId(setor_id: string) {
   try {
@@ -20,11 +21,13 @@ export default async function getCardsHelpDeskBySetorId(setor_id: string) {
       headers: {
         Authorization: "Bearer " + token,
       },
-      next: {
-        revalidate: 60,
-        tags: ["helpdesk-cards"],
-      },
+      cache: "no-store",
+      // next: {
+      //   revalidate: 60,
+      //   tags: ["helpdesk-cards"],
+      // },
     });
+
     const data: { cards: CardHelpDesk[] } = await response.json();
     const cards = data.cards;
     return { data: cards, ok: true, error: "" };
