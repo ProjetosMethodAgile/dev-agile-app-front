@@ -3,6 +3,7 @@ import { MessageCircle, Paperclip, User } from "lucide-react";
 import React from "react";
 import { useGlobalContext } from "@/context/globalContext";
 import { CardHelpDesk } from "@/types/api/apiTypes";
+import getIniciaisNome from "@/utils/getIniciaisNome";
 
 export type KanbanCardProps = React.ComponentProps<"div"> & {
   card: CardHelpDesk;
@@ -12,7 +13,6 @@ export type KanbanCardProps = React.ComponentProps<"div"> & {
 
 export default function KanbanCard({
   card,
-
   cardId,
   openCard,
   ...props
@@ -26,6 +26,7 @@ export default function KanbanCard({
     cardElement.classList.remove("opacity-10");
     setCard(null);
   }
+  console.log(card);
 
   return (
     <div
@@ -62,8 +63,16 @@ export default function KanbanCard({
             <span>{card.attachmentsCount}</span>
           </div>
         </div>
-        <div>
-          <User />
+        <div className="flex max-w-[90px] overflow-x-auto">
+          {card.CardSessao.atendentesVinculados.map((atendente) => (
+            <p
+              key={atendente.KanbanSessoesAtendentes.atenden}
+              className="rounded-full bg-gray-600 p-1 font-bold hover:bg-gray-500"
+              title={atendente.UsuarioAtendente?.nome}
+            >
+              {getIniciaisNome(atendente?.UsuarioAtendente?.nome)}
+            </p>
+          ))}
         </div>
       </div>
     </div>

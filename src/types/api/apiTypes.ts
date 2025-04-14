@@ -278,6 +278,11 @@ export type CardHelpDesk = {
     id: string;
     atendentesVinculados: {
       createdAt: string;
+      UsuarioAtendente: {
+        nome: string;
+        email: string;
+        contato: string;
+      };
       KanbanSessoesAtendentes: {
         id: string;
         atenden: string;

@@ -18,9 +18,6 @@ export default function ContainerHelpDesk(props: React.ComponentProps<"div">) {
 
   const { ws } = useWebSocket();
 
-  useEffect(() => {
-    console.log(cards);
-  }, [cards]);
   // Função para buscar dados do Kanban
   const fetchData = useCallback(async () => {
     if (!currentSetor) return;
@@ -54,16 +51,19 @@ export default function ContainerHelpDesk(props: React.ComponentProps<"div">) {
 
     const messageHandler = (event: MessageEvent) => {
       const data = JSON.parse(event.data);
-      // Se a mensagem for de criação, atualização, exclusão ou modificação de coluna,
-      // refaz a busca dos dados
+      console.log("[WS RECEBIDO]", data);
+      console.log(cards.some((c) => data.type === `cardUpdated-${c.id}`));
+      cards.map((c) => console.log(`cardUpdated-${c.id}`));
+
       if (
-        data.type === "cardCreated" ||
         data.type === `cardCreated-${currentSetor}` ||
+        data.type === `cardUpdated-${currentSetor}` ||
         data.type === "cardUpdated" ||
         data.type === "cardDeleted" ||
         data.type === "columnCreated" ||
         data.type === "columnUpdated"
       ) {
+        console.log("🔥 Atualizando dados via WebSocket");
         fetchData();
       }
     };
@@ -84,7 +84,6 @@ export default function ContainerHelpDesk(props: React.ComponentProps<"div">) {
     );
   }
 
-  if (loading) return <div>Carregando colunas...</div>;
   return (
     <div {...props}>
       <Kanban.Root>

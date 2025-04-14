@@ -9,6 +9,8 @@ import Image from "next/image";
 import InputTextMessage from "./InputTextMessage";
 // Importa o hook do contexto WebSocket
 import { useWebSocket } from "@/context/WebSocketContext";
+import { postVinculaAtendenteToCardHelpdesk } from "@/actions/HelpDesk/postVinculaAtendenteToCardHelpdesk";
+import { toast } from "react-toastify";
 
 export type ModalCardHelpdeskProps = React.ComponentProps<"form"> & {
   cardId: string;
@@ -43,6 +45,16 @@ export default function ModalCardHelpdesk({
     setLoading(false);
   }, [cardId]);
 
+  async function handleAddAtendente(sessao_id: string) {
+    const response = await postVinculaAtendenteToCardHelpdesk(sessao_id);
+    console.log(response);
+
+    if (response.message && response.error) {
+      toast.warning(response.message);
+    } else if (response.message) {
+      toast.success(response.message);
+    }
+  }
   // Busca os dados do card ao carregar ou ao mudar o cardId
   useEffect(() => {
     getCardData();
@@ -208,10 +220,15 @@ export default function ModalCardHelpdesk({
                   <Paperclip />
                   Anexos
                 </div>
-                <div className="text-1xl flex h-11 w-full cursor-pointer items-center justify-center rounded-xl bg-gray-500 p-2 font-bold text-white hover:bg-green-600 active:scale-95 sm:w-2/3">
-                  <Paperclip />
-                  Anexos
-                </div>
+                {card?.CardSessao && (
+                  <div
+                    onClick={() => handleAddAtendente(card?.CardSessao.id)}
+                    className="text-1xl flex h-11 w-full cursor-pointer items-center justify-center rounded-xl bg-gray-500 p-2 font-bold text-white hover:bg-green-600 active:scale-95 sm:w-2/3"
+                  >
+                    <Paperclip />
+                    Ingressar
+                  </div>
+                )}
               </>
             )}
           </div>
