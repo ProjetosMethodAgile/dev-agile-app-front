@@ -1,7 +1,7 @@
 "use client";
 import getCardHelpDeskId from "@/actions/HelpDesk/getCardHelpDeskId";
 import { Form } from "@/components/form";
-import { CardHelpDeskSessao } from "@/types/api/apiTypes";
+import { CardHelpDesk, CardHelpDeskSessao } from "@/types/api/apiTypes";
 import iconsMap from "@/utils/iconsMap";
 import { useEffect, useRef, useState, useCallback } from "react";
 import formatDateSimple from "@/utils/formatDateSimple";
@@ -13,12 +13,12 @@ import { postVinculaAtendenteToCardHelpdesk } from "@/actions/HelpDesk/postVincu
 import { toast } from "react-toastify";
 
 export type ModalCardHelpdeskProps = React.ComponentProps<"form"> & {
-  cardId: string;
+  currentCard: CardHelpDesk;
   closeModal: () => void;
 };
 
 export default function ModalCardHelpdesk({
-  cardId,
+  currentCard,
   closeModal,
   ...props
 }: ModalCardHelpdeskProps) {
@@ -35,7 +35,7 @@ export default function ModalCardHelpdesk({
   const getCardData = useCallback(async () => {
     setLoading(true);
     try {
-      const data = await getCardHelpDeskId(cardId);
+      const data = await getCardHelpDeskId(currentCard.id);
       if (data.data && data.ok) {
         setCard(data.data);
       }
@@ -43,12 +43,10 @@ export default function ModalCardHelpdesk({
       console.error("Erro ao buscar os dados do card", error);
     }
     setLoading(false);
-  }, [cardId]);
+  }, [currentCard.id]);
 
   async function handleAddAtendente(sessao_id: string) {
     const response = await postVinculaAtendenteToCardHelpdesk(sessao_id);
-    console.log(response);
-
     if (response.message && response.error) {
       toast.warning(response.message);
     } else if (response.message) {
@@ -58,14 +56,14 @@ export default function ModalCardHelpdesk({
   // Busca os dados do card ao carregar ou ao mudar o cardId
   useEffect(() => {
     getCardData();
-  }, [cardId, getCardData]);
+  }, [currentCard.id, getCardData]);
 
   // Atualiza o card se houver mensagem de atualização enviada pelo WebSocket
   useEffect(() => {
     if (!ws) return;
     const messageHandler = (event: MessageEvent) => {
       const data = JSON.parse(event.data);
-      if (data.type === "cardUpdated") {
+      if (data.type === `messageUpdate-${currentCard.CardSessao.id}`) {
         getCardData();
       }
     };
@@ -73,7 +71,7 @@ export default function ModalCardHelpdesk({
     return () => {
       ws.removeEventListener("message", messageHandler);
     };
-  }, [ws, getCardData]);
+  }, [ws, getCardData, currentCard.CardSessao.id]);
 
   // Sempre que as mensagens mudarem, rola para o final
   useEffect(() => {

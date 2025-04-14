@@ -14,14 +14,14 @@ export default function ContainerHelpDesk(props: React.ComponentProps<"div">) {
     useGlobalContext();
   const [columns, setColumns] = useState<ColumnsHelpDesk[]>([]);
   const [cards, setCards] = useState<CardHelpDesk[]>([]);
-  const [loading, setLoading] = useState(false);
+  // const [loading, setLoading] = useState(false);
 
   const { ws } = useWebSocket();
 
   // Função para buscar dados do Kanban
   const fetchData = useCallback(async () => {
     if (!currentSetor) return;
-    setLoading(true);
+    // setLoading(true);
     try {
       const { data } = await getColumnsHelpDeskForUser(currentSetor);
       if (data) {
@@ -37,7 +37,7 @@ export default function ContainerHelpDesk(props: React.ComponentProps<"div">) {
     } catch (err) {
       console.error("Erro na busca dos dados do Kanban:", err);
     }
-    setLoading(false);
+    // setLoading(false);
   }, [currentSetor]);
 
   // Busca inicial ao alterar o setor
@@ -51,13 +51,14 @@ export default function ContainerHelpDesk(props: React.ComponentProps<"div">) {
 
     const messageHandler = (event: MessageEvent) => {
       const data = JSON.parse(event.data);
-      console.log("[WS RECEBIDO]", data);
-      console.log(cards.some((c) => data.type === `cardUpdated-${c.id}`));
-      cards.map((c) => console.log(`cardUpdated-${c.id}`));
+      // Verifica se algum card da lista corresponde ao tipo recebido desse setor
+      const hasUpdatedCard = cards.some(
+        (card) => data.type === `cardUpdated-${card.id}`,
+      );
 
       if (
         data.type === `cardCreated-${currentSetor}` ||
-        data.type === `cardUpdated-${currentSetor}` ||
+        hasUpdatedCard ||
         data.type === "cardUpdated" ||
         data.type === "cardDeleted" ||
         data.type === "columnCreated" ||
@@ -72,13 +73,13 @@ export default function ContainerHelpDesk(props: React.ComponentProps<"div">) {
     return () => {
       ws.removeEventListener("message", messageHandler);
     };
-  }, [currentSetor, ws, fetchData]);
+  }, [currentSetor, ws, fetchData, cards]);
 
   // Abre o modal com o card atual
   async function openCurrentCard(currentCard: CardHelpDesk) {
     openGlobalModal(
       <ModalCardHelpdesk
-        cardId={currentCard.id}
+        currentCard={currentCard}
         closeModal={closeGlobalModal}
       />,
     );

@@ -38,18 +38,15 @@ export const WebSocketProvider: React.FC<{ children: React.ReactNode }> = ({
   const lastActivityRef = useRef(Date.now());
   // Timer para inatividade
   const inactivityTimerRef = useRef<NodeJS.Timeout | null>(null);
-  // Tentativas de reconexão para o backoff exponencial
-  const attemptRef = useRef<number>(0);
-  // Para armazenar o timeout da reconexão
+  // Timeout da reconexão
   const reconnectTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(
     null,
   );
-  // Flag para indicar que a desconexão foi manual (ex: inatividade)
+  // Flag para desconexão manual (ex: por inatividade)
   const manualDisconnectRef = useRef<boolean>(false);
 
-  // Conecta o WebSocket com verificação dos estados CONNECTING/OPEN
   const connect = useCallback(() => {
-    // Se já existe uma conexão em progresso ou aberta, não faz nada
+    // Se já há uma conexão em progresso ou aberta, não tenta novamente.
     if (
       wsRef.current &&
       (wsRef.current.readyState === WebSocket.CONNECTING ||
@@ -57,11 +54,7 @@ export const WebSocketProvider: React.FC<{ children: React.ReactNode }> = ({
     ) {
       return;
     }
-    console.log(
-      "Tentando conectar o WebSocket, tentativa",
-      attemptRef.current + 1,
-    );
-    // Reseta flag de desconexão manual ao tentar nova conexão
+    console.log("Tentando conectar o WebSocket");
     manualDisconnectRef.current = false;
     const socket = new WebSocket(SOCKET_URL);
 
@@ -69,13 +62,11 @@ export const WebSocketProvider: React.FC<{ children: React.ReactNode }> = ({
       console.log("WebSocket conectado");
       setWs(socket);
       wsRef.current = socket;
-      // Reseta as tentativas de reconexão na conexão bem-sucedida
-      attemptRef.current = 0;
     };
 
     socket.onmessage = (event) => {
       console.log("Mensagem recebida do servidor:", event.data);
-      // Aqui você pode adicionar lógica adicional para processar as mensagens recebidas
+      // Lógica para processar as mensagens pode ser adicionada aqui.
     };
 
     socket.onerror = (error) => {
@@ -86,23 +77,20 @@ export const WebSocketProvider: React.FC<{ children: React.ReactNode }> = ({
       console.log("WebSocket desconectado");
       setWs(null);
       wsRef.current = null;
-      // Se a desconexão foi manual, não agendamos a reconexão
+      // Se a desconexão foi manual, não tenta reconectar.
       if (manualDisconnectRef.current) {
         console.log("Desconexão manual. Não reconectando automaticamente.");
         manualDisconnectRef.current = false;
         return;
       }
-      // Backoff exponencial para reconexão (máximo 30 segundos)
-      attemptRef.current++;
-      const delay = Math.min(2 ** attemptRef.current * 1000, 30000);
-      console.log(`Tentando reconectar em ${delay} ms...`);
+      // Tenta reconectar após 1 minuto (60.000 ms)
+      console.log("Tentando reconectar em 60000 ms...");
       reconnectTimeoutRef.current = setTimeout(() => {
         connect();
-      }, delay);
+      }, 60000);
     };
   }, []);
 
-  // Desconecta o WebSocket de forma manual (ex: após período de inatividade)
   const disconnect = useCallback(() => {
     if (wsRef.current) {
       console.log("Desconectando o WebSocket manualmente");
@@ -111,44 +99,29 @@ export const WebSocketProvider: React.FC<{ children: React.ReactNode }> = ({
       wsRef.current = null;
       setWs(null);
     }
-    // Se houver uma reconexão pendente, cancela-a
+    // Se houver reconexão pendente, cancela-a
     if (reconnectTimeoutRef.current) {
       clearTimeout(reconnectTimeoutRef.current);
       reconnectTimeoutRef.current = null;
     }
   }, []);
 
-  // Atualiza o timestamp de atividade e reconecta se não houver conexão ativa
+  // Agora, handleActivity apenas atualiza o timestamp de atividade
   const handleActivity = useCallback(() => {
     lastActivityRef.current = Date.now();
-    // Só reconecta se não houver socket ou se estiver fechado/fechando
-    if (
-      !wsRef.current ||
-      wsRef.current.readyState === WebSocket.CLOSED ||
-      wsRef.current.readyState === WebSocket.CLOSING
-    ) {
-      console.log(
-        "Atividade detectada - reconectando o WebSocket imediatamente",
-      );
-      if (reconnectTimeoutRef.current) {
-        clearTimeout(reconnectTimeoutRef.current);
-        reconnectTimeoutRef.current = null;
-      }
-      connect();
-    }
-  }, [connect]);
+  }, []);
 
   useEffect(() => {
-    // Conecta o WebSocket inicialmente
+    // Conecta inicialmente o WebSocket
     connect();
 
-    // Eventos que representam atividade do usuário
+    // Registra eventos de atividade do usuário
     const events = ["mousemove", "keydown", "scroll", "touchstart"];
     events.forEach((eventName) =>
       window.addEventListener(eventName, handleActivity),
     );
 
-    // Checa periodicamente se houve inatividade superior ao limite definido
+    // Verifica periodicamente a inatividade para desconectar o WebSocket
     inactivityTimerRef.current = setInterval(() => {
       const elapsed = Date.now() - lastActivityRef.current;
       if (
@@ -188,7 +161,7 @@ export const WebSocketProvider: React.FC<{ children: React.ReactNode }> = ({
   );
 };
 
-// Custom hook para consumir o contexto do WebSocket
+// Hook para consumir o contexto do WebSocket
 export const useWebSocket = (): IWebSocketContext => {
   const context = useContext(WebSocketContext);
   if (!context) {
