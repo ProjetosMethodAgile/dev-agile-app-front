@@ -2,22 +2,23 @@
 import { MessageCircle, Paperclip, User } from "lucide-react";
 import React from "react";
 import { useGlobalContext } from "@/context/globalContext";
+import { CardHelpDesk } from "@/types/api/apiTypes";
 
 export type KanbanCardProps = React.ComponentProps<"div"> & {
-  titleCard: string;
+  card: CardHelpDesk;
   cardId: string;
   openCard: React.MouseEventHandler<HTMLDivElement>;
 };
 
 export default function KanbanCard({
-  titleCard,
+  card,
+
   cardId,
   openCard,
   ...props
 }: KanbanCardProps) {
   const cardRef = React.useRef<HTMLDivElement>(null);
   const { setCard } = useGlobalContext();
-
   function dragCardStart(cardElement: HTMLDivElement) {
     cardElement.classList.add("opacity-10");
   }
@@ -46,19 +47,19 @@ export default function KanbanCard({
       onClick={openCard}
       {...props}
     >
-      <p className="text-[18px]">{titleCard}</p>
+      <p className="text-[18px]">{card.titulo_chamado}</p>
       <div className="flex flex-wrap">
         <div className="rounded-sm bg-green-600 p-1">etiqueta</div>
       </div>
       <div className="flex items-center justify-between">
         <div className="flex gap-3">
-          <div>
+          <div className="flex gap-1">
             <MessageCircle />
-            <span>3</span>
+            <span>{card.messagesCount}</span>
           </div>
-          <div>
+          <div className="flex gap-1">
             <Paperclip />
-            <span>1</span>
+            <span>{card.attachmentsCount}</span>
           </div>
         </div>
         <div>

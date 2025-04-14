@@ -3,7 +3,7 @@ import apiError from "@/functions/api-error";
 import { cookies } from "next/headers";
 import jwt from "jsonwebtoken";
 import { TokenData } from "@/types/api/apiTypes";
-import logout from "./logout";
+import logout from "../logout";
 import { POST_SETOR_HELPDESK } from "@/functions/api";
 import { revalidateTag } from "next/cache";
 
@@ -16,6 +16,7 @@ export async function postSetorHelpDesk(
 ): Promise<{ errors: string[]; msg_success: string; success: boolean }> {
   const nomeSetor = formData.get("nome") as string;
   const empTag = formData.get("emptag") as string;
+  const email_setor = formData.get("email_setor") as string;
   const errors: string[] = [];
 
   if (!nomeSetor || nomeSetor.trim().length <= 2) {
@@ -44,7 +45,7 @@ export async function postSetorHelpDesk(
       body: JSON.stringify({
         nome: nomeSetor,
         empresa_id: usuarioData.empresa.id,
-        email_setor: usuarioData.emailSetor,
+        email_setor: email_setor,
       }),
     });
     if (response.ok) {

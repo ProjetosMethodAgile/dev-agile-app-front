@@ -3,7 +3,7 @@ import { Form } from "@/components/form";
 import iconsMap from "@/utils/iconsMap";
 import { useGlobalContext } from "@/context/globalContext";
 import { useEffect, useState } from "react";
-import { redirect, useParams } from "next/navigation";
+import { redirect, useParams, usePathname } from "next/navigation";
 import { useActionState } from "react";
 import { toast } from "react-toastify";
 import AtendenteList from "./AtendenteList";
@@ -31,6 +31,8 @@ export default function AtendenteContainer({
 
   const { openGlobalModal, closeGlobalModal } = useGlobalContext();
   const { empresaTag } = useParams();
+  const pathname = usePathname();
+
   const [state, formAction] = useActionState(postAtendenteHelpDesk, {
     errors: [],
     msg_success: "",
@@ -48,7 +50,7 @@ export default function AtendenteContainer({
     if (state?.success) {
       toast.success(state.msg_success);
       closeGlobalModal();
-      redirect("/devagile/protect/gerenciar-sistema/configurar-help-desk");
+      redirect(pathname);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state]);

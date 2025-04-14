@@ -1,5 +1,5 @@
-import { PermissaoCompletaData } from "@/types/api/apiTypes";
 import { ChangeEvent } from "react";
+import { PermissionsState } from "../formSteps/createUser/permissionsForm/permissionsMenu/PermissionsMenu";
 
 type FormCheckboxProps = {
   label: string;
@@ -7,8 +7,8 @@ type FormCheckboxProps = {
   checked?: boolean;
   name?: string;
   onChange?: (event: ChangeEvent<HTMLInputElement>) => void;
-  value?: PermissaoCompletaData | any;
-  disabled?: boolean
+  value?: PermissionsState;
+  disabled?: boolean;
 };
 
 export default function FormCheckbox({
@@ -18,10 +18,10 @@ export default function FormCheckbox({
   checked,
   name,
   value,
-  disabled
+  disabled,
 }: FormCheckboxProps) {
   return (
-    <div className="text-primary-50 flex cursor-pointer items-center  space-x-2 p-1">
+    <div className="text-primary-50 flex cursor-pointer items-center space-x-2 p-1">
       <input
         onChange={onChange}
         checked={checked}
@@ -31,7 +31,12 @@ export default function FormCheckbox({
         value={JSON.stringify(value)}
         disabled={disabled}
       />
-      <label className={`${disabled ? 'text-gray-700' : ''} cursor-pointer`} htmlFor={id}>{label}</label>
+      <label
+        className={`${disabled ? "text-gray-700" : ""} cursor-pointer`}
+        htmlFor={id}
+      >
+        {label}
+      </label>
     </div>
   );
 }

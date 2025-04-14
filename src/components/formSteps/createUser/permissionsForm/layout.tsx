@@ -1,5 +1,4 @@
 import { PermissoesRole } from "@/types/api/apiTypes";
-import { act } from "react";
 
 export default function PermissionsNavigationForm({
   children,
@@ -21,7 +20,7 @@ export default function PermissionsNavigationForm({
               return (
                 <h3
                   onClick={() => setActiveTab(screen.id)}
-                  className={`cursor-pointer hover:text-primary-50 text-xl font-semibold ${activeTab === screen.id ? "text-primary-50 border-b-2" : "text-gray-600"}`}
+                  className={`hover:text-primary-50 cursor-pointer text-xl font-semibold ${activeTab === screen.id ? "text-primary-50 border-b-2" : "text-gray-600"}`}
                   key={screen.nome}
                 >
                   {screen.nome}
@@ -30,7 +29,7 @@ export default function PermissionsNavigationForm({
             }
           })}
       </div>
-      <div className="flex h-[100vh] flex-col p-3 text-lg">{children}</div>
+      <div className="flex  flex-col p-3 text-lg">{children}</div>
     </nav>
   );
 }

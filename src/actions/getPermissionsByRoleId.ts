@@ -1,8 +1,7 @@
 "use server";
 
-import { GET_PERMISSIONS_ALL, GET_PERMISSIONS_BY_ROLE_ID } from "@/functions/api";
+import { GET_PERMISSIONS_BY_ROLE_ID } from "@/functions/api";
 import apiError from "@/functions/api-error";
-import { PermissaoCompletaData, PermissoesRole } from "@/types/api/apiTypes";
 import { cookies } from "next/headers";
 
 //Busca todos os usuarios do sistema
@@ -23,7 +22,7 @@ export default async function getPermissionsByRoleId(role_id: string) {
     });
 
     if (!response.ok) throw new Error("Erro ao pegar roles.");
-    const {permissoes} = (await response.json());
+    const { permissoes } = await response.json();
 
     return { data: permissoes, ok: true, error: null };
   } catch (error) {

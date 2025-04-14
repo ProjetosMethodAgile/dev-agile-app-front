@@ -7,7 +7,7 @@ export function GET_PERMISSIONS_ALL() {
   };
 }
 
-export function GET_PERMISSIONS_BY_ROLE_ID(id:string) {
+export function GET_PERMISSIONS_BY_ROLE_ID(id: string) {
   return {
     url: API_URL + `/permissoes/roles/${id}`,
   };
@@ -99,6 +99,17 @@ export function GET_KANBAN_CARD_BY_ID(id: string) {
 export function POST_CHAMADO_KANBAN_COLUNA() {
   return {
     url: API_URL + `/helpdesk/card`,
+  };
+}
+
+export function POST_AUTH_CHAMADO_KANBAN_COLUNA() {
+  return {
+    url: API_URL + `/helpdesk/card/auth`,
+  };
+}
+export function POST_REPLY_CHAMADO_KANBAN() {
+  return {
+    url: API_URL + `/helpdesk/message/reply`,
   };
 }
 

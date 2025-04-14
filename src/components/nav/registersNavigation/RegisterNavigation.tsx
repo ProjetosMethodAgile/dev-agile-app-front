@@ -1,14 +1,21 @@
 "use client";
 import { RegisterNavProps } from "@/types/frontend/uiTypes";
 import { Circle, CircleCheck } from "lucide-react";
-import React, { act } from "react";
+import React from "react";
 
 type RegisterNavigationProps = {
   activeTab: string;
-  setActiveTab: React.Dispatch<React.SetStateAction<string>>
-}
+  setActiveTab: React.Dispatch<React.SetStateAction<string>>;
+  inputsValidate: (
+    e: React.MouseEvent<HTMLElement> | React.FormEvent<HTMLFormElement>,
+  ) => boolean;
+};
 
-export default function RegisterNavigation({setActiveTab, activeTab}: RegisterNavigationProps) {
+export default function RegisterNavigation({
+  setActiveTab,
+  activeTab,
+  inputsValidate,
+}: RegisterNavigationProps) {
   const tabs: RegisterNavProps[] = [
     {
       name: "Informações",
@@ -23,16 +30,26 @@ export default function RegisterNavigation({setActiveTab, activeTab}: RegisterNa
   ];
 
   return (
-    <ul className=" flex flex-col gap-2 *:flex *:cursor-pointer *:items-center *:gap-2 
-    *:rounded-2xl *:px-5 *:py-2 ">
+    <ul className="flex flex-col gap-2 *:flex *:cursor-pointer *:items-center *:gap-2 *:rounded-2xl *:px-5 *:py-2">
       {tabs.map((tab) => (
         <li
           key={tab.id}
-          onClick={() => setActiveTab(tab.id)}
-          className={`${activeTab === tab.id ? "dark:bg-primary-300/30 shadow-sm bg-primary-600 text-general" : ""} transition-all`}
+          onClick={(e) => {
+            const isValid = inputsValidate(e);
+            if (isValid) {
+              setActiveTab(tab.id);
+            }
+          }}
+          className={`${
+            activeTab === tab.id
+              ? "dark:bg-primary-300/30 bg-primary-600 text-general shadow-sm"
+              : ""
+          } transition-all`}
         >
-          <tab.icon className=" size-5 dark:text-general" />
-          <span className="text-xl font-semibold dark:text-general">{tab.name}</span>
+          <tab.icon className="dark:text-general size-5 rounded-full" />
+          <span className="dark:text-general text-xl font-semibold">
+            {tab.name}
+          </span>
         </li>
       ))}
     </ul>

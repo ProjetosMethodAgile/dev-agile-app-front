@@ -1,20 +1,48 @@
 "use client";
 
+import { CardHelpDeskSessao } from "@/types/api/apiTypes";
 import iconsMap from "@/utils/iconsMap";
-
+import { postReplyCardHelpdesk } from "@/actions/HelpDesk/postReplyCardHelpdesk";
+import { toast } from "react-toastify";
 export type InputTextMessageProps = React.ComponentProps<"input"> & {
   message: string;
   setMessage: React.Dispatch<React.SetStateAction<string>>;
+  cardData?: CardHelpDeskSessao | null;
 };
 
 export default function InputTextMessage({
   message,
   setMessage,
+  cardData,
   ...props
 }: InputTextMessageProps) {
   const Send = iconsMap["sendMessage"];
 
-  async function handleSendMessage() {}
+  async function handleSendMessage() {
+    console.log(cardData);
+
+    const message_id = cardData?.CardSessao.MessageSessao.at(-1)?.message_id;
+    const to_email =
+      cardData?.CardSessao.MessageSessao[0]?.ClienteSessao?.email;
+    if (!message.length) {
+      toast.error("Escreva sua resposta antes de enviar a mensagem");
+    }
+    console.log(message_id, to_email);
+
+    if (message_id && to_email) {
+      try {
+        await postReplyCardHelpdesk(message_id, message, to_email, message_id);
+        // Atualize o estado local, se necessário:
+        setMessage("");
+        // Força a atualização da rota
+      } catch (e) {
+        console.log(e);
+        toast.error("Erro ao enviar mensagem");
+      }
+    } else {
+      toast.error("Não é possível responder esse chamado no momento");
+    }
+  }
 
   return (
     <div
