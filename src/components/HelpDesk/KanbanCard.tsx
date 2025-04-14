@@ -1,5 +1,5 @@
 "use client";
-import { MessageCircle, Paperclip, User } from "lucide-react";
+import { MessageCircle, Paperclip } from "lucide-react";
 import React from "react";
 import { useGlobalContext } from "@/context/globalContext";
 import { CardHelpDesk } from "@/types/api/apiTypes";
