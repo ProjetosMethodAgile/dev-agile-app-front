@@ -264,7 +264,15 @@ export type ColumnsHelpDesk = KanbanColumn & {
   }[];
 };
 
-//listar cards no kanban
+
+export type AcaoColuna ={
+  id: string;
+  nome: string;
+  descricao: string;
+  createdAt: string;
+  updateAt: string;
+  permissao_id: string;
+};
 export type CardHelpDesk = {
   id: string;
   column_id: string;

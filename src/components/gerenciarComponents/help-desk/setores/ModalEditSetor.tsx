@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { Form } from "@/components/form";
 import { KanbanColumn, SetorHelpDesk } from "@/types/api/apiTypes";
 import iconsMap from "@/utils/iconsMap";
@@ -9,6 +9,9 @@ import KanbanCardGerenciar from "../kanban-gerenciar-sistema/kanbanCardGerenciar
 import getKanbanColunaBySetorId from "@/actions/getKanbanColunaBySetorId";
 import putOrdemColsHelpDesk from "@/actions/putOrdemColsHelpDesk";
 import { toast } from "react-toastify";
+import { useGlobalContext } from "@/context/globalContext";
+import { FolderPen, MessageCircleQuestion } from "lucide-react";
+import { BUSCA_ACOES_COLUNA } from "@/actions/HelpDesk/AcoesColuna/getAcaoColuna";
 
 type ModalEditSetorProps = {
   closeModal: () => void;
@@ -24,6 +27,18 @@ function Tab1Content({ setorProps }: { setorProps: SetorHelpDesk }) {
   const [columns, setColumns] = useState<KanbanColumn[]>([]);
   const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
   const [isEditing, setIsEditing] = useState(false);
+  const [formsModal , setFormsModal] =useState(false)
+  const [messagePanne , setMessagePanne] =useState(false)
+  const [messagePanneTetx , setMessagePaneText] =useState("")
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const options = [
+    { value: "", label: "Selecione uma opção" },
+    { value: "email", label: "Enviar Email" }
+  ];
+
+
+
+
 
   const handleDragStart = (
     e: React.DragEvent<HTMLDivElement>,
@@ -82,7 +97,28 @@ function Tab1Content({ setorProps }: { setorProps: SetorHelpDesk }) {
       toast.error("Ocorreu um erro inesperado. Tente novamente.");
     }
   }
+const handleAddKanbanSetor = ()=>{
+setFormsModal(!formsModal)
+}
+const onMouseEventPanne = (data: string) => {
+  const SELECT_MESSAGE = "Escolha a ação que deve ser executada quando o card chegar nesta coluna.";
+  const DEFAULT_MESSAGE = "Responsavel pela identificação de sua coluna";
+  console.log(data);
+  
+  const message = data === "Select" ? SELECT_MESSAGE : DEFAULT_MESSAGE;
+  setMessagePaneText(message);
+  setMessagePanne(true);
+  
+  setTimeout(() => {
+    setMessagePanne(false);
+  }, 15000);
+};
 
+
+const onMouseOutFunc = ()=>{
+  setMessagePaneText("");
+  setMessagePanne(false);
+}
   useEffect(() => {
     async function getColumnsSetor() {
       const response = await getKanbanColunaBySetorId(setorProps.id);
@@ -95,6 +131,15 @@ function Tab1Content({ setorProps }: { setorProps: SetorHelpDesk }) {
     getColumnsSetor();
   }, [setorProps.id]);
 
+
+
+  useEffect(()=>{
+    async function buscaAcoesColuna(){
+      const result = await BUSCA_ACOES_COLUNA()
+   
+    }
+    buscaAcoesColuna()
+    },[])
   return (
     <div className="animate-move-left-to-right min-h-90 min-w-130">
       <div className="mb-2 flex items-center gap-2">
@@ -118,11 +163,41 @@ function Tab1Content({ setorProps }: { setorProps: SetorHelpDesk }) {
             >
               <IconEdit />
             </div>
-            <div className="cursor-pointer rounded-xl bg-green-500 p-2 text-white hover:bg-green-600 active:scale-95">
-              <AddSetorBtn />
+            <div className="cursor-pointer rounded-xl bg-green-500 p-2 text-white hover:bg-green-600 active:scale-95" onClick={handleAddKanbanSetor}>
+              <AddSetorBtn/>
             </div>
           </div>
         </div>
+        {formsModal? 
+        
+        <div className="flex flex-col mt-5 w-[90%] gap-2">
+          <h1>Cria coluna</h1>
+         <label className=" border border-general rounded-[15px] p-2 pl-4 pr-4 flex justify-between" htmlFor="inputNameKanban">
+          <input id="inputNameKanban" type="text" placeholder="Digite o nome da coluna"  className="flex w-[90%] focus:outline-none focus:border-none "/>
+          <FolderPen className="text-amber-200  hover:text-custom-green-100 hover:scale-105 cursor-pointer"  onMouseOut={onMouseOutFunc}   onMouseMove={()=> onMouseEventPanne("column")}/>
+         </label>
+         <label className="border border-general rounded-[15px] p-2 pl-4 pr-4 flex justify-between" htmlFor="acao">
+
+         <select 
+      name="opcoes" 
+      id="opcoes" 
+      className="flex w-[90%] focus:outline-none focus:border-none"
+    >
+      {options.map((option, index) => (
+        <option key={index} value={option.value}>
+          {option.label}
+        </option>
+      ))}
+    </select>
+        
+          <MessageCircleQuestion className="text-amber-200 hover:text-custom-green-100 hover:scale-105 cursor-pointer " onMouseMove={()=> onMouseEventPanne("Select")} onMouseOut={onMouseOutFunc}/>
+          {messagePanne&& <p className="absolute bottom-0 left-0 w-[100%] p-5 flex justify-center bg-primary-100 p-3.5 flex-wrap ">{messagePanneTetx}</p>}
+         </label>
+         <input type="button" value={'Cadastrar'} className=" w-[100%] rounded-[10px] bg-primary-300 p-1 flex text-center border border-amber-50" />
+  
+        </div>
+        
+        :
         <div className="bg-primary-150 flex max-w-130 overflow-x-auto rounded-[10px] p-5">
           <div className="flex gap-1">
             {columns.length ? (
@@ -152,6 +227,7 @@ function Tab1Content({ setorProps }: { setorProps: SetorHelpDesk }) {
             )}
           </div>
         </div>
+        }
         {isEditing && (
           <div className="mt-4 flex justify-end">
             <button
