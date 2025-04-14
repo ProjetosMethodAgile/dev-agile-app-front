@@ -9,7 +9,7 @@ import KanbanCardGerenciar from "../kanban-gerenciar-sistema/kanbanCardGerenciar
 import getKanbanColunaBySetorId from "@/actions/getKanbanColunaBySetorId";
 import putOrdemColsHelpDesk from "@/actions/putOrdemColsHelpDesk";
 import { toast } from "react-toastify";
-import { useGlobalContext } from "@/context/globalContext";
+// import { useGlobalContext } from "@/context/globalContext";
 import { FolderPen, MessageCircleQuestion } from "lucide-react";
 import { BUSCA_ACOES_COLUNA } from "@/actions/HelpDesk/AcoesColuna/getAcaoColuna";
 
@@ -17,6 +17,9 @@ type ModalEditSetorProps = {
   closeModal: () => void;
   setor: SetorHelpDesk;
 };
+
+
+
 
 function Tab1Content({ setorProps }: { setorProps: SetorHelpDesk }) {
   const Config = iconsMap["settings"];
@@ -31,8 +34,11 @@ function Tab1Content({ setorProps }: { setorProps: SetorHelpDesk }) {
   const [messagePanne , setMessagePanne] =useState(false)
   const [messagePanneTetx , setMessagePaneText] =useState("")
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+
+
   const options = [
-    { value: "", label: "Selecione uma opção" },
+    { value: "", label: "Escolha uma ação" },
     { value: "email", label: "Enviar Email" }
   ];
 
@@ -115,6 +121,9 @@ const onMouseEventPanne = (data: string) => {
 };
 
 
+
+
+
 const onMouseOutFunc = ()=>{
   setMessagePaneText("");
   setMessagePanne(false);
@@ -133,13 +142,21 @@ const onMouseOutFunc = ()=>{
 
 
 
+
+
   useEffect(()=>{
     async function buscaAcoesColuna(){
       const result = await BUSCA_ACOES_COLUNA()
+     console.log(result);
+     
    
     }
     buscaAcoesColuna()
     },[])
+
+
+
+ 
   return (
     <div className="animate-move-left-to-right min-h-90 min-w-130">
       <div className="mb-2 flex items-center gap-2">
