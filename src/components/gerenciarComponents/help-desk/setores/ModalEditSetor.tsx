@@ -29,11 +29,7 @@ function Tab1Content({ setorProps }: { setorProps: SetorHelpDesk }) {
   const [formsModal, setFormsModal] = useState(false);
   const [messagePanne, setMessagePanne] = useState(false);
   const [messagePanneTetx, setMessagePaneText] = useState("");
-
-  const options = [
-    { value: "", label: "Escolha uma ação" },
-    { value: "email", label: "Enviar Email" },
-  ];
+  const [opcoes, setOption] = useState([]);
 
   const handleDragStart = (
     e: React.DragEvent<HTMLDivElement>,
@@ -128,8 +124,25 @@ function Tab1Content({ setorProps }: { setorProps: SetorHelpDesk }) {
 
   useEffect(() => {
     async function buscaAcoesColuna() {
-      const result = await BUSCA_ACOES_COLUNA();
-      console.log(result);
+      try {
+        const result = await BUSCA_ACOES_COLUNA();
+        if (Array.isArray(result.data)) {
+          // Mapeia cada item para objeto { value, label }
+          const opcoesExtraidas = result.data.map((item) => {
+            // item.kanban_empresa_por_acao é o objeto que contém id e nome
+            const acao = item.kanban_empresa_por_acao;
+            return {
+              value: acao.id, // ou, se preferir, use item.kanban_acao_id
+              label: acao.nome, // texto que aparecerá no <option>
+            };
+          });
+          setOption(opcoesExtraidas);
+        } else {
+          console.error("result.data não é um array:", result.data);
+        }
+      } catch (error) {
+        console.error("Erro ao buscar ações da coluna:", error);
+      }
     }
     buscaAcoesColuna();
   }, []);
@@ -193,9 +206,9 @@ function Tab1Content({ setorProps }: { setorProps: SetorHelpDesk }) {
                 id="opcoes"
                 className="flex w-[90%] focus:border-none focus:outline-none"
               >
-                {options.map((option, index) => (
-                  <option key={index} value={option.value}>
-                    {option.label}
+                {opcoes.map((opcao) => (
+                  <option key={opcao.value} value={opcao.value} className="bg-primary-900">
+                    {opcao.label}
                   </option>
                 ))}
               </select>
