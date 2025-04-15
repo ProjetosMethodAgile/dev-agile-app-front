@@ -102,7 +102,7 @@ export type User = {
   nome: string;
   email: string;
   contato: string;
-  status: 'Ativo' | 'Inativo';
+  status: "Ativo" | "Inativo";
   empresa?: EmpresaData[];
   usuario_roles: RoleData[];
   permissoes: PermissaoCompletaData[];
@@ -117,7 +117,7 @@ export type UsuariosData = {
     nome: string;
     email: string;
     contato: string;
-    status: 'Ativo' | 'Inativo';
+    status: "Ativo" | "Inativo";
     empresa: EmpresaData[];
     usuario_roles: RoleData[];
     // As permissões agora vêm agrupadas e completas (com acessos, ações e subtelas)
@@ -266,8 +266,7 @@ export type ColumnsHelpDesk = KanbanColumn & {
   }[];
 };
 
-
-export type AcaoColuna ={
+export type AcaoColuna = {
   id: string;
   nome: string;
   descricao: string;
@@ -318,10 +317,18 @@ export type CardHelpDeskSessao = {
   };
   CardSessao: {
     id: string;
-    SessaoAtendenteID: {
-      visualizacao_atendente: boolean;
-      atendente_id: string;
+    atendentesVinculados: {
       createdAt: string;
+      UsuarioAtendente: {
+        nome: string;
+        email: string;
+        contato: string;
+      };
+      KanbanSessoesAtendentes: {
+        id: string;
+        atenden: string;
+        visuali: boolean;
+      };
     }[];
     MessageSessao: {
       atendente_id: string;

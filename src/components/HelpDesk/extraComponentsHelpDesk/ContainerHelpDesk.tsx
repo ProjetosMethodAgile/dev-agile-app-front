@@ -64,7 +64,6 @@ export default function ContainerHelpDesk(props: React.ComponentProps<"div">) {
         data.type === "columnCreated" ||
         data.type === "columnUpdated"
       ) {
-        console.log("🔥 Atualizando dados via WebSocket");
         fetchData();
       }
     };

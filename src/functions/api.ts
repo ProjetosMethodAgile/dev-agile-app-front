@@ -130,7 +130,7 @@ export function PUT_CARD_COLUMN() {
     url: API_URL + `/helpdesk/card/updateColumn`,
   };
 }
-export function GET_ACOES_KANBAN(empresa_id:string) {
+export function GET_ACOES_KANBAN(empresa_id: string) {
   return {
     url: API_URL + `/helpdesk/acoes/empresa/${empresa_id}`,
   };

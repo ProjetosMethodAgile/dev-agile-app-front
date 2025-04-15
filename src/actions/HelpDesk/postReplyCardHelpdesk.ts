@@ -32,10 +32,6 @@ export async function postReplyCardHelpdesk(
         "Content-Type": "application/json",
         Authorization: "Bearer " + token,
       },
-      next: {
-        revalidate: 60,
-        tags: ["helpdesk-cards"],
-      },
       body: JSON.stringify({
         inReplyTo,
         textBody,
@@ -46,8 +42,6 @@ export async function postReplyCardHelpdesk(
     });
     revalidateTag("helpdesk-columns");
     revalidateTag("helpdesk-cards");
-
-    console.log(response);
 
     if (!response.ok) {
       return { msg_success: "erro", success: false, status: response.status };

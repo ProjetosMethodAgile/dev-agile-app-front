@@ -11,6 +11,7 @@ import InputTextMessage from "./InputTextMessage";
 import { useWebSocket } from "@/context/WebSocketContext";
 import { postVinculaAtendenteToCardHelpdesk } from "@/actions/HelpDesk/postVinculaAtendenteToCardHelpdesk";
 import { toast } from "react-toastify";
+import getIniciaisNome from "@/utils/getIniciaisNome";
 
 export type ModalCardHelpdeskProps = React.ComponentProps<"form"> & {
   currentCard: CardHelpDesk;
@@ -77,10 +78,6 @@ export default function ModalCardHelpdesk({
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [card?.CardSessao.MessageSessao]);
-
-  useEffect(() => {
-    console.log(card);
-  }, [card]);
 
   return (
     <Form.Root
@@ -197,6 +194,23 @@ export default function ModalCardHelpdesk({
                 <span>Última interação: </span>
                 {card && formatDateSimple(card.updatedAt)}
               </span>
+              {card?.CardSessao.atendentesVinculados.length ? (
+                <div className="flex flex-wrap gap-1">
+                  <span>Atendentes: </span>
+
+                  {card?.CardSessao.atendentesVinculados.map((atendente) => (
+                    <p
+                      key={atendente.KanbanSessoesAtendentes.atenden}
+                      className="rounded-full bg-gray-600 p-1 font-bold hover:bg-gray-500"
+                      title={atendente.UsuarioAtendente?.nome}
+                    >
+                      {getIniciaisNome(atendente?.UsuarioAtendente?.nome)}
+                    </p>
+                  ))}
+                </div>
+              ) : (
+                ""
+              )}
             </div>
           )}
           {loading ? (
