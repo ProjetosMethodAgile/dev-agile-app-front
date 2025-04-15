@@ -274,6 +274,7 @@ export type AcaoColuna = {
   updateAt: string;
   permissao_id: string;
 };
+
 export type CardHelpDesk = {
   id: string;
   column_id: string;
