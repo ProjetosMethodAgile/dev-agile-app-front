@@ -11,9 +11,6 @@ const CriarUsuarioPage = async () => {
   if (!roles.ok)
     throw new Error(roles.error || "Não foi possivel obter as Roles");
 
-
-
-
   return (
     <div className="container">
       <ScreenTitle title="Usuarios do sistema - Cadastro" icon={UserCheck} />

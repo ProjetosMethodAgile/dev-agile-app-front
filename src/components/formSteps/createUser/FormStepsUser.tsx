@@ -14,32 +14,67 @@ import {
   Phone,
   UserCircle,
 } from "lucide-react";
-import { RoleData, PermissoesRole } from "@/types/api/apiTypes";
+import {
+  RoleData,
+  PermissoesRole,
+  PermissaoCompletaData,
+  PermissoesData,
+} from "@/types/api/apiTypes";
 import PermissionsMenu from "./permissionsForm/permissionsMenu/PermissionsMenu";
 import { postUser } from "@/actions/postUser";
 import { useGlobalContext } from "@/context/globalContext";
 import getPermissionsByRoleId from "@/actions/getPermissionsByRoleId";
+import { updateUser } from "@/actions/updateUser";
 
-type FormStepsUser = {
-  rolesData: RoleData[];
+export type defaultPermissoes = {
+  acessos: PermissoesData;
+  descricao: string;
+  id: string;
+  subpermissoes: defaultPermissoes[];
 };
 
-export default function FormStepsUser({ rolesData }: FormStepsUser) {
+type FormStepsUser = {
+  rolesData?: RoleData[];
+  isEditMode?: boolean;
+  defaultValues?: {
+    id?: string;
+    nome: string;
+    contato: string;
+    email: string;
+    senha?: string;
+    role: string;
+    permissoes: defaultPermissoes[];
+  };
+};
+
+export default function FormStepsUser({
+  rolesData,
+  defaultValues,
+  isEditMode = false,
+}: FormStepsUser) {
   const [activeTab, setActiveTab] = React.useState("informacoes");
   const [currentRoles, setCurrentRoles] = React.useState<RoleData[] | []>(
-    rolesData,
+    rolesData ? rolesData : [],
   );
   const { closeGlobalModal } = useGlobalContext();
   const [usersData, setUsersData] = React.useState({
-    nome: "",
-    contato: "",
-    email: "",
+    id: defaultValues?.id || "",
+    nome: defaultValues?.nome || "",
+    contato: defaultValues?.contato || "",
+    email: defaultValues?.email || "",
+    permissoes: defaultValues?.permissoes || [],
     senha: "",
     confirmar_senha: "",
   });
   const [permissoesData, setPermissoesData] = useState<PermissoesRole[] | []>(
     [],
   );
+
+  useEffect(() => {
+    if (defaultValues?.role) {
+      handleRoleChange(defaultValues.role);
+    }
+  }, [defaultValues?.role]);
 
   function handleRoleChange(role_id: string) {
     async function getPermissions() {
@@ -55,27 +90,34 @@ export default function FormStepsUser({ rolesData }: FormStepsUser) {
     e: React.MouseEvent<HTMLElement> | React.FormEvent<HTMLFormElement>,
   ) {
     e.preventDefault();
-    if (!usersData.nome || !usersData.email || !usersData.senha) {
+    if (!usersData.nome || !usersData.email) {
       if (!usersData.nome) toast.error("Nome é obrigatório.");
       if (!usersData.email) toast.error("Email é obrigatório.");
-      if (!usersData.senha) toast.error("Senha é obrigatório.");
-      if (usersData.senha !== usersData.confirmar_senha)
-        toast.error("As senhas não coincidem");
       return false;
-    } else if (usersData.senha !== usersData.confirmar_senha) {
+    }
+
+    if (!isEditMode && !usersData.senha) {
+      toast.error("Senha é obrigatória.");
+      return false;
+    }
+
+    if (usersData.senha !== usersData.confirmar_senha) {
       toast.error("As senhas não coincidem");
       return false;
-    } else {
-      setActiveTab("permissoes");
-      return true;
     }
+
+    setActiveTab("permissoes");
+    return true;
   }
 
-  const [state, formAction] = useActionState(postUser, {
-    errors: [],
-    msg_success: "",
-    success: false,
-  });
+  const [state, formAction] = useActionState(
+    isEditMode ? updateUser : postUser,
+    {
+      errors: [],
+      msg_success: "",
+      success: false,
+    },
+  );
 
   useEffect(() => {
     if (state?.errors.length) {
@@ -101,6 +143,14 @@ export default function FormStepsUser({ rolesData }: FormStepsUser) {
       <Form.Root className="w-full" action={formAction}>
         <div className={` ${activeTab !== "informacoes" ? "hidden" : ""}`}>
           <Form.Section title="Dados do usuario">
+            <Form.InputText
+              icon={UserCircle}
+              inputId="id"
+              name="id"
+              label="id"
+              className="hidden"
+              value={usersData.id}
+            />
             <Form.InputText
               icon={UserCircle}
               inputId="nome"
@@ -204,10 +254,15 @@ export default function FormStepsUser({ rolesData }: FormStepsUser) {
               onChange={(id) => {
                 handleRoleChange(id);
               }}
+              value={defaultValues?.role || ""}
             />
           </Form.Section>
           <Form.Section title="Permissões">
-            <PermissionsMenu permissoesData={permissoesData} />
+            <PermissionsMenu
+              permissoesData={permissoesData}
+              defaultValues={defaultValues?.permissoes}
+              isEditMode={true}
+            />
           </Form.Section>
           <div className="flex justify-between">
             <Form.ButtonBack

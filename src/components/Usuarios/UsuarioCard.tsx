@@ -1,9 +1,13 @@
+"use client";
+
 import { User } from "@/types/api/apiTypes";
 import { EllipsisVertical, User2 } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 export default function UsuarioCard({ user }: { user: User }) {
   const [showTooltip, setShowTooltip] = useState(false);
+  const router = useRouter();
   return (
     <div
       key={user.id}
@@ -13,15 +17,15 @@ export default function UsuarioCard({ user }: { user: User }) {
         <div className="ml-2 flex items-center gap-4">
           <User2 className="bg-primary-300 size-10 min-w-10 rounded-full p-1" />
           <div className="flex flex-col">
-            <span className="flex  items-center gap-2 justify-self-start">
+            <span className="flex items-center gap-2 justify-self-start">
               {user.nome}
               <span
                 onMouseEnter={() => setShowTooltip(true)}
                 onMouseLeave={() => setShowTooltip(false)}
-                className={`block relative  size-2 cursor-pointer  rounded-full ${user.status === "Ativo" ? "bg-green-600" : "bg-red-600"}`}
+                className={`relative block size-2 cursor-pointer rounded-full ${user.status === "Ativo" ? "bg-green-600" : "bg-red-600"}`}
               >
                 {showTooltip && (
-                  <div className="absolute z-10 left-2 top-1 transition-all rounded bg-gray-800 px-2 py-1 text-xs whitespace-nowrap text-white shadow-md">
+                  <div className="absolute top-1 left-2 z-10 rounded bg-gray-800 px-2 py-1 text-xs whitespace-nowrap text-white shadow-md transition-all">
                     {user.status}
                   </div>
                 )}
@@ -41,7 +45,10 @@ export default function UsuarioCard({ user }: { user: User }) {
             <div key={role.id}>{role.nome}</div>
           ))}
         </span>
-        <span className="hover:border-primary-50 border-b-2 border-transparent hover:cursor-pointer">
+        <span
+          onClick={() => router.push(`usuarios-do-sistema/alterar/${user.id}`)}
+          className="hover:border-primary-50 border-b-2 border-transparent hover:cursor-pointer"
+        >
           Gerenciar
         </span>
       </div>
