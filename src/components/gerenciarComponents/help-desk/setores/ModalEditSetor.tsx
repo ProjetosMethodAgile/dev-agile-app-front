@@ -1,16 +1,24 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import { Form } from "@/components/form";
-import { KanbanColumn, SetorHelpDesk } from "@/types/api/apiTypes";
+import { KanbanColumn, MotivoHelpDesk, SetorHelpDesk } from "@/types/api/apiTypes";
 import iconsMap from "@/utils/iconsMap";
 import KanbanColumnGerenciar from "../kanban-gerenciar-sistema/KanbanColumnGerenciar";
 import KanbanCardGerenciar from "../kanban-gerenciar-sistema/kanbanCardGerenciar";
 import getKanbanColunaBySetorId from "@/actions/getKanbanColunaBySetorId";
 import putOrdemColsHelpDesk from "@/actions/putOrdemColsHelpDesk";
 import { toast } from "react-toastify";
-import { FolderPen, MessageCircleQuestion } from "lucide-react";
+import {
+  Divide,
+  FolderPen,
+  MessageCircleQuestion,
+  ReceiptText,
+} from "lucide-react";
 import { BUSCA_ACOES_COLUNA } from "@/actions/HelpDesk/AcoesColuna/getAcaoColuna";
+import { postColumnHelpdesk } from "@/actions/HelpDesk/postColumnHelpdesk";
+import getMotivoSetor from "@/actions/getMotivoSetor";
+import { postMotivoKanbanHelpdesk } from "@/actions/HelpDesk/postKanbanMotivos";
 
 type ModalEditSetorProps = {
   closeModal: () => void;
@@ -29,7 +37,13 @@ function Tab1Content({ setorProps }: { setorProps: SetorHelpDesk }) {
   const [formsModal, setFormsModal] = useState(false);
   const [messagePanne, setMessagePanne] = useState(false);
   const [messagePanneTetx, setMessagePaneText] = useState("");
-  const [opcoes, setOption] = useState([]);
+  const [opcoes, setOption] = useState<{ label?: string; value?: string }[]>(
+    [],
+  );
+
+  // Estados para os inputs do cadastro da coluna
+  const [nomeColuna, setNomeColuna] = useState("");
+  const [acaoSelecionada, setAcaoSelecionada] = useState("");
 
   const handleDragStart = (
     e: React.DragEvent<HTMLDivElement>,
@@ -79,7 +93,7 @@ function Tab1Content({ setorProps }: { setorProps: SetorHelpDesk }) {
         const mensagem =
           typeof resposta.data === "string"
             ? resposta.data
-            : "Ordem  das colunas atualizada com sucesso!";
+            : "Ordem das colunas atualizada com sucesso!";
         toast.success(mensagem);
         setIsEditing(false);
       }
@@ -88,13 +102,51 @@ function Tab1Content({ setorProps }: { setorProps: SetorHelpDesk }) {
       toast.error("Ocorreu um erro inesperado. Tente novamente.");
     }
   }
+
+  async function handleCadastraColuna(
+    nome: string,
+    setor_id: string,
+    id_acao: string,
+  ) {
+    // Validação simples
+    if (!nome || !id_acao) {
+      toast.error("Por favor, preencha todos os campos.");
+      return;
+    }
+
+    try {
+      const response = await postColumnHelpdesk(nome, setor_id, id_acao);
+      console.log(response);
+
+      if (!response.error) {
+        toast.success("Coluna cadastrada com sucesso!");
+        // Limpa os inputs após o cadastro
+        setNomeColuna("");
+        setAcaoSelecionada("");
+        // Atualiza a lista de colunas após o cadastro
+        const updatedResponse = await getKanbanColunaBySetorId(setorProps.id);
+        const sortedColumns = updatedResponse.columns.sort(
+          (a: KanbanColumn, b: KanbanColumn) =>
+            parseInt(a.posicao) - parseInt(b.posicao),
+        );
+        setColumns(sortedColumns);
+      } else {
+        toast.error("Erro ao cadastrar a coluna.");
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error("Ocorreu um erro inesperado ao cadastrar a coluna.");
+    }
+  }
+
   const handleAddKanbanSetor = () => {
     setFormsModal(!formsModal);
   };
+
   const onMouseEventPanne = (data: string) => {
     const SELECT_MESSAGE =
       "Escolha a ação que deve ser executada quando o card chegar nesta coluna.";
-    const DEFAULT_MESSAGE = "Responsavel pela identificação de sua coluna";
+    const DEFAULT_MESSAGE = "Responsável pela identificação de sua coluna";
     console.log(data);
 
     const message = data === "Select" ? SELECT_MESSAGE : DEFAULT_MESSAGE;
@@ -110,6 +162,7 @@ function Tab1Content({ setorProps }: { setorProps: SetorHelpDesk }) {
     setMessagePaneText("");
     setMessagePanne(false);
   };
+
   useEffect(() => {
     async function getColumnsSetor() {
       const response = await getKanbanColunaBySetorId(setorProps.id);
@@ -127,13 +180,11 @@ function Tab1Content({ setorProps }: { setorProps: SetorHelpDesk }) {
       try {
         const result = await BUSCA_ACOES_COLUNA();
         if (Array.isArray(result.data)) {
-          // Mapeia cada item para objeto { value, label }
           const opcoesExtraidas = result.data.map((item) => {
-            // item.kanban_empresa_por_acao é o objeto que contém id e nome
             const acao = item.kanban_empresa_por_acao;
             return {
-              value: acao.id, // ou, se preferir, use item.kanban_acao_id
-              label: acao.nome, // texto que aparecerá no <option>
+              value: acao.id,
+              label: acao.nome,
             };
           });
           setOption(opcoesExtraidas);
@@ -189,6 +240,8 @@ function Tab1Content({ setorProps }: { setorProps: SetorHelpDesk }) {
                 id="inputNameKanban"
                 type="text"
                 placeholder="Digite o nome da coluna"
+                value={nomeColuna}
+                onChange={(e) => setNomeColuna(e.target.value)}
                 className="flex w-[90%] focus:border-none focus:outline-none"
               />
               <FolderPen
@@ -204,10 +257,17 @@ function Tab1Content({ setorProps }: { setorProps: SetorHelpDesk }) {
               <select
                 name="opcoes"
                 id="opcoes"
+                value={acaoSelecionada}
+                onChange={(e) => setAcaoSelecionada(e.target.value)}
                 className="flex w-[90%] focus:border-none focus:outline-none"
               >
+                <option value="">Selecione uma ação</option>
                 {opcoes.map((opcao) => (
-                  <option key={opcao.value} value={opcao.value} className="bg-primary-900">
+                  <option
+                    key={opcao.value}
+                    value={opcao.value}
+                    className="bg-primary-900"
+                  >
                     {opcao.label}
                   </option>
                 ))}
@@ -218,13 +278,18 @@ function Tab1Content({ setorProps }: { setorProps: SetorHelpDesk }) {
                 onMouseMove={() => onMouseEventPanne("Select")}
                 onMouseOut={onMouseOutFunc}
               />
+
               {messagePanne && (
                 <p className="bg-primary-100 absolute bottom-0 left-0 flex w-[100%] flex-wrap justify-center p-5">
                   {messagePanneTetx}
                 </p>
               )}
             </label>
+
             <input
+              onClick={() =>
+                handleCadastraColuna(nomeColuna, setorProps.id, acaoSelecionada)
+              }
               type="button"
               value={"Cadastrar"}
               className="bg-primary-300 flex w-[100%] rounded-[10px] border border-amber-50 p-1 text-center"
@@ -316,9 +381,122 @@ function Tab2Content({ setorProps }: { setorProps: SetorHelpDesk }) {
     </div>
   );
 }
+function Tab3Content({ setorProps }: { setorProps: SetorHelpDesk }) {
+  const Delete = iconsMap["delete"];
+  const Edit = iconsMap["editBtn"];
+  const More = iconsMap["add"];
+  const [motivos, setMotivos] = useState<MotivoHelpDesk>([]);
+  const [activeMenu, setActiveMenu] = useState("edit");
+  const [tituloMotivo, setTituloMotivo] = useState<string>("");
+  const [urlMotivo, setUrlMotivo] = useState("");
+
+  useEffect(() => {
+    async function pegaMotivoSetorID() {
+      const response = await getMotivoSetor(setorProps.id);
+      setMotivos(response.data);
+    }
+    pegaMotivoSetorID();
+  }, []);
+
+
+function handleRegisterMotivo(e: FormEvent<HTMLFormElement>){
+  e.preventDefault();
+  const response = postMotivoKanbanHelpdesk(setorProps.id,tituloMotivo,urlMotivo)
+  console.log(response);
+  
+}
+
+
+  return (
+    <div className="animate-move-left-to-right min-h-90 min-w-130">
+      <div className="flex w-[90%] justify-end gap-3">
+        <div
+          className="flex size-10 cursor-pointer items-center justify-center rounded-[5px] rounded-xl bg-green-500 p-2 text-white hover:bg-green-600 active:scale-95"
+          onClick={() => setActiveMenu("add")}
+        >
+          <More />
+        </div>
+        
+        <div
+          className="bg-primary-300 hover:bg-primary-300/70 flex size-10 cursor-pointer items-center justify-center rounded-xl active:scale-95"
+          onClick={() => setActiveMenu("edit")}
+        >
+          <Edit />
+        </div>
+       
+      </div>
+
+      {activeMenu === "add" ? (
+        <>
+          <h1 className="ml-12 p-1 text-2xl">Motivo</h1>
+          <p className="m-auto w-100 pb-2 text-[15px] text-gray-500">
+            Aqui você cadastra os motivos pelos quais os setores podem entrar em
+            contato com o seu time.
+          </p>
+          <form className="m-auto w-[80%]">
+            <div className=" mb-5 flex w-[90%] justify-between rounded-[10px] border border-zinc-400 p-2">
+              <input className="focus:outline-none" type="text" placeholder="Titulo do motivo"  value={tituloMotivo}
+                onChange={(e) => setTituloMotivo(e.target.value)}/>
+            </div>
+            <input
+              type="text"
+              placeholder="URL da imagem"
+              className="flex w-[90%] rounded-[10px] border border-zinc-400 p-2"
+              value={urlMotivo}
+              onChange={(e) => setUrlMotivo(e.target.value)}
+            />
+            <button  type="submit" className="bg-primary-100 mt-5 w-[90%] rounded-[15px] p-3 focus:outline-none" onClick={(e)=>handleRegisterMotivo(e)}>
+              Cadastrar
+            </button>
+          </form>
+        </>
+      ) : activeMenu === "edit" ? (
+        <div className="h-80 overflow-y-auto">
+          <h1 className="text-2xl mb-2">Motivos cadastrado</h1>
+          <p className="w-100 pb-2 text-[15px] text-gray-500">
+          Aqui você pode editar ou excluir os motivos cadastrados. Eles são exibidos quando alguém abre um chamado
+          </p>
+        <ul className="dark:bg-primary-600 bg-primary-500 sticky top-0 flex rounded-md text-white">
+          <li className="min-w-50 text-center">Descrição</li>
+          <li className="min-w-50 text-center">Ações</li>
+        </ul>
+        <ul>
+          {motivos.length ? (
+            motivos.map((item) => (
+              <div
+                key={item.id}
+                className="dark:border-primary-600/70 border-primary-300 hover:bg-primary-200/50 my-1 flex h-16 items-center rounded-md border p-2 transition-all"
+              >
+                <li className="min-w-50 text-center">{item.descricao}</li>
+                <li className="flex min-w-50 justify-center text-center">
+                  <div className="flex gap-4 flex-row-reverse">
+
+                  <div className="cursor-pointer rounded-xl bg-red-500 p-2 text-white hover:bg-red-700 active:scale-95">
+                    <Delete />
+                  </div>
+                  <div className="cursor-pointer rounded-xl bg-primary-300 p-2 text-white hover:bg-primary-600/70 active:scale-95">
+                    <Edit />
+                  </div>
+                  </div>
+                
+                </li>
+              </div>
+            ))
+          ) : (
+            <p className="text-center">Nenhum motivo cadastrado.</p>
+          )}
+        </ul>
+      </div>
+      
+      ) : (
+        ""
+      )}
+    </div>
+  );
+}
 
 export function ModalEditSetor({ closeModal, setor }: ModalEditSetorProps) {
-  const [activeTab, setActiveTab] = useState<"tab1" | "tab2">("tab1");
+  const [activeTab, setActiveTab] = useState<"tab1" | "tab2" | "tab3">("tab1");
   const Config = iconsMap["settings"];
   const Users = iconsMap["users"];
   const Voltar = iconsMap["CircleX"];
@@ -349,10 +527,18 @@ export function ModalEditSetor({ closeModal, setor }: ModalEditSetorProps) {
             <Users />
             Atendentes
           </li>
+          <li
+            className={`${activeTab === "tab3" ? "bg-primary-300" : ""} flex cursor-pointer gap-2 rounded-2xl p-2`}
+            onClick={() => setActiveTab("tab3")}
+          >
+            <ReceiptText />
+            Motivo
+          </li>
         </ul>
         <div className="flex-1">
           {activeTab === "tab1" && <Tab1Content setorProps={setor} />}
           {activeTab === "tab2" && <Tab2Content setorProps={setor} />}
+          {activeTab === "tab3" && <Tab3Content setorProps={setor} />}
         </div>
       </div>
     </Form.Root>
