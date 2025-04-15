@@ -26,7 +26,6 @@ export default function KanbanCard({
     cardElement.classList.remove("opacity-10");
     setCard(null);
   }
-  console.log(card);
 
   return (
     <div
