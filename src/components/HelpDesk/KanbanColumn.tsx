@@ -47,6 +47,7 @@ export default function KanbanColumn({
                 idAcoes: idAcoes,
                 nomeAcoes: nomeAcoes,
               });
+              console.log(response);
             }
             onCardDrop(cardId, column.id);
           }

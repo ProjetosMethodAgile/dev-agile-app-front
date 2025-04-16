@@ -112,37 +112,14 @@ export type User = {
 
 export type UsuariosData = {
   status: boolean;
-  usuarios: {
-    id: string;
-    nome: string;
-    email: string;
-    contato: string;
-    status: "Ativo" | "Inativo";
-    empresa: EmpresaData[];
-    usuario_roles: RoleData[];
-    // As permissões agora vêm agrupadas e completas (com acessos, ações e subtelas)
-    permissoes: PermissaoCompletaData[];
-    createdAt: string;
-    updatedAt: string;
-  }[];
+  usuarios: User[];
 };
 
 // Tipo de usuário – conforme o endpoint "pegaUsuarioPorId"
 // Agora o retorno agrupa as permissões em "permissoes"
 export type UsuarioData = {
   status: boolean;
-  usuario: {
-    id: string;
-    nome: string;
-    email: string;
-    contato: string;
-    empresa: EmpresaData[];
-    usuario_roles: RoleData[];
-    // As permissões agora vêm agrupadas e completas (com acessos, ações e subtelas)
-    permissoes: PermissaoCompletaData[];
-    createdAt: string;
-    updatedAt: string;
-  };
+  usuario: User;
 };
 
 // Tipo para fazer chamadas para API

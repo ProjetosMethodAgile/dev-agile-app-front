@@ -1,14 +1,13 @@
-import { PermissoesRole } from "@/types/api/apiTypes";
+import { PermissaoCompletaData, PermissoesRole } from "@/types/api/apiTypes";
 import React, { useState } from "react";
 import PermissionsNavigationForm from "../layout";
 import ScreeConfig from "./screen/ScreenConfig";
 import SubScreenConfig from "./subscreen/SubScreenConfig";
-import { defaultPermissoes } from "../../FormStepsUser";
 
 type PermissionsMenuProps = {
   permissoesData: PermissoesRole[];
   isEditMode?: boolean;
-  defaultValues: defaultPermissoes[] | undefined;
+  defaultValues: PermissaoCompletaData[] | undefined;
 };
 
 type CrudPermissions = {
@@ -35,7 +34,7 @@ export default function PermissionsMenu({
   const [actions, setActions] = useState<PermissionsState>(() => {
     if (isEditMode && defaultValues) {
       const initialState: PermissionsState = {};
-  
+
       defaultValues.forEach((item) => {
         // Adiciona permissão da tela principal
         initialState[item.id] = {
@@ -48,7 +47,7 @@ export default function PermissionsMenu({
             delete: item.acessos.can_delete,
           },
         };
-  
+
         // Adiciona permissões das sub-telas
         item.subpermissoes?.forEach((subItem) => {
           initialState[subItem.id] = {
@@ -63,10 +62,10 @@ export default function PermissionsMenu({
           };
         });
       });
-  
+
       return initialState;
     }
-  
+
     return {};
   });
   function handleToggleCrud(

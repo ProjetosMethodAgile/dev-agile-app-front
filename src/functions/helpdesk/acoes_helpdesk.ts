@@ -9,6 +9,7 @@ export async function identificaAcao({
 }: identificaAcaoProps) {
   if (nomeAcoes) {
     console.log(nomeAcoes);
+    console.log(idAcoes);
     nomeAcoes.map((acao) => {
       const nome = acao.trim().toLowerCase();
       console.log(nome);
@@ -28,3 +29,5 @@ const acoesHelpDesk = [
     funcao: () => console.log(),
   },
 ];
+
+console.log(acoesHelpDesk);

@@ -1,5 +1,4 @@
 import getRolesAll from "@/actions/getRolesAll";
-import getUser from "@/actions/getUser";
 import getUserById from "@/actions/getUserById";
 import FormStepsUser from "@/components/formSteps/createUser/FormStepsUser";
 import ScreenTitle from "@/components/titles/ScreenTitle";
@@ -7,12 +6,12 @@ import { UserCheck } from "lucide-react";
 import React from "react";
 
 type AtualizarUsuariosProps = {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 };
 
 const AtualizarUsuarioPage = async ({ params }: AtualizarUsuariosProps) => {
   const roles = await getRolesAll();
-  const { data } = await getUserById(params.id);
+  const { data } = await getUserById((await params).id);
   if (!data) throw new Error("Usuário não encontrado");
   const userData = data.usuario;
 
@@ -21,7 +20,10 @@ const AtualizarUsuarioPage = async ({ params }: AtualizarUsuariosProps) => {
 
   return (
     <div className="container">
-      <ScreenTitle title="Usuarios do sistema - Atualizar" icon={UserCheck} />
+      <ScreenTitle
+        title={`Usuarios do sistema - Atualizar - ${userData.nome}`}
+        icon={UserCheck}
+      />
 
       <FormStepsUser
         rolesData={roles.data || []}

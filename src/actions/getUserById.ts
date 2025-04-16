@@ -2,7 +2,7 @@
 
 import { GET_USER_ID } from "@/functions/api";
 import apiError from "@/functions/api-error";
-import { TokenData, User } from "@/types/api/apiTypes";
+import { TokenData, UsuarioData } from "@/types/api/apiTypes";
 import { cookies } from "next/headers";
 import jwt from "jsonwebtoken";
 
@@ -28,7 +28,7 @@ export default async function getUserById(id: string) {
     });
 
     if (!response.ok) throw new Error("Erro ao pegar o usuários.");
-    const data = (await response.json()) as User;
+    const data = (await response.json()) as UsuarioData;
 
     return { data, ok: true, error: null };
   } catch (error) {
