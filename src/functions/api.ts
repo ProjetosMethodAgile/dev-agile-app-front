@@ -1,5 +1,5 @@
-export const API_URL = "https://devagile.com.br/api";
-//export const API_URL = "http://localhost:3001/api";
+//export const API_URL = "https://devagile.com.br/api";
+export const API_URL = "http://localhost:3001/api";
 
 export function GET_PERMISSIONS_ALL() {
   return {
@@ -184,6 +184,12 @@ export function GET_USERS_EMP() {
 }
 
 export function GET_USER_ID(userId: string) {
+  return {
+    url: API_URL + `/usuario/${userId}`,
+  };
+}
+
+export function PUT_USUARIO(userId: string) {
   return {
     url: API_URL + `/usuario/${userId}`,
   };
