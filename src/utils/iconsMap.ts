@@ -12,6 +12,7 @@ import {
   CircleChevronLeft,
   CircleX,
   Paperclip,
+  UserRoundPlus,
 } from "lucide-react";
 
 // Mapeia o slug da tela com o ícone correspondente.
@@ -33,6 +34,7 @@ const iconsMap: { [key: string]: React.ElementType } = {
   //gerenciar usuarios
   "configurar-help-desk": Handshake,
   Paperclip: Paperclip,
+  UserRoundPlus: UserRoundPlus,
 
   // Adicione outros mapeamentos conforme necessário
 };

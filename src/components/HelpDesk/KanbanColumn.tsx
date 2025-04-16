@@ -2,12 +2,14 @@
 "use client";
 import putPosicaoCardColumnid from "@/actions/HelpDesk/putPosicaoCardColumnid";
 import { useGlobalContext } from "@/context/globalContext";
+import { identificaAcao } from "@/functions/helpdesk/acoes_helpdesk";
+import { ColumnsHelpDesk } from "@/types/api/apiTypes";
 import { Plus } from "lucide-react";
 import React from "react";
 
 export type KanbanColumnProps = React.ComponentProps<"div"> & {
   title: string;
-  columnId: string;
+  column: ColumnsHelpDesk;
   children: React.ReactNode;
   // Novo prop para atualizar o estado do card ao soltar
   onCardDrop?: (cardId: string, newColumnId: string) => void;
@@ -16,7 +18,7 @@ export type KanbanColumnProps = React.ComponentProps<"div"> & {
 export default function KanbanColumn({
   children,
   title,
-  columnId,
+  column,
   onCardDrop,
   ...props
 }: KanbanColumnProps) {
@@ -33,12 +35,20 @@ export default function KanbanColumn({
       const cardId = card.getAttribute("data-card-id");
       if (cardId) {
         // Atualiza a posição do card no backend
-        const result = await putPosicaoCardColumnid(cardId, columnId);
+        const result = await putPosicaoCardColumnid(cardId, column.id);
         if (!result.ok) {
           console.error("Erro ao atualizar coluna do card:", result.error);
         } else {
           if (onCardDrop) {
-            onCardDrop(cardId, columnId);
+            if (column.ColumnAcoes.length) {
+              const idAcoes = column.ColumnAcoes.map((a) => a.id);
+              const nomeAcoes = column.ColumnAcoes.map((a) => a.nome);
+              const response = await identificaAcao({
+                idAcoes: idAcoes,
+                nomeAcoes: nomeAcoes,
+              });
+            }
+            onCardDrop(cardId, column.id);
           }
         }
       }
@@ -61,6 +71,7 @@ export default function KanbanColumn({
       e.currentTarget.classList.remove("bg-primary-500");
     }
   }
+  console.log(column);
 
   return (
     <div

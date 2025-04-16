@@ -91,8 +91,8 @@ export default function ContainerHelpDesk(props: React.ComponentProps<"div">) {
           columns.map((column) => (
             <Kanban.Column
               title={column.nome}
-              columnId={column.id}
               key={column.id}
+              column={column}
               onCardDrop={(cardId: string, newColumnId: string) =>
                 setCards((prevCards) =>
                   prevCards.map((card) =>

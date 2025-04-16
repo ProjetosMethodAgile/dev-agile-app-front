@@ -25,6 +25,8 @@ export default function ModalCardHelpdesk({
 }: ModalCardHelpdeskProps) {
   const Voltar = iconsMap["voltar"];
   const Paperclip = iconsMap["Paperclip"];
+  const Ingressar = iconsMap["UserRoundPlus"];
+
   const [loading, setLoading] = useState(false);
   const [card, setCard] = useState<CardHelpDeskSessao | null>(null);
   const [message, setMessage] = useState("");
@@ -235,9 +237,9 @@ export default function ModalCardHelpdesk({
                 {card?.CardSessao && (
                   <div
                     onClick={() => handleAddAtendente(card?.CardSessao.id)}
-                    className="text-1xl flex h-11 w-full cursor-pointer items-center justify-center rounded-xl bg-gray-500 p-2 font-bold text-white hover:bg-green-600 active:scale-95 sm:w-2/3"
+                    className="text-1xl hover:bg-primary-100 flex h-11 w-full cursor-pointer items-center justify-center gap-2 rounded-xl bg-blue-600 p-2 font-bold text-white active:scale-95 sm:w-2/3"
                   >
-                    <Paperclip />
+                    <Ingressar />
                     Ingressar
                   </div>
                 )}
