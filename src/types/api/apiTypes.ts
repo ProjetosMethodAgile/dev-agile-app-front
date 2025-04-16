@@ -194,6 +194,8 @@ export type MotivoHelpDesk = {
   setor_id: string;
   descricao: string;
   src_img: string;
+  createdAt: string;
+  updatedAt: string;
 };
 export type KanbanColumn = {
   id: string;

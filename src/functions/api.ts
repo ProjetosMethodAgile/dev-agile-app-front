@@ -70,7 +70,13 @@ export function GET_MOTIVO(setorId: string) {
 }
 export function POST_MOTIVO() {
   return {
-    url: API_URL + `/api/kanban/motivos`,
+    url: API_URL + `/kanban/motivos`,
+  };
+}
+
+export function DELETE_MOTIVO(id:string) {
+  return {
+    url: API_URL + `/kanban/motivos${id}`,
   };
 }
 
