@@ -7,6 +7,7 @@ import { revalidateTag } from "next/cache";
 
 // Suponha que você crie essa função
 import { PUT_USUARIO } from "@/functions/api";
+import { Console, log } from "console";
 
 export async function updateUser(
   state:
@@ -80,7 +81,7 @@ export async function updateUser(
     const usuarioData = jwt.decode(token) as TokenData;
 
     const { url } = await PUT_USUARIO(id); // <- Troque aqui para seu endpoint de atualização
-
+    console.log("URL", url);
     const response = await fetch(url, {
       method: "PUT",
       headers: {
@@ -94,10 +95,11 @@ export async function updateUser(
         senha,
         status,
         roles_id: [tipoUsuario],
-        permissoes: permissionsComplete,
+        permissoesCRUD: permissionsComplete,
         empresa_id: usuarioData.empresa.id,
       }),
     });
+
 
     if (response.ok) {
       revalidateTag("update-user");

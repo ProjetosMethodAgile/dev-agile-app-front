@@ -12,10 +12,9 @@ type AtualizarUsuariosProps = {
 
 const AtualizarUsuarioPage = async ({ params }: AtualizarUsuariosProps) => {
   const roles = await getRolesAll();
-  const {data} = await getUserById(params.id);
+  const { data } = await getUserById(params.id);
   if (!data) throw new Error("Usuário não encontrado");
   const userData = data.usuario;
-    console.log(userData, "userData");
 
   if (!roles.ok)
     throw new Error(roles.error || "Não foi possivel obter as Roles");
@@ -24,11 +23,15 @@ const AtualizarUsuarioPage = async ({ params }: AtualizarUsuariosProps) => {
     <div className="container">
       <ScreenTitle title="Usuarios do sistema - Atualizar" icon={UserCheck} />
 
-     <FormStepsUser
+      <FormStepsUser
         rolesData={roles.data || []}
         isEditMode
-        defaultValues={{...userData, role: userData.usuario_roles[0].id, permissoes: userData.permissoes}}
-      /> 
+        defaultValues={{
+          ...userData,
+          role: userData.usuario_roles[0].id,
+          permissoes: userData.permissoes,
+        }}
+      />
     </div>
   );
 };
