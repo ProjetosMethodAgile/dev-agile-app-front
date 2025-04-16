@@ -30,7 +30,7 @@ export type defaultPermissoes = {
   acessos: PermissoesData;
   descricao: string;
   id: string;
-  subpermissoes: defaultPermissoes[];
+  subpermissoes: PermissaoCompletaData[];
 };
 
 type FormStepsUser = {
@@ -43,7 +43,7 @@ type FormStepsUser = {
     email: string;
     senha?: string;
     role: string;
-    permissoes: defaultPermissoes[];
+    permissoes: PermissaoCompletaData[];
   };
 };
 
@@ -149,7 +149,7 @@ export default function FormStepsUser({
               name="id"
               label="id"
               className="hidden"
-              value={usersData.id}
+              defaultValue={usersData.id}
             />
             <Form.InputText
               icon={UserCircle}
@@ -157,7 +157,7 @@ export default function FormStepsUser({
               name="nome"
               label="Nome"
               className="col-span-2"
-              value={usersData.nome}
+              defaultValue={usersData.nome}
               onChange={(e) =>
                 setUsersData({
                   ...usersData,
@@ -171,7 +171,7 @@ export default function FormStepsUser({
               name="contato"
               label="Contato"
               className="col-span-1"
-              value={usersData.contato}
+              defaultValue={usersData.contato}
               onChange={(e) =>
                 setUsersData({
                   ...usersData,
@@ -198,7 +198,7 @@ export default function FormStepsUser({
               name="email"
               label="Email"
               className="col-span-2"
-              value={usersData.email}
+              defaultValue={usersData.email}
               onChange={(e) =>
                 setUsersData({
                   ...usersData,
@@ -212,7 +212,7 @@ export default function FormStepsUser({
               type="password"
               name="senha"
               label="Senha"
-              value={usersData.senha}
+              defaultValue={usersData.senha}
               onChange={(e) =>
                 setUsersData({
                   ...usersData,
@@ -226,7 +226,7 @@ export default function FormStepsUser({
               type="password"
               name="senha"
               label="Confirmar Senha"
-              value={usersData.confirmar_senha}
+              defaultValue={usersData.confirmar_senha}
               onChange={(e) =>
                 setUsersData({
                   ...usersData,

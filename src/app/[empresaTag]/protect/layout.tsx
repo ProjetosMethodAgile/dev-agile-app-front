@@ -17,7 +17,10 @@ export default async function ProtectedEmpresaLayout({
   // Valida a sessão e obtém os dados do usuário
   const { user } = await validateCompanySession(empresaTag);
   // Obtém as permissões completas para o usuário logado
-  const permissions = await getUserPermissions(user.usuario.id, empresaTag);
+  let permissions;
+  if (user.usuario.id) {
+    permissions = await getUserPermissions(user.usuario.id, empresaTag);
+  }
   return (
     <WebSocketProvider>
       <UserContextProvider user={user} permissions={permissions}>

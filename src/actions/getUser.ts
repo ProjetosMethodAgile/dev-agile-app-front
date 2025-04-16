@@ -30,7 +30,10 @@ export default async function getUser(): Promise<GetUserResult> {
     const data = (await response.json()) as UsuarioData;
 
     // Valida se o usuário possui a empresa contida no token
-    if (!data.usuario.empresa.some((e) => e.id === usuarioData.empresa.id)) {
+    if (
+      data.usuario.empresa &&
+      !data.usuario.empresa.some((e) => e.id === usuarioData.empresa.id)
+    ) {
       throw new Error("Usuário não pertence à empresa autenticada.");
     }
 
