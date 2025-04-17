@@ -151,7 +151,7 @@ export const useViewChatSuspenso = () => {
         setorHelpDesk,
         motivoEscolhido,
       );
-      setMotivoImage(motivoObject.src_img);
+      if(motivoObject) setMotivoImage(motivoObject.src_img);
     }
 
     // 2) Ação de "voltar"

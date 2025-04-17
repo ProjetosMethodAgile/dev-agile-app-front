@@ -1,5 +1,6 @@
 "use server"
 import { POST_MOTIVO } from "@/functions/api";
+import { revalidateTag } from "next/cache";
 import { cookies } from "next/headers";
 
 
@@ -29,9 +30,10 @@ export async function postMotivoKanbanHelpdesk(
           descricao:descricao,
           src_img:src_img
         }),
-      });
-      console.log("aaaaaaaaaaaaaaaaaaaaaa",response);
-      console.log(url);
+       
+         });
+          revalidateTag("helpdesk-Motivos");
+  
     
     if (!response.ok) {
       return { msg_success: "erro", success: false, status: response.status };

@@ -76,7 +76,12 @@ export function POST_MOTIVO() {
 
 export function DELETE_MOTIVO(id:string) {
   return {
-    url: API_URL + `/kanban/motivos${id}`,
+    url: API_URL + `/kanban/motivos/${id}`,
+  };
+}
+export function PUT_MOTIVO(id:string) {
+  return {
+    url: API_URL + `/kanban/motivos/${id}`,
   };
 }
 
