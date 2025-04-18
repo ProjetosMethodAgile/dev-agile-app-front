@@ -41,6 +41,7 @@ type FormStepsUser = {
     nome: string;
     contato: string;
     email: string;
+    status: "Ativo" | "Inativo";
     senha?: string;
     role: string;
     permissoes: PermissaoCompletaData[];
@@ -62,6 +63,7 @@ export default function FormStepsUser({
     nome: defaultValues?.nome || "",
     contato: defaultValues?.contato || "",
     email: defaultValues?.email || "",
+    status: defaultValues?.status === 'Ativo' ? "Ativo" : "Inativo",
     permissoes: defaultValues?.permissoes || [],
     senha: "",
     confirmar_senha: "",
@@ -181,16 +183,6 @@ export default function FormStepsUser({
             />
           </Form.Section>
           <Form.Section title="Acesso ao sistema">
-            {/* <Form.InputSelect
-              options={[
-                { id: "ativo", nome: "Ativo" },
-                { id: "inativo", nome: "Inativo" },
-              ]}
-              label="Status"
-              id="status"
-              name="status"
-              defaultOptionText="Ativo"
-            /> */}
             <Form.InputText
               icon={MailIcon}
               inputId="email"
@@ -234,6 +226,17 @@ export default function FormStepsUser({
                 })
               }
             />
+
+            {isEditMode && <Form.InputSelect
+              options={[
+                { id: "ativo", nome: "Ativo" },
+                { id: "inativo", nome: "Inativo" },
+              ]}
+              label="Status"
+              id="status"
+              name="status"
+              value={usersData.status.toLowerCase()}
+            />}
           </Form.Section>
           <Form.ButtonNext
             type="submit"

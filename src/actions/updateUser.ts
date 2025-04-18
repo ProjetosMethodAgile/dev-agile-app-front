@@ -18,9 +18,14 @@ export async function updateUser(
     const contato = formData.get("contato") as string;
     const email = formData.get("email") as string;
     const senha = formData.get("senha") as string;
-    const status = "Ativo";
+    const status = formData.get("status") as string;
     const tipoUsuario = formData.get("tipo_usuario") as string;
     const permissionsCheckbox = formData.getAll("checkbox[]") as string[];
+
+    function capitalize(str: string) {
+      if (!str) return "";
+      return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+    }
 
     const permissionsObject = permissionsCheckbox
       ?.map((permission) => {
@@ -87,7 +92,7 @@ export async function updateUser(
         email,
         contato,
         senha,
-        status,
+        status: capitalize(status),
         roles_id: [tipoUsuario],
         permissoesCRUD: permissionsComplete,
       }),

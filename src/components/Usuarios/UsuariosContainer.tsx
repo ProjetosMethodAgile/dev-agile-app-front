@@ -24,7 +24,6 @@ export default function UsuariosContainer({ data }: { data: User[] }) {
 
   //atualiza o estado quando o filtro é alterado
   function changeFilter(value: string, key: string) {
-    console.log(value, key);
     setCurrentFilter({
       ...currentFilter,
       [key]: value,
@@ -88,8 +87,8 @@ export default function UsuariosContainer({ data }: { data: User[] }) {
               </div>
               {showFilter && (
                 <div className="bg-primary-150 absolute top-12 w-70 rounded-2xl p-4">
-                  <div className="flex items-center justify-between mb-4">
-                    <h4 className="font-semibold text-1xl">Filtrar</h4>
+                  <div className="mb-4 flex items-center justify-between">
+                    <h4 className="text-1xl font-semibold">Filtrar</h4>
                     <XIcon
                       onClick={() => setShowFilter(false)}
                       className="cursor-pointer justify-self-end"
@@ -132,7 +131,6 @@ export default function UsuariosContainer({ data }: { data: User[] }) {
           search={search}
           currentFilter={currentFilter}
         />
-        {/* <Table data={data} columns={userColumns} /> */}
       </div>
     </div>
   );

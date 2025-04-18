@@ -17,7 +17,6 @@ const AtualizarUsuarioPage = async ({ params }: AtualizarUsuariosProps) => {
 
   if (!roles.ok)
     throw new Error(roles.error || "Não foi possivel obter as Roles");
-
   return (
     <div className="container">
       <ScreenTitle
