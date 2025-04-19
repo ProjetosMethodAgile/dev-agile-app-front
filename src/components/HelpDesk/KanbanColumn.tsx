@@ -41,13 +41,12 @@ export default function KanbanColumn({
         } else {
           if (onCardDrop) {
             if (column.ColumnAcoes.length) {
-              const idAcoes = column.ColumnAcoes.map((a) => a.id);
               const nomeAcoes = column.ColumnAcoes.map((a) => a.nome);
               const response = await identificaAcao({
-                idAcoes: idAcoes,
                 nomeAcoes: nomeAcoes,
+                column,
+                cardId,
               });
-              console.log(response);
             }
             onCardDrop(cardId, column.id);
           }
@@ -72,7 +71,6 @@ export default function KanbanColumn({
       e.currentTarget.classList.remove("bg-primary-500");
     }
   }
-  console.log(column);
 
   return (
     <div
