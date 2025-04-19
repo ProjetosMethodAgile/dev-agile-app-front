@@ -23,8 +23,9 @@ export default async function getRolesAll() {
     });
 
     if (!response.ok) throw new Error("Erro ao pegar roles.");
-    const data = (await response.json()) as RoleData[];
-
+    const dataRole = (await response.json()) as RoleData[];
+    const data = dataRole.filter((role) => role.id !== process.env.ROLE_MASTER_ID);
+  
     return { data: data, ok: true, error: null };
   } catch (error) {
     return apiError(error);
