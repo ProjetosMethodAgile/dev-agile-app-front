@@ -122,6 +122,8 @@ export default function FormStepsUser({
     },
   );
 
+  
+
   useEffect(() => {
     if (state?.errors.length) {
       state.errors.forEach((erro: string) => {
