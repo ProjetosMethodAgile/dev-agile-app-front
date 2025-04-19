@@ -196,7 +196,7 @@ export type MotivoHelpDesk = {
   src_img: string;
   createdAt: string;
   updatedAt: string;
-};
+}& React.SetStateAction<string[] | null>;
 export type KanbanColumn = {
   id: string;
   setor_id: string;

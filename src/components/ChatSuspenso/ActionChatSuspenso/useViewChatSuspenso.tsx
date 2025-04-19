@@ -139,6 +139,7 @@ export const useViewChatSuspenso = () => {
 
         if (motivoObject && typeof motivoObject === "object") {
           setMotivo(motivoObject); // Atualiza o motivo selecionado no contexto
+
         }
         return;
       }

@@ -14,7 +14,7 @@ function Tab3Content({ setorProps }: { setorProps: SetorHelpDesk }) {
   const Delete = iconsMap["delete"];
   const Edit = iconsMap["editBtn"];
   const More = iconsMap["add"];
-  const [motivos, setMotivos] = useState<MotivoHelpDesk[]>([]);
+  const [motivosKanbanEdit, setMotivosKanbanEdit] = useState<MotivoHelpDesk[]>([]);
   const [activeMenu, setActiveMenu] = useState("edit");
   const [tituloMotivo, setTituloMotivo] = useState<string>("");
   const [urlMotivo, setUrlMotivo] = useState<string>("");
@@ -29,7 +29,7 @@ function Tab3Content({ setorProps }: { setorProps: SetorHelpDesk }) {
     async function pegaMotivoSetorID() {
       const response = await getMotivoSetor(setorProps.id);
       if (response.data) {
-        setMotivos(response.data);
+        setMotivosKanbanEdit(response.data);
       }
     }
     pegaMotivoSetorID();
@@ -224,8 +224,8 @@ function Tab3Content({ setorProps }: { setorProps: SetorHelpDesk }) {
             ) : (
               ""
             )}
-            {motivos.length ? (
-              motivos.map((item) => (
+            {motivosKanbanEdit.length ? (
+              motivosKanbanEdit.map((item) => (
                 <div
                   key={item.id}
                   className="dark:border-primary-600/70 border-primary-300 hover:bg-primary-200/50 my-1 flex h-16 items-center rounded-md border p-2 transition-all"
