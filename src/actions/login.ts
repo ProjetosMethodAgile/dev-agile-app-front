@@ -20,6 +20,7 @@ export async function setLogin(formData: FormData): Promise<void> {
     }
 
     const { url } = POST_LOGIN();
+console.log(url);
 
     const response = await fetch(url, {
       headers: { "Content-Type": "application/json" },

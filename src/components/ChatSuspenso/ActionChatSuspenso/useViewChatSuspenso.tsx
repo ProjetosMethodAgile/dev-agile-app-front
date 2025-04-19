@@ -139,6 +139,7 @@ export const useViewChatSuspenso = () => {
 
         if (motivoObject && typeof motivoObject === "object") {
           setMotivo(motivoObject); // Atualiza o motivo selecionado no contexto
+
         }
         return;
       }
@@ -151,7 +152,7 @@ export const useViewChatSuspenso = () => {
         setorHelpDesk,
         motivoEscolhido,
       );
-      setMotivoImage(motivoObject.src_img);
+      if(motivoObject) setMotivoImage(motivoObject.src_img);
     }
 
     // 2) Ação de "voltar"

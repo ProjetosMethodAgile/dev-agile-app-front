@@ -68,6 +68,22 @@ export function GET_MOTIVO(setorId: string) {
     url: API_URL + `/kanban/motivos/setor/${setorId}`,
   };
 }
+export function POST_MOTIVO() {
+  return {
+    url: API_URL + `/kanban/motivos`,
+  };
+}
+
+export function DELETE_MOTIVO(id:string) {
+  return {
+    url: API_URL + `/kanban/motivos/${id}`,
+  };
+}
+export function PUT_MOTIVO(id:string) {
+  return {
+    url: API_URL + `/kanban/motivos/${id}`,
+  };
+}
 
 export function GET_KANBAN_COLUNA(setor_id: string) {
   return {
@@ -110,6 +126,13 @@ export function POST_AUTH_CHAMADO_KANBAN_COLUNA() {
 export function POST_REPLY_CHAMADO_KANBAN() {
   return {
     url: API_URL + `/helpdesk/message/reply`,
+  };
+}
+
+
+export function POST_CREATE_COLUMN_KANBAN() {
+  return {
+    url: API_URL + `/helpdesk/column`,
   };
 }
 
