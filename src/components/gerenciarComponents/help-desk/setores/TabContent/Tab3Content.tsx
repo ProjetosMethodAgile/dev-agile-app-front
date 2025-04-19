@@ -134,7 +134,7 @@ function Tab3Content({ setorProps }: { setorProps: SetorHelpDesk }) {
       ) : activeMenu === "edit" ? (
         <div className="h-80 overflow-y-auto pr-5">
           <div className="flex justify-between gap-3">
-            <h1 className="p-1 text-2xl">Motivos cadastrado</h1>
+            <h1 className="p-1 text-2xl">{popUp.message==="modalDelet"?"Deletar Motivo":popUp.message==="modalEdit"?"Editar motivo":"Motivos cadastrado"}</h1>
             <div className="flex gap-3">
               <div
                 className="flex size-10 cursor-pointer items-center justify-center rounded-[5px] rounded-xl bg-green-500 p-2 text-white hover:bg-green-600 active:scale-95"
@@ -149,16 +149,23 @@ function Tab3Content({ setorProps }: { setorProps: SetorHelpDesk }) {
             Aqui você pode editar ou excluir os motivos cadastrados. Eles são
             exibidos quando alguém abre um chamado
           </p>
+            {popUp.message === "modalDelet"|| popUp.message ==="modalEdit"? 
+            <div  className="dark:bg-primary-600 bg-primary-500 sticky top-0 flex rounded-md text-white">
+                <p className="min-w-50 m-auto">Uma vez editado ou removido não podera retornar os valores</p>
+            </div>
+            
+            :
           <ul className="dark:bg-primary-600 bg-primary-500 sticky top-0 flex rounded-md text-white">
             <li className="min-w-50 text-center">Descrição</li>
             <li className="min-w-50 text-center">Ações</li>
           </ul>
+          }
           <ul>
-            {popUp.message === "modalDelet" ? (
-              <Modal>
-                <div className="popup-container fixed top-0 left-0 flex h-[100%] w-[100%] flex-col items-center justify-center bg-blue-950/75 backdrop-blur-3xl">
+          {popUp.message === "modalDelet" ? (
+              <Modal className="p-5" >
+                <div className="">
                   <div>
-                    <p className="flex flex-col p-1 text-2xl">
+                    <p className="flex flex-col p-1 text-[1rem]">
                       Deseja realmente deletar o motivo {nomeMotivoSelecionado}?
                       Esta ação <strong>não poderá ser desfeita.</strong>
                     </p>
@@ -180,25 +187,23 @@ function Tab3Content({ setorProps }: { setorProps: SetorHelpDesk }) {
                 </div>
               </Modal>
             ) : popUp.message === "modalEdit" ? (
-              <Modal>
-                <div className="popup-container fixed top-0 left-0 flex h-[100%] w-[100%] flex-col bg-black/70 backdrop-blur-lg">
-                  <h1 className="p-5 text-4xl">Edição</h1>
-                  <div className="flex h-full w-full flex-col items-center justify-center">
+              <Modal className="" >
+                  <div className="flex h-full w-full gap-5 mt-5 flex-col">
                     <Form.InputText
                       value={nomeMotivoSelecionado}
-                      className="w-150"
+                      className=""
                       onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                         setnomeMotivoSelecionado(e.target.value);
                       }}
                     />
                     <Form.InputText
                       value={urlMotivo}
-                      className="w-150"
+                      className=""
                       onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                         setUrlMotivo(e.target.value);
                       }}
                     />
-                    <div className="popup-buttons mt-5 flex gap-5 self-start pl-22">
+                    <div className="flex gap-5">
                       <button
                         onClick={() =>
                           handleEditaMotivo(
@@ -218,13 +223,14 @@ function Tab3Content({ setorProps }: { setorProps: SetorHelpDesk }) {
                         Fechar
                       </button>
                     </div>
-                  </div>
                 </div>
+                
               </Modal>
             ) : (
               ""
             )}
-            {motivosKanbanEdit.length ? (
+        
+            {motivosKanbanEdit.length && !popUp.message.length ? (
               motivosKanbanEdit.map((item) => (
                 <div
                   key={item.id}
@@ -259,13 +265,14 @@ function Tab3Content({ setorProps }: { setorProps: SetorHelpDesk }) {
                 </div>
               ))
             ) : (
-              <p className="text-center">Nenhum motivo cadastrado.</p>
+              <p className="text-center">{popUp.message ==="modalDelet"|| popUp.message === "modalEdit"?"":"Nenhum motivo cadastrado." }</p>
             )}
           </ul>
         </div>
       ) : (
         ""
       )}
+        
     </div>
   );
 }
