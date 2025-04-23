@@ -6,12 +6,13 @@ type identificaAcaoProps = {
   cardId: string;
 };
 
-async function enviaEmail() {}
+// async function enviaEmail() {}
 
 const acoesHelpDesk = [
   {
     nome: "nenhuma",
-    funcao: (column: ColumnsHelpDesk, cardId: string) => console.log(),
+    funcao: (column: ColumnsHelpDesk, cardId: string) =>
+      console.log(column, cardId),
   },
   {
     nome: "envia e-mail",
