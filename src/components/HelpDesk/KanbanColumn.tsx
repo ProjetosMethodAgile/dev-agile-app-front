@@ -46,7 +46,7 @@ export default function KanbanColumn({
             if (column.ColumnAcoes.length) {
               const nomeAcoes = column.ColumnAcoes.map((a) => a.nome);
               console.log(nomeAcoes);
-              const response = await identificaAcao({
+              await identificaAcao({
                 nomeAcoes: nomeAcoes,
                 column,
                 cardId,
