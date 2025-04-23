@@ -6,6 +6,7 @@ import { identificaAcao } from "@/functions/helpdesk/acoes_helpdesk";
 import { ColumnsHelpDesk } from "@/types/api/apiTypes";
 import { Plus } from "lucide-react";
 import React from "react";
+import { toast } from "react-toastify";
 
 export type KanbanColumnProps = React.ComponentProps<"div"> & {
   title: string;
@@ -37,11 +38,14 @@ export default function KanbanColumn({
         // Atualiza a posição do card no backend
         const result = await putPosicaoCardColumnid(cardId, column.id);
         if (!result.ok) {
-          console.error("Erro ao atualizar coluna do card:", result.error);
+          toast.error(
+            "Erro ao atualizar posição do card, contate o administrador do sistema",
+          );
         } else {
           if (onCardDrop) {
             if (column.ColumnAcoes.length) {
               const nomeAcoes = column.ColumnAcoes.map((a) => a.nome);
+              console.log(nomeAcoes);
               const response = await identificaAcao({
                 nomeAcoes: nomeAcoes,
                 column,

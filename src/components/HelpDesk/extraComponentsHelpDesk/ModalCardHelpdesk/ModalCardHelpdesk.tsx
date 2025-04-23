@@ -48,6 +48,9 @@ export default function ModalCardHelpdesk({
     setLoading(false);
   }, [currentCard.id]);
 
+  useEffect(() => {
+    console.log(card);
+  }, [card]);
   async function handleAddAtendente(sessao_id: string) {
     const response = await postVinculaAtendenteToCardHelpdesk(sessao_id);
     if (response.message && response.error) {
@@ -133,20 +136,29 @@ export default function ModalCardHelpdesk({
                   {card?.CardSessao.MessageSessao &&
                   card.CardSessao.MessageSessao.length > 0
                     ? card.CardSessao.MessageSessao.map((msg, index) => {
+                        const getMessageBgColor = (
+                          isAtendente: boolean,
+                          isMgsSystem: boolean,
+                        ) => {
+                          if (isMgsSystem) return "bg-gray-100"; // sistema
+                          if (isAtendente) return "bg-blue-200"; // atendente
+                          return "bg-yellow-100"; // cliente
+                        };
                         const isAtendente = Boolean(msg.AtendenteMessage);
+                        const isMgsSystem = msg.system_msg;
                         const senderName = isAtendente
                           ? msg.AtendenteMessage.UsuarioAtendente.nome
                           : msg.ClienteSessao?.nome || "Cliente Externo";
                         return (
                           <div
                             key={index}
-                            className={`mb-4 rounded p-2 shadow ${
-                              isAtendente ? "bg-blue-200" : "bg-yellow-100"
-                            }`}
+                            className={`mb-4 rounded p-2 shadow ${getMessageBgColor(isAtendente, isMgsSystem)}`}
                           >
                             <div className="flex items-center justify-between">
                               <span className="text-primary-150 text-sm font-bold">
-                                {senderName}
+                                {!isMgsSystem
+                                  ? senderName
+                                  : "mensagem do sistema"}
                               </span>
                               <span className="text-xs text-gray-500">
                                 {formatDateSimple(msg.createdAt)}

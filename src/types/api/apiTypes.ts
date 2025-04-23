@@ -311,6 +311,7 @@ export type CardHelpDeskSessao = {
     MessageSessao: {
       atendente_id: string;
       cliente_id: string;
+      system_msg: boolean;
       content_msg: string;
       createdAt: string;
       updatedAt: string;
