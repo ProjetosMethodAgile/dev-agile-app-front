@@ -1,33 +1,46 @@
+import { ColumnsHelpDesk } from "@/types/api/apiTypes";
+
 type identificaAcaoProps = {
-  nomeAcoes?: string[];
-  idAcoes?: string[];
+  nomeAcoes: string[];
+  column: ColumnsHelpDesk;
+  cardId: string;
 };
+
+async function enviaEmail() {}
+
+const acoesHelpDesk = [
+  {
+    nome: "nenhuma",
+    funcao: (column: ColumnsHelpDesk, cardId: string) => console.log(),
+  },
+  {
+    nome: "envia e-mail",
+    funcao: (column: ColumnsHelpDesk, cardId: string) => {
+      console.log("cardId");
+      console.log(cardId);
+      console.log(column.id);
+      console.log(column.nome);
+    },
+  },
+];
 
 export async function identificaAcao({
   nomeAcoes,
-  idAcoes,
+  column,
+  cardId,
 }: identificaAcaoProps) {
-  if (nomeAcoes) {
-    console.log(nomeAcoes);
-    console.log(idAcoes);
-    nomeAcoes.map((acao) => {
-      const nome = acao.trim().toLowerCase();
-      console.log(nome);
+  if (nomeAcoes && column) {
+    nomeAcoes.map((nomeAcao) => {
+      const nome = nomeAcao.trim().toLowerCase();
+      acoesHelpDesk.map((acao) => {
+        if (acao.nome === nome) {
+          acao.funcao(column, cardId);
+        }
+      });
     });
   } else {
     return;
   }
 }
-
-const acoesHelpDesk = [
-  {
-    nome: "nenhuma",
-    funcao: () => console.log(),
-  },
-  {
-    nome: "envia e-mail",
-    funcao: () => console.log(),
-  },
-];
 
 console.log(acoesHelpDesk);
