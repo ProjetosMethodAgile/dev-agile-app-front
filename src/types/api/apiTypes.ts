@@ -198,6 +198,7 @@ export type AtendentesHelpDesk = {
   id: string;
   usuario_id: string;
   empresa_id: string;
+  status:boolean;
   createdAt: string;
   updatedAt: string;
   Setores: SetorHelpDesk[];
