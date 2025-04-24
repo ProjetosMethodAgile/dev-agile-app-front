@@ -45,7 +45,6 @@ export default function KanbanColumn({
           if (onCardDrop) {
             if (column.ColumnAcoes.length) {
               const nomeAcoes = column.ColumnAcoes.map((a) => a.nome);
-              console.log(nomeAcoes);
               await identificaAcao({
                 nomeAcoes: nomeAcoes,
                 column,

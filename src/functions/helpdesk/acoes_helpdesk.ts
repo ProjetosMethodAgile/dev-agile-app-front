@@ -1,3 +1,4 @@
+import { postEnviaEmailHelpDesk } from "@/actions/HelpDesk/AcoesColuna/postEnviaEmailHelpDesk";
 import { ColumnsHelpDesk } from "@/types/api/apiTypes";
 
 type identificaAcaoProps = {
@@ -6,21 +7,16 @@ type identificaAcaoProps = {
   cardId: string;
 };
 
-// async function enviaEmail() {}
-
 const acoesHelpDesk = [
   {
     nome: "nenhuma",
-    funcao: (column: ColumnsHelpDesk, cardId: string) =>
+    funcao: async (column: ColumnsHelpDesk, cardId: string) =>
       console.log(column, cardId),
   },
   {
     nome: "envia e-mail",
-    funcao: (column: ColumnsHelpDesk, cardId: string) => {
-      console.log("cardId");
-      console.log(cardId);
-      console.log(column.id);
-      console.log(column.nome);
+    funcao: async (column: ColumnsHelpDesk, cardId: string) => {
+      await postEnviaEmailHelpDesk(cardId, column.nome);
     },
   },
 ];
@@ -43,5 +39,3 @@ export async function identificaAcao({
     return;
   }
 }
-
-console.log(acoesHelpDesk);

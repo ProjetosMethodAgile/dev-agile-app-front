@@ -75,11 +75,16 @@ export default function ContainerHelpDesk(props: React.ComponentProps<"div">) {
   }, [currentSetor, ws, fetchData, cards]);
 
   // Abre o modal com o card atual
-  async function openCurrentCard(currentCard: CardHelpDesk) {
+  async function openCurrentCard(
+    currentCard: CardHelpDesk,
+    column: ColumnsHelpDesk,
+  ) {
     openGlobalModal(
       <ModalCardHelpdesk
         currentCard={currentCard}
         closeModal={closeGlobalModal}
+        currentSetor={currentSetor}
+        currentColumn={column}
       />,
     );
   }
@@ -110,7 +115,7 @@ export default function ContainerHelpDesk(props: React.ComponentProps<"div">) {
                     card={card}
                     cardId={card.id}
                     key={card.id}
-                    openCard={() => openCurrentCard(card)}
+                    openCard={() => openCurrentCard(card, column)}
                   />
                 ))}
             </Kanban.Column>

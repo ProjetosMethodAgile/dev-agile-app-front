@@ -1,5 +1,5 @@
-export const API_URL = "https://devagile.com.br/api";
-// export const API_URL = "http://localhost:3001/api";
+// export const API_URL = "https://devagile.com.br/api";
+export const API_URL = "http://localhost:3001/api";
 
 export function GET_PERMISSIONS_ALL() {
   return {
@@ -74,12 +74,12 @@ export function POST_MOTIVO() {
   };
 }
 
-export function DELETE_MOTIVO(id:string) {
+export function DELETE_MOTIVO(id: string) {
   return {
     url: API_URL + `/kanban/motivos/${id}`,
   };
 }
-export function PUT_MOTIVO(id:string) {
+export function PUT_MOTIVO(id: string) {
   return {
     url: API_URL + `/kanban/motivos/${id}`,
   };
@@ -129,7 +129,6 @@ export function POST_REPLY_CHAMADO_KANBAN() {
   };
 }
 
-
 export function POST_CREATE_COLUMN_KANBAN() {
   return {
     url: API_URL + `/helpdesk/column`,
@@ -156,6 +155,12 @@ export function PUT_CARD_COLUMN() {
 export function GET_ACOES_KANBAN(empresa_id: string) {
   return {
     url: API_URL + `/helpdesk/acoes/empresa/${empresa_id}`,
+  };
+}
+
+export function POST_SEND_EMAIL_ACAO_KANBAN() {
+  return {
+    url: API_URL + `/helpdesk/acao/sendMail`,
   };
 }
 

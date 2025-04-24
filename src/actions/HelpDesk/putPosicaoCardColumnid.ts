@@ -12,6 +12,8 @@ export default async function putPosicaoCardColumnid(
   try {
     const token = (await cookies()).get("token")?.value;
     if (!token) throw new Error("Token não encontrado");
+    console.log(card_id);
+    console.log(new_column_id);
 
     const { url } = PUT_CARD_COLUMN();
 
@@ -26,6 +28,7 @@ export default async function putPosicaoCardColumnid(
         new_column_id,
       }),
     });
+    console.log(response);
 
     if (!response.ok)
       throw new Error(
