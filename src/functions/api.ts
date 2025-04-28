@@ -1,5 +1,5 @@
-// export const API_URL = "https://devagile.com.br/api";
-export const API_URL = "http://localhost:3001/api";
+export const API_URL = "https://devagile.com.br/api";
+// export const API_URL = "http://localhost:3001/api";
 
 export function GET_PERMISSIONS_ALL() {
   return {
@@ -155,6 +155,12 @@ export function PUT_CARD_COLUMN() {
 export function GET_ACOES_KANBAN(empresa_id: string) {
   return {
     url: API_URL + `/helpdesk/acoes/empresa/${empresa_id}`,
+  };
+}
+
+export function GET_KEANBAN_ACOES_COLUNA(id: string) {
+  return {
+    url: API_URL + `/helpdesk/acoes/column/${id}`,
   };
 }
 

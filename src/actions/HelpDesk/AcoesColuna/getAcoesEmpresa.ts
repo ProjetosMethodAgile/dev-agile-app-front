@@ -1,4 +1,4 @@
-"use server"
+"use server";
 
 import { GET_ACOES_KANBAN } from "@/functions/api";
 import apiError from "@/functions/api-error";
@@ -6,7 +6,7 @@ import { AcaoColuna, TokenData } from "@/types/api/apiTypes";
 import jwt from "jsonwebtoken";
 import { cookies } from "next/headers";
 
-export async function BUSCA_ACOES_COLUNA() {
+export async function getAcosEmpresa() {
   try {
     // Obtém o token dos cookies
     const token = (await cookies()).get("token")?.value;
@@ -18,7 +18,6 @@ export async function BUSCA_ACOES_COLUNA() {
       throw new Error("Token inválido.");
     }
 
-    
     const { url } = await GET_ACOES_KANBAN(usuarioData.empresa.id);
 
     const response = await fetch(url, {
@@ -33,7 +32,7 @@ export async function BUSCA_ACOES_COLUNA() {
     }
 
     const acaoColuna: AcaoColuna = await response.json();
-    
+
     return {
       data: acaoColuna,
       ok: true,

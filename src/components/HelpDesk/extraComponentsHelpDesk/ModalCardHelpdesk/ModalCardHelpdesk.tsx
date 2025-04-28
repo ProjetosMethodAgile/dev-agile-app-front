@@ -239,12 +239,12 @@ export default function ModalCardHelpdesk({
               {loading ? (
                 <div className="mb-1 h-11 w-full animate-pulse rounded-xl bg-gray-300" />
               ) : (
-                <button
+                <div
                   onClick={() => setMoveCard((c) => !c)}
                   className="mb-1 flex h-11 w-full cursor-pointer items-center justify-center rounded-xl bg-green-500 p-2 text-2xl font-bold text-white hover:bg-green-600 active:scale-95"
                 >
                   Mover Card
-                </button>
+                </div>
               )}
               <div className="flex flex-wrap gap-2 sm:flex-nowrap">
                 {loading ? (

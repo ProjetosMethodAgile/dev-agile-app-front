@@ -8,6 +8,7 @@ import { cookies } from "next/headers";
 export default async function putPosicaoCardColumnid(
   card_id: string,
   new_column_id: string,
+  setor_id: string,
 ): Promise<{ error: string; data: string | null; ok: boolean }> {
   try {
     const token = (await cookies()).get("token")?.value;
@@ -26,9 +27,9 @@ export default async function putPosicaoCardColumnid(
       body: JSON.stringify({
         card_id,
         new_column_id,
+        setor_id,
       }),
     });
-    console.log(response);
 
     if (!response.ok)
       throw new Error(

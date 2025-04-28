@@ -16,6 +16,8 @@ const acoesHelpDesk = [
   {
     nome: "envia e-mail",
     funcao: async (column: ColumnsHelpDesk, cardId: string) => {
+      console.log("ENVIOU O EMAILL");
+
       await postEnviaEmailHelpDesk(cardId, column.nome);
     },
   },

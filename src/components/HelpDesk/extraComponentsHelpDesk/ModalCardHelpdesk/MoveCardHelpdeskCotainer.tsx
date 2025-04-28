@@ -5,6 +5,7 @@ import { ColumnsHelpDesk } from "@/types/api/apiTypes";
 import putPosicaoCardColumnid from "@/actions/HelpDesk/putPosicaoCardColumnid";
 import { toast } from "react-toastify";
 import { identificaAcao } from "@/functions/helpdesk/acoes_helpdesk";
+import { getAcoesColuna } from "@/actions/HelpDesk/AcoesColuna/getAcoesColuna";
 
 export type MoveCardHelpdeskCotainerProps = React.ComponentProps<"div"> & {
   setMoveCard: React.Dispatch<SetStateAction<boolean>>;
@@ -36,25 +37,32 @@ export default function MoveCardHelpdeskCotainer({
       const response = await getColumnsHelpDeskForUser(setorAtual);
       if (response.ok && response.data) {
         setColumns(response.data);
+
+        // <-- inicializa currentColumn com o primeiro id (excluindo a colunaAtual, se quiser)
+        const primeira = response.data.find((c) => c.id !== colunaAtual);
+        if (primeira) {
+          setCurrentColumn(primeira.id);
+        }
       }
       setLoading(false);
     }
     getColumn(setorAtual);
-  }, []);
+  }, [setorAtual, colunaAtual, setCurrentColumn]);
 
   async function handleMoveCard(cardId: string, column_id: string) {
-    //CRIAR ROTA DE PEGA ACOES POR COLUNA ID PARA PASSAR NO PARAMETRO DE IDENTIFICA ACAO E AJUSTAR INPUT SELECT
-
-    // const acoesFromColumn = await BUSCA_ACOES_COLUNA;
-    // if (acoesColuna.length) {
-    //   const nomeAcoes = acoesColuna.map((a) => a.nome);
-    //   await identificaAcao({
-    //     nomeAcoes: nomeAcoes,
-    //     column,
-    //     cardId,
-    //   });
-    // }
-    const result = await putPosicaoCardColumnid(cardId, column_id);
+    const acoesFromColumn = await getAcoesColuna(column_id);
+    if (acoesFromColumn.ok && acoesFromColumn.data) {
+      if (acoesColuna.length) {
+        const nomeAcoes = acoesFromColumn.data.ColumnAcoes.map((a) => a.nome);
+        await identificaAcao({
+          nomeAcoes: nomeAcoes,
+          column: acoesFromColumn.data,
+          cardId,
+        });
+        setMoveCard(false);
+      }
+    }
+    const result = await putPosicaoCardColumnid(cardId, column_id, setorAtual);
 
     if (result.data && result.ok) {
       toast.success(result.data);
@@ -72,7 +80,7 @@ export default function MoveCardHelpdeskCotainer({
             options={columns
               .filter((c) => colunaAtual !== c.id)
               .map((c) => ({ id: c.id, nome: c.nome }))}
-            defaultOption={true}
+            defaultOption={false}
             setCurrentColumn={setCurrentColumn}
             currentColumn={currentColumn}
             columnSelect={true}

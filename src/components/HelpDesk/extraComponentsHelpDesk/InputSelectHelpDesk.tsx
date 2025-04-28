@@ -13,7 +13,7 @@ export type InputSelectHelpDeskTypes = {
   defaultOptionText?: string;
   resetAfterSelect?: boolean;
   currentColumn?: string;
-  setCurrentColumn: React.Dispatch<React.SetStateAction<string>>;
+  setCurrentColumn?: React.Dispatch<React.SetStateAction<string>>;
   //necessario para distinguir select de setor e colunas
   columnSelect?: boolean;
 };
@@ -45,7 +45,7 @@ export default function InputSelectHelpDesk({
     const selectedValue = e.target.value;
     if (onChange) onChange(selectedValue);
 
-    if (columnSelect) {
+    if (columnSelect && setCurrentColumn) {
       setCurrentColumn(selectedValue);
     } else {
       setCurrentSetor(resetAfterSelect ? "" : selectedValue);

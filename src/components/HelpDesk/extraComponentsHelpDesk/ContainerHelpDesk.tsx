@@ -59,6 +59,7 @@ export default function ContainerHelpDesk(props: React.ComponentProps<"div">) {
       if (
         data.type === `cardCreated-${currentSetor}` ||
         hasUpdatedCard ||
+        data.type === `cardUpdated-${currentSetor}` ||
         data.type === "cardUpdated" ||
         data.type === "cardDeleted" ||
         data.type === "columnCreated" ||
@@ -98,6 +99,7 @@ export default function ContainerHelpDesk(props: React.ComponentProps<"div">) {
               title={column.nome}
               key={column.id}
               column={column}
+              currentSetor={currentSetor}
               onCardDrop={(cardId: string, newColumnId: string) =>
                 setCards((prevCards) =>
                   prevCards.map((card) =>
