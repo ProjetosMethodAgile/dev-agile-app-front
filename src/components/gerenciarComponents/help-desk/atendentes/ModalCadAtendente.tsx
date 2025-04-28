@@ -39,8 +39,10 @@ export function ModalCadAtendente({
   const Voltar = iconsMap["voltar"];
   const Add = iconsMap["add"];
   const IconDelete = iconsMap["delete"];
-
+  const IconEdit = iconsMap["editBtn"];
   // Estados para setores disponíveis e selecionados
+    const [atendenteID,setAtendenteID] = useState("")
+    const [atendenteNome,setAtendenteNome] = useState("")
   const [availableSetores, setAvailableSetores] = useState(
     setoresAvaliables?.map((setor) => ({
       id: setor.id,
@@ -81,6 +83,11 @@ export function ModalCadAtendente({
     startTransition(() => {
       formAction(formData);
     });
+  };
+
+  const openModal = () => {
+    // setModalAtendenteEdit(true)
+
   };
 
   return (
@@ -147,6 +154,7 @@ export function ModalCadAtendente({
         <Add />
         <span className="text-2xl">Cadastrar</span>
       </Form.InputSubmit>
+  
     </Form.Root>
   );
 }

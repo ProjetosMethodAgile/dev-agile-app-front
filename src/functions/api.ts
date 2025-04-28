@@ -189,6 +189,11 @@ export function ATIVA_ATTENDENT_HELPDESK(id:string){
     url: API_URL + `/helpdesk/atendentes/ativo/${id}`
 };
 }
+export function PEGA_TODOS_ATENDNETES(){
+  return {
+    url: API_URL + `/helpdesk/atendentes/all`
+};
+}
 
 //=================USUARIOS=====================================/
 

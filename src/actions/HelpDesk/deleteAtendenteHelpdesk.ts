@@ -12,25 +12,27 @@ export async function inativaAtendenteHelpdesk(id: string) {
         if (!token) throw new Error("Token não encontrado.");
         
         
-    const usuarioData = jwt.decode(token) as TokenData;
-    if (!usuarioData?.id || !usuarioData?.empresa)
-      throw new Error("Token inválido.");
-
-
-    const result = await DELETE_ATTENDENT_HELPDESK(id);
-    if (!result?.url) {
-      return { msg_success: "erro", success: false };
-    }
-    
-    const endpoint: string = result.url;
-    
-    const response = await fetch(endpoint, {
-        method: "DELETE",
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-    });
+        const usuarioData = jwt.decode(token) as TokenData;
+        if (!usuarioData?.id || !usuarioData?.empresa)
+          throw new Error("Token inválido.");
+        
+        
+        const result = await DELETE_ATTENDENT_HELPDESK(id);
+        if (!result?.url) {
+          return { msg_success: "erro", success: false };
+        }
+        
+        const endpoint: string = result.url;
+        
+        const response = await fetch(endpoint, {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        });
+        console.log(response);
+   
 
     
     if (!response.ok) {
