@@ -12,6 +12,7 @@ export type KanbanColumnProps = React.ComponentProps<"div"> & {
   title: string;
   column: ColumnsHelpDesk;
   children: React.ReactNode;
+  currentSetor: string;
   // Novo prop para atualizar o estado do card ao soltar
   onCardDrop?: (cardId: string, newColumnId: string) => void;
 };
@@ -20,6 +21,7 @@ export default function KanbanColumn({
   children,
   title,
   column,
+  currentSetor,
   onCardDrop,
   ...props
 }: KanbanColumnProps) {
@@ -36,7 +38,11 @@ export default function KanbanColumn({
       const cardId = card.getAttribute("data-card-id");
       if (cardId) {
         // Atualiza a posição do card no backend
-        const result = await putPosicaoCardColumnid(cardId, column.id);
+        const result = await putPosicaoCardColumnid(
+          cardId,
+          column.id,
+          currentSetor,
+        );
         if (!result.ok) {
           toast.error(
             "Erro ao atualizar posição do card, contate o administrador do sistema",
@@ -45,7 +51,6 @@ export default function KanbanColumn({
           if (onCardDrop) {
             if (column.ColumnAcoes.length) {
               const nomeAcoes = column.ColumnAcoes.map((a) => a.nome);
-              console.log(nomeAcoes);
               await identificaAcao({
                 nomeAcoes: nomeAcoes,
                 column,

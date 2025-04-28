@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import { useEffect, useState } from "react";
 import KanbanCardGerenciar from "../../kanban-gerenciar-sistema/kanbanCardGerenciar";
 import KanbanColumnGerenciar from "../../kanban-gerenciar-sistema/KanbanColumnGerenciar";
@@ -8,7 +8,7 @@ import putOrdemColsHelpDesk from "@/actions/putOrdemColsHelpDesk";
 import { toast } from "react-toastify";
 import { postColumnHelpdesk } from "@/actions/HelpDesk/postColumnHelpdesk";
 import getKanbanColunaBySetorId from "@/actions/getKanbanColunaBySetorId";
-import { BUSCA_ACOES_COLUNA } from "@/actions/HelpDesk/AcoesColuna/getAcaoColuna";
+import { getAcosEmpresa } from "@/actions/HelpDesk/AcoesColuna/getAcoesEmpresa";
 import { FolderPen, MessageCircleQuestion } from "lucide-react";
 
 function Tab1Content({ setorProps }: { setorProps: SetorHelpDesk }) {
@@ -164,7 +164,7 @@ function Tab1Content({ setorProps }: { setorProps: SetorHelpDesk }) {
   useEffect(() => {
     async function buscaAcoesColuna() {
       try {
-        const result = await BUSCA_ACOES_COLUNA();
+        const result = await getAcosEmpresa();
         if (Array.isArray(result.data)) {
           const opcoesExtraidas = result.data.map((item) => {
             const acao = item.kanban_empresa_por_acao;
@@ -328,4 +328,4 @@ function Tab1Content({ setorProps }: { setorProps: SetorHelpDesk }) {
     </div>
   );
 }
-export default Tab1Content
+export default Tab1Content;

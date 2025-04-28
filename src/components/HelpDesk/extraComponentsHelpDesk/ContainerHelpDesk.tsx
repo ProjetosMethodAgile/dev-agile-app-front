@@ -59,6 +59,7 @@ export default function ContainerHelpDesk(props: React.ComponentProps<"div">) {
       if (
         data.type === `cardCreated-${currentSetor}` ||
         hasUpdatedCard ||
+        data.type === `cardUpdated-${currentSetor}` ||
         data.type === "cardUpdated" ||
         data.type === "cardDeleted" ||
         data.type === "columnCreated" ||
@@ -75,11 +76,16 @@ export default function ContainerHelpDesk(props: React.ComponentProps<"div">) {
   }, [currentSetor, ws, fetchData, cards]);
 
   // Abre o modal com o card atual
-  async function openCurrentCard(currentCard: CardHelpDesk) {
+  async function openCurrentCard(
+    currentCard: CardHelpDesk,
+    column: ColumnsHelpDesk,
+  ) {
     openGlobalModal(
       <ModalCardHelpdesk
         currentCard={currentCard}
         closeModal={closeGlobalModal}
+        currentSetor={currentSetor}
+        currentColumn={column}
       />,
     );
   }
@@ -93,6 +99,7 @@ export default function ContainerHelpDesk(props: React.ComponentProps<"div">) {
               title={column.nome}
               key={column.id}
               column={column}
+              currentSetor={currentSetor}
               onCardDrop={(cardId: string, newColumnId: string) =>
                 setCards((prevCards) =>
                   prevCards.map((card) =>
@@ -110,7 +117,7 @@ export default function ContainerHelpDesk(props: React.ComponentProps<"div">) {
                     card={card}
                     cardId={card.id}
                     key={card.id}
-                    openCard={() => openCurrentCard(card)}
+                    openCard={() => openCurrentCard(card, column)}
                   />
                 ))}
             </Kanban.Column>
