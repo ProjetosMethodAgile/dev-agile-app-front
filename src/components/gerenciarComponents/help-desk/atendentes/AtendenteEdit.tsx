@@ -5,8 +5,9 @@ import { ativaAtendenteHelpdesk } from "@/actions/HelpDesk/ativaAtendenteHelpDes
 import { inativaAtendenteHelpdesk } from "@/actions/HelpDesk/deleteAtendenteHelpdesk";
 import { HelpDeskSetoresPorAtendenteAtivos } from "@/types/api/apiTypes";
 import iconsMap from "@/utils/iconsMap";
-import { Dispatch, SetStateAction } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import { toast } from "react-toastify";
+import ModalGerenciar from "./ModalGerenciar";
 
 type AtendenteEditProps = {
   atendentes: HelpDeskSetoresPorAtendenteAtivos[];
@@ -20,20 +21,14 @@ export default function AtendenteEdit({
   setModalAtendenteEdit,
 }: AtendenteEditProps) {
   const Voltar = iconsMap.voltar;
-
+ const [ativaModalGerenciar , setAtivaModalGerenciar]  = useState<boolean>(false)
   async function refreshAtendentes() {
     try {
       const res = await pegaTodosAtendente();
 
-  
-      if (
-        res &&
-        "data" in res &&
-        Array.isArray(res.data)
-      ) {
+      if (res && "data" in res && Array.isArray(res.data)) {
         setAtendentes(res.data);
       } else {
-     
         toast.error(res.error || "Resposta inesperada da API");
       }
     } catch (e) {
@@ -41,16 +36,9 @@ export default function AtendenteEdit({
     }
   }
 
-
-  async function handleToggleStatus(
-    id: string,
-    currentStatus: boolean
-  ) {
- 
-    setAtendentes(prev =>
-      prev.map(at =>
-        at.id === id ? { ...at, status: !currentStatus } : at
-      )
+  async function handleToggleStatus(id: string, currentStatus: boolean) {
+    setAtendentes((prev) =>
+      prev.map((at) => (at.id === id ? { ...at, status: !currentStatus } : at)),
     );
 
     try {
@@ -64,49 +52,46 @@ export default function AtendenteEdit({
       await refreshAtendentes();
     } catch {
       // rollback
-      setAtendentes(prev =>
-        prev.map(at =>
-          at.id === id ? { ...at, status: currentStatus } : at
-        )
+      setAtendentes((prev) =>
+        prev.map((at) =>
+          at.id === id ? { ...at, status: currentStatus } : at,
+        ),
       );
       toast.error("Erro ao alterar status. Tente novamente.");
     }
   }
-
+if (!ativaModalGerenciar) 
   return (
     <div className="min-w-[37rem] p-4">
       {/* Botão fechar */}
 
       <div className="flex justify-between">
-
-      <button
-        aria-label="Fechar Modal"
-        className="flex h-10 w-10 items-center justify-center rounded-full hover:bg-gray-200 active:scale-95"
-        onClick={() => setModalAtendenteEdit(false)}
+        <button
+          aria-label="Fechar Modal"
+          className="flex h-10 w-10 items-center justify-center rounded-full hover:bg-gray-200 active:scale-95"
+          onClick={() => setModalAtendenteEdit(false)}
         >
-        <Voltar className="h-6 w-6 text-gray-700" />
-      </button>
-
-      <button className="bg-primary-100 p-2 rounded-2xl ">Gerenciar</button>
-        </div>
+          <Voltar className="h-6 w-6 text-gray-700" />
+        </button>
+      </div>
 
       <ul className="mt-4 space-y-2">
-        {atendentes.map(item => (
+        {atendentes.map((item) => (
           <li
             key={item.id}
-            className="flex items-center justify-between rounded-md border border-primary-100/35 p-3 hover:bg-primary-200/50 transition"
+            className="border-primary-100/35 hover:bg-primary-200/50 flex items-center justify-between rounded-md border p-3 transition"
           >
-            <div>
-              <p className="font-semibold">{item.UsuarioAtendente.nome}</p>
+            <div className="w-50">
+              <p className="font-semibold">{item.UsuarioAtendente.nome.length >= 21
+                  ? item.UsuarioAtendente.nome.slice(0, 20) + "…"
+                  : item.UsuarioAtendente.nome}</p>
               <p className="text-sm text-gray-500">
                 {item.UsuarioAtendente.email}
               </p>
               <p className="mt-1 text-sm">
                 Status:{" "}
                 <span
-                  className={
-                    item.status ? "text-green-600" : "text-red-600"
-                  }
+                  className={item.status ? "text-green-600" : "text-red-600"}
                 >
                   {item.status ? "Ativo" : "Inativo"}
                 </span>
@@ -114,10 +99,13 @@ export default function AtendenteEdit({
             </div>
 
             {/* Toggle */}
+           
+              <button className="bg-primary-100 rounded-2xl p-2" onClick={()=> setAtivaModalGerenciar(true)}>
+                Gerenciar
+              </button>
+         
             <div
-              onClick={() =>
-                handleToggleStatus(item.id, item.status)
-              }
+              onClick={() => handleToggleStatus(item.id, item.status)}
               className={`relative inline-flex h-6 w-12 cursor-pointer items-center rounded-full transition-colors ${
                 item.status ? "bg-green-500" : "bg-red-500"
               }`}
@@ -133,4 +121,8 @@ export default function AtendenteEdit({
       </ul>
     </div>
   );
+if (ativaModalGerenciar) 
+  return(
+    <ModalGerenciar/>
+  )
 }
