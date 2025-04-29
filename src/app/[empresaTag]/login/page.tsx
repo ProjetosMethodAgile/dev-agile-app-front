@@ -28,6 +28,7 @@ export default async function EmpresaLoginPage({
 
   // Se o usuário já estiver autenticado, redireciona para a área protegida
   const userResult = await getUser();
+
   if (userResult.ok && userResult.data) {
     redirect(`/${empresaTag}/protect/home`);
   }
