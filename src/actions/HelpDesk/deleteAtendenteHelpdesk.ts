@@ -31,10 +31,11 @@ export async function inativaAtendenteHelpdesk(id: string) {
             "Content-Type": "application/json",
           },
         });
-        console.log(response);
+
    
 
-    
+
+        
     if (!response.ok) {
       return { msg_success: "erro", success: false, status: response.status };
     }

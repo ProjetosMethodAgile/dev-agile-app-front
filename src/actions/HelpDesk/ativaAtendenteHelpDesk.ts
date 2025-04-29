@@ -6,8 +6,7 @@ import { ATIVA_ATTENDENT_HELPDESK } from "@/functions/api";
 import { TokenData } from "@/types/api/apiTypes";
 
 export async function ativaAtendenteHelpdesk(id: string) {
-    try {
-        
+    try {  
         const token = (await cookies()).get("token")?.value;
         if (!token) throw new Error("Token não encontrado.");
         
@@ -25,7 +24,7 @@ export async function ativaAtendenteHelpdesk(id: string) {
     const endpoint: string = result.url;
     
     const response = await fetch(endpoint, {
-        method: "DELETE",
+        method: "PUT",
       headers: {
         Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
