@@ -41,6 +41,7 @@ export function ModalCadAtendente({
   const IconDelete = iconsMap["delete"];
 
   // Estados para setores disponíveis e selecionados
+
   const [availableSetores, setAvailableSetores] = useState(
     setoresAvaliables?.map((setor) => ({
       id: setor.id,
@@ -82,6 +83,8 @@ export function ModalCadAtendente({
       formAction(formData);
     });
   };
+
+
 
   return (
     <Form.Root action={formAction} onSubmit={handleSubmit} className="">
@@ -147,6 +150,7 @@ export function ModalCadAtendente({
         <Add />
         <span className="text-2xl">Cadastrar</span>
       </Form.InputSubmit>
+  
     </Form.Root>
   );
 }

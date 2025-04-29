@@ -198,6 +198,7 @@ export type AtendentesHelpDesk = {
   id: string;
   usuario_id: string;
   empresa_id: string;
+  status:boolean;
   createdAt: string;
   updatedAt: string;
   Setores: SetorHelpDesk[];
@@ -206,11 +207,28 @@ export type AtendentesHelpDesk = {
     nome: string;
     email: string;
     contato: string;
+    status:string;
   };
 };
 
 export type HelpDeskSetoresPorAtendente = {
   id: string;
+  Setores: {
+    id: string;
+    nome: string;
+    empresa_id: string;
+  }[];
+  UsuarioAtendente: {
+    id: string;
+    nome: string;
+    email: string;
+    contato: string;
+  };
+};
+
+export type HelpDeskSetoresPorAtendenteAtivos = {
+  id: string;
+  status:boolean;
   Setores: {
     id: string;
     nome: string;

@@ -28,11 +28,11 @@ export default function AtendenteContainer({
 }: AtendenteContainerProps) {
   const [search, setSearch] = useState("");
   const AddSetorBtn = iconsMap["add"];
-
+  const IconEdit = iconsMap["editBtn"];
   const { openGlobalModal, closeGlobalModal } = useGlobalContext();
   const { empresaTag } = useParams();
   const pathname = usePathname();
-
+  const [modalAtendenteEdit, setModalAtendenteEdit] = useState<boolean>(false);
   const [state, formAction] = useActionState(postAtendenteHelpDesk, {
     errors: [],
     msg_success: "",
@@ -90,7 +90,7 @@ export default function AtendenteContainer({
 
   return (
     <div {...props}>
-      <div className="mb-4 flex flex-wrap items-center gap-2">
+      <div className="mb-4 flex flex-wrap items-center gap-2 ">
         <Form.InputText
           id="search"
           name="search"
@@ -102,7 +102,13 @@ export default function AtendenteContainer({
           }
           className="flex-1"
           aria-label="Buscar setor"
-        />
+        />{    
+          !modalAtendenteEdit&&
+        <button className="bg-primary-100 flex h-11 w-20 cursor-pointer items-center justify-center rounded-xl active:scale-95" onClick={()=>{setModalAtendenteEdit(true)}}>
+          <IconEdit />
+        </button>
+        }
+
         <button
           onClick={openModal}
           className="flex h-11 w-20 cursor-pointer items-center justify-center rounded-xl bg-green-500 text-white hover:bg-green-600 active:scale-95"
@@ -111,7 +117,7 @@ export default function AtendenteContainer({
           <AddSetorBtn />
         </button>
       </div>
-      <AtendenteList search={search} />
+      <AtendenteList search={search} setModalAtendenteEdit={setModalAtendenteEdit} modalAtendenteEdit={modalAtendenteEdit} />
     </div>
   );
 }
