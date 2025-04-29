@@ -13,11 +13,15 @@ export async function pegaTodosAtendente() {
                 const usuarioData = jwt.decode(token) as TokenData;
         
         if (!usuarioData || !usuarioData.id || !usuarioData.empresa)
+
+ 
+          
             throw new Error("Token inválido");
-        const  result = await PEGA_TODOS_ATENDNETES()
+        const  result = await PEGA_TODOS_ATENDNETES(usuarioData.empresa.id)
         if (!result?.url) {
             return { msg_success: "erro", success: false };
           }
+
           
           const endpoint: string = result.url;
           console.log(endpoint);
@@ -31,7 +35,8 @@ export async function pegaTodosAtendente() {
             tags: ["atendente-helpdesk","setor-helpdesk"],
           },
         });
-    
+        
+        
         const data: HelpDeskSetoresPorAtendenteAtivos[] = await response.json();
         return { data, ok: true, error: "" };
       } catch (error) {

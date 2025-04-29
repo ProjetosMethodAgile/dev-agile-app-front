@@ -1,8 +1,8 @@
 "use client";
 
-import iconsMap from "@/utils/iconsMap";
+
 import { useEffect, useState } from "react";
-import getAtendentesHelpDesk from "@/actions/getAtendentesHelpDesk";
+
 import { HelpDeskSetoresPorAtendenteAtivos } from "@/types/api/apiTypes";
 import AtendenteEdit from "./AtendenteEdit";
 import { pegaTodosAtendente } from "@/actions/HelpDesk/AcoesColuna/getAllAtendente";
@@ -55,7 +55,9 @@ export default function AtendenteList({
     return (
       <div className="h-80 overflow-y-auto">
         <AtendenteEdit
+        setAtendentes={setAtendentes}
         atendentes={atendentes}
+  
         setModalAtendenteEdit={setModalAtendenteEdit}
       />
       </div>
@@ -73,7 +75,6 @@ export default function AtendenteList({
 
       {filteredAtendentes.length > 0 ? (
         filteredAtendentes.map((atendente) => {
-          const IconDelete = iconsMap["delete"];
           return (
             <ul
               key={atendente.id}
@@ -90,7 +91,7 @@ export default function AtendenteList({
               </li>
               <li className="flex min-w-45 justify-center gap-1">
                 <div className="flex flex-col items-center">
-                  <p>{atendente.status}</p>
+                  <p>{atendente.status?"Ativo":"Inativo"}</p>
                   <div
                     className={`${
                       !atendente.status
