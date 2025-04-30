@@ -170,6 +170,12 @@ export function POST_SEND_EMAIL_ACAO_KANBAN() {
   };
 }
 
+export function POST_CHANGE_STATUS_CARD() {
+  return {
+    url: API_URL + `/helpdesk/acao/changeStatusCard`,
+  };
+}
+
 export function GET_SETOR_HELPDESK_FOR_USER(
   usuario_id: string,
   empresa_id: string,
