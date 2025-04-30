@@ -20,6 +20,7 @@ export async function updateUser(
     const senha = formData.get("senha") as string;
     const status = formData.get("status") as string;
     const tipoUsuario = formData.get("tipo_usuario") as string;
+    const primeiro_acesso = formData.get("primeiro_acesso") as string;
     const permissionsCheckbox = formData.getAll("checkbox[]") as string[];
 
     function capitalize(str: string) {
@@ -80,6 +81,20 @@ export async function updateUser(
       };
     }
 
+    const payload: Record<string, any> = {
+      primeiro_acesso: primeiro_acesso === "Não" ? false : true,
+    };
+
+    if (senha) payload.senha = senha;
+    if (nome) payload.nome = nome;
+    if (email) payload.email = email;
+    if (contato) payload.contato = contato;
+    if (status) payload.status = capitalize(status);
+    if (tipoUsuario) payload.roles_id = [tipoUsuario];
+    if (permissionsComplete.length > 0) {
+      payload.permissoesCRUD = permissionsComplete;
+    } else payload.permissoesCRUD = []
+
     const { url } = PUT_USUARIO(id);
     const response = await fetch(url, {
       method: "PUT",
@@ -87,16 +102,9 @@ export async function updateUser(
         Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({
-        nome,
-        email,
-        contato,
-        senha,
-        status: capitalize(status),
-        roles_id: [tipoUsuario],
-        permissoesCRUD: permissionsComplete,
-      }),
+      body: JSON.stringify(payload),
     });
+    console.log(payload)
 
     if (response.ok) {
       const data = await response.json();
@@ -104,12 +112,11 @@ export async function updateUser(
       return {
         success: true,
         errors: [],
-        msg_success: data.message
-          ? data.message
-          : "Usuário atualizado com sucesso.",
+        msg_success: data.message ? data.message : "Atualizado com sucesso.",
       };
     } else {
       errors.push("Erro ao atualizar, contate o administrador do sistema.");
+      console.log(await response.json());
       return { success: false, errors, msg_success: "" };
     }
   } catch (error) {

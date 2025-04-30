@@ -43,6 +43,7 @@ export async function setLogin(formData: FormData): Promise<void> {
       });
 
       if(login.primeiroAcesso){
+        console.log(login)
         redirect(`/${empresaTag}/protect/criar-senha`);
       }
 
