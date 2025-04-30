@@ -272,14 +272,26 @@ export type AcaoColuna = {
   permissao_id: string;
 };
 
+export type KanbanStatusCard = {
+  id: string;
+  nome: string;
+  descricao?: string;
+  color?: string; // hex ou nome de cor, ex: '#FF0000'
+};
+
+// Tipo de card resumido
 export type CardHelpDesk = {
   id: string;
   column_id: string;
   src_img_capa: string;
   titulo_chamado: string;
-  status: string;
+
+  status_card_id: string;
+  status: KanbanStatusCard;
+
   createdAt: string;
-  updateAt: string;
+  updatedAt: string;
+
   ColumnsCard: KanbanColumn;
   CardSessao: {
     id: string;
@@ -297,22 +309,25 @@ export type CardHelpDesk = {
       };
     }[];
   };
-  messagesCount: string;
-  attachmentsCount: string;
+
+  messagesCount: number;
+  attachmentsCount: number;
 };
 
-//card com mais detalhes e todo corpo de conversas
+// Tipo de card com sessão completa
 export type CardHelpDeskSessao = {
   id: string;
   column_id: string;
   src_img_capa: string;
   titulo_chamado: string;
-  status: string;
+
+  status_card_id: string;
+  status: KanbanStatusCard;
+
   createdAt: string;
   updatedAt: string;
-  ColumnsCard: {
-    nome: string;
-  };
+
+  ColumnsCard: { nome: string };
   CardSessao: {
     id: string;
     atendentesVinculados: {
@@ -328,6 +343,7 @@ export type CardHelpDeskSessao = {
         visuali: boolean;
       };
     }[];
+
     MessageSessao: {
       atendente_id: string;
       cliente_id: string;
