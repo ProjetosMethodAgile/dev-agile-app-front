@@ -2,7 +2,7 @@
 
 import { useGlobalContext } from "@/context/globalContext";
 import { PermissionsState } from "../PermissionsMenu";
-import { Check, ScreenShare, X } from "lucide-react";
+import { Check, X } from "lucide-react";
 import React from "react";
 
 type CurrentScreensProps = {

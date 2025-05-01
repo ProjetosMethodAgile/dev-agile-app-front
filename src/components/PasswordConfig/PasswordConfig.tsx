@@ -2,11 +2,10 @@
 
 import { useGlobalContext } from "@/context/globalContext";
 import { Form } from "../form";
-import { use, useActionState, useEffect } from "react";
+import { useActionState, useEffect } from "react";
 import { updateUser } from "@/actions/updateUser";
 import { useUser } from "@/context/userContext";
 import { toast } from "react-toastify";
-import { redirect } from "next/navigation";
 
 export function PasswordConfig() {
   const { openGlobalModal, closeGlobalModal } = useGlobalContext();
@@ -86,7 +85,7 @@ export function PasswordConfig() {
         <Form.InputSubmit>Atualizar Senha</Form.InputSubmit>
       </Form.Root>,
     );
-  }, []);
+  }, [user,openGlobalModal]);
 
   return <div></div>;
 }
