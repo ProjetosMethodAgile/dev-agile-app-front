@@ -3,11 +3,17 @@
 import { redirect } from "next/navigation";
 import getUser from "@/actions/getUser";
 import { PermissaoCompletaData } from "@/types/api/apiTypes";
+import { use } from "react";
 
 export async function validateScreenAccess(screenName: string): Promise<void> {
   const normalizedScreen = screenName.trim().toLowerCase();
 
   const userResult = await getUser();
+
+  if(userResult.data?.usuario.primeiro_acesso){
+    redirect("criar-senha");
+  }
+
   if (!userResult.ok || !userResult.data) {
     redirect("/login");
   }

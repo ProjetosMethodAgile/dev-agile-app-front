@@ -6,9 +6,11 @@ import { useActionState, useEffect } from "react";
 import { updateUser } from "@/actions/updateUser";
 import { useUser } from "@/context/userContext";
 import { toast } from "react-toastify";
+import { useRouter } from "next/navigation";
 
 export function PasswordConfig() {
   const { openGlobalModal, closeGlobalModal } = useGlobalContext();
+  const router = useRouter();
   const { user } = useUser();
   const [state, formAction] = useActionState(updateUser, {
     errors: [],
@@ -25,6 +27,10 @@ export function PasswordConfig() {
     if (state?.success) {
       toast.success(state.msg_success);
       closeGlobalModal();
+
+      const currentPath = window.location.pathname;
+      const newPath = currentPath.replace("/criar-senha", "/home");
+      router.push(newPath);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state]);
@@ -45,14 +51,12 @@ export function PasswordConfig() {
             type="password"
             inputId="senha"
             name="senha"
-
           />
           <Form.InputText
             label="Confirmar Senha"
             type="password"
-            inputId="senha"
-            name="senha"
-            
+            inputId="confirm_password"
+            name="confirm_password"
           />
           <Form.InputText
             label="Primeiro Acesso"
@@ -61,7 +65,7 @@ export function PasswordConfig() {
             name="primeiro_acesso"
             value="Não"
             className="hidden"
-            readOnly 
+            readOnly
           />
           <Form.InputText
             label="Id"
@@ -70,7 +74,7 @@ export function PasswordConfig() {
             name="id"
             value={user?.usuario.id}
             className="hidden"
-            readOnly 
+            readOnly
           />
           <Form.InputText
             label="Tipo Usuario"
@@ -85,7 +89,6 @@ export function PasswordConfig() {
         <Form.InputSubmit>Atualizar Senha</Form.InputSubmit>
       </Form.Root>,
     );
-     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
 
   return <div></div>;
