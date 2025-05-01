@@ -91,9 +91,7 @@ export async function updateUser(
     if (contato) payload.contato = contato;
     if (status) payload.status = capitalize(status);
     if (tipoUsuario) payload.roles_id = [tipoUsuario];
-    if (permissionsComplete.length > 0) {
-      payload.permissoesCRUD = permissionsComplete;
-    } else payload.permissoesCRUD = []
+    if (permissionsComplete.length > 0) payload.permissoesCRUD = permissionsComplete;
 
     const { url } = PUT_USUARIO(id);
     const response = await fetch(url, {
@@ -104,7 +102,6 @@ export async function updateUser(
       },
       body: JSON.stringify(payload),
     });
-    console.log(payload)
 
     if (response.ok) {
       const data = await response.json();

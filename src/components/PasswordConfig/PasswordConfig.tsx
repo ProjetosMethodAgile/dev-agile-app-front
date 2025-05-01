@@ -26,7 +26,6 @@ export function PasswordConfig() {
     if (state?.success) {
       toast.success(state.msg_success);
       closeGlobalModal();
-      redirect("/devagile/protect/gerenciar-sistema/usuarios-do-sistema");
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state]);
@@ -47,12 +46,14 @@ export function PasswordConfig() {
             type="password"
             inputId="senha"
             name="senha"
+
           />
           <Form.InputText
             label="Confirmar Senha"
             type="password"
             inputId="senha"
             name="senha"
+            
           />
           <Form.InputText
             label="Primeiro Acesso"
@@ -61,6 +62,7 @@ export function PasswordConfig() {
             name="primeiro_acesso"
             value="Não"
             className="hidden"
+            readOnly 
           />
           <Form.InputText
             label="Id"
@@ -69,6 +71,7 @@ export function PasswordConfig() {
             name="id"
             value={user?.usuario.id}
             className="hidden"
+            readOnly 
           />
           <Form.InputText
             label="Tipo Usuario"
@@ -77,6 +80,7 @@ export function PasswordConfig() {
             name="tipo_usuario"
             value={user?.usuario.usuario_roles[0].id}
             className="hidden"
+            readOnly
           />
         </Form.Section>
         <Form.InputSubmit>Atualizar Senha</Form.InputSubmit>
