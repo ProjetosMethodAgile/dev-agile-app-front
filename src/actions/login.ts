@@ -20,7 +20,6 @@ export async function setLogin(formData: FormData): Promise<void> {
     }
 
     const { url } = POST_LOGIN();
-console.log(url);
 
     const response = await fetch(url, {
       headers: { "Content-Type": "application/json" },
@@ -34,6 +33,7 @@ console.log(url);
     }
 
     const login = await response.json();
+   
 
     if (login.token) {
       (await cookies()).set("token", login.token, {
@@ -41,6 +41,11 @@ console.log(url);
         secure: true,
         maxAge: 60 * 60 * 24 * 7, // 7 dias
       });
+
+      if(login.primeiroAcesso){
+        console.log(login)
+        redirect(`/${empresaTag}/protect/criar-senha`);
+      }
 
       redirect(`/${empresaTag}/protect/home`);
     } else {
