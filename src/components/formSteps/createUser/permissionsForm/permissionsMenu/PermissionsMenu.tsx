@@ -1,5 +1,5 @@
 import { PermissaoCompletaData, PermissoesRole } from "@/types/api/apiTypes";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import PermissionsNavigationForm from "../layout";
 import ScreeConfig from "./screen/ScreenConfig";
 import SubScreenConfig from "./subscreen/SubScreenConfig";

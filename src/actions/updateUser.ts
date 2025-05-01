@@ -6,6 +6,28 @@ import { revalidateTag } from "next/cache";
 // Suponha que você crie essa função
 import { PUT_USUARIO } from "@/functions/api";
 
+type PermissaoCRUD = {
+  permissao_id: string;
+  acessos: {
+    can_read: boolean;
+    can_create: boolean;
+    can_update: boolean;
+    can_delete: boolean;
+  };
+  acoes: string[];
+};
+
+type UpdateUserPayload = {
+  primeiro_acesso: boolean;
+  senha?: string;
+  nome?: string;
+  email?: string;
+  contato?: string;
+  status?: string;
+  roles_id?: string[];
+  permissoesCRUD?: PermissaoCRUD[];
+};
+
 export async function updateUser(
   state:
     | { errors: string[]; msg_success: string; success: boolean }
@@ -81,7 +103,7 @@ export async function updateUser(
       };
     }
 
-    const payload: Record<string, any> = {
+    const payload: UpdateUserPayload = {
       primeiro_acesso: primeiro_acesso === "Não" ? false : true,
     };
 
