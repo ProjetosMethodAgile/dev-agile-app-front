@@ -57,6 +57,7 @@ export default function FormStepsUser({
   const [currentRoles, setCurrentRoles] = React.useState<RoleData[] | []>(
     rolesData ? rolesData : [],
   );
+ 
   const { closeGlobalModal } = useGlobalContext();
   const [usersData, setUsersData] = React.useState({
     id: defaultValues?.id || "",
@@ -120,6 +121,8 @@ export default function FormStepsUser({
       success: false,
     },
   );
+
+  
 
   useEffect(() => {
     if (state?.errors.length) {
