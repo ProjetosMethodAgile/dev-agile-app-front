@@ -85,7 +85,8 @@ export function PasswordConfig() {
         <Form.InputSubmit>Atualizar Senha</Form.InputSubmit>
       </Form.Root>,
     );
-  }, [user,openGlobalModal]);
+     // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user]);
 
   return <div></div>;
 }
