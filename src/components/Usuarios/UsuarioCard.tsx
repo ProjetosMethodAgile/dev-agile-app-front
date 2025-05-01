@@ -4,10 +4,12 @@ import { User } from "@/types/api/apiTypes";
 import { EllipsisVertical, User2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import ActionsMenuUserCard from "./ActionsMenuUserCard";
 
 export default function UsuarioCard({ user }: { user: User }) {
   const [showTooltip, setShowTooltip] = useState(false);
   const router = useRouter();
+
   return (
     <div
       key={user.id}
@@ -34,10 +36,13 @@ export default function UsuarioCard({ user }: { user: User }) {
             <span className="max-w-50 truncate text-sm">{user.email}</span>
           </div>
         </div>
-        <EllipsisVertical
-          className="bg-primary-600 hover:bg-primary-600/70 flex min-w-5 cursor-pointer self-start rounded-full p-1"
-          size={22}
-        />
+        <div className="relative">
+          <ActionsMenuUserCard user={user} />
+          <EllipsisVertical
+            className="bg-primary-600 hover:bg-primary-600/70 relative flex min-w-5 cursor-pointer self-start rounded-full p-1"
+            size={22}
+          />
+        </div>
       </div>
       <div className="mt-2 flex items-center justify-between">
         <span className="bg-primary-500 rounded-2xl p-2 text-sm">

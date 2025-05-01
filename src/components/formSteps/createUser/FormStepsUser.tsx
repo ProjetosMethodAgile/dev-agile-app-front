@@ -57,14 +57,14 @@ export default function FormStepsUser({
   const [currentRoles, setCurrentRoles] = React.useState<RoleData[] | []>(
     rolesData ? rolesData : [],
   );
- 
+
   const { closeGlobalModal } = useGlobalContext();
   const [usersData, setUsersData] = React.useState({
     id: defaultValues?.id || "",
     nome: defaultValues?.nome || "",
     contato: defaultValues?.contato || "",
     email: defaultValues?.email || "",
-    status: defaultValues?.status === 'Ativo' ? "Ativo" : "Inativo",
+    status: defaultValues?.status === "Ativo" ? "Ativo" : "Inativo",
     permissoes: defaultValues?.permissoes || [],
     senha: "",
     confirmar_senha: "",
@@ -121,8 +121,6 @@ export default function FormStepsUser({
       success: false,
     },
   );
-
-  
 
   useEffect(() => {
     if (state?.errors.length) {
@@ -201,45 +199,19 @@ export default function FormStepsUser({
                 })
               }
             />
-            <Form.InputText
-              icon={KeyRound}
-              inputId="senha"
-              type="password"
-              name="senha"
-              label="Senha"
-              defaultValue={usersData.senha}
-              onChange={(e) =>
-                setUsersData({
-                  ...usersData,
-                  senha: (e.target as HTMLInputElement).value,
-                })
-              }
-            />
-            <Form.InputText
-              icon={KeyRound}
-              inputId="confirmar_senha"
-              type="password"
-              name="senha"
-              label="Confirmar Senha"
-              defaultValue={usersData.confirmar_senha}
-              onChange={(e) =>
-                setUsersData({
-                  ...usersData,
-                  confirmar_senha: (e.target as HTMLInputElement).value,
-                })
-              }
-            />
 
-            {isEditMode && <Form.InputSelect
-              options={[
-                { id: "ativo", nome: "Ativo" },
-                { id: "inativo", nome: "Inativo" },
-              ]}
-              label="Status"
-              id="status"
-              name="status"
-              value={usersData.status.toLowerCase()}
-            />}
+            {isEditMode && (
+              <Form.InputSelect
+                options={[
+                  { id: "ativo", nome: "Ativo" },
+                  { id: "inativo", nome: "Inativo" },
+                ]}
+                label="Status"
+                id="status"
+                name="status"
+                value={usersData.status.toLowerCase()}
+              />
+            )}
           </Form.Section>
           <Form.ButtonNext
             type="submit"
