@@ -2,7 +2,7 @@
 
 import { useGlobalContext } from "@/context/globalContext";
 import { Form } from "../form";
-import { useActionState, useEffect, useState } from "react";
+import { useActionState, useEffect } from "react";
 import { updateUser } from "@/actions/updateUser";
 import { useUser } from "@/context/userContext";
 import { toast } from "react-toastify";
@@ -17,10 +17,7 @@ export function PasswordConfig() {
     msg_success: "",
     success: false,
   });
-  const [passwords, setPasswords] = useState({
-    senha: "",
-    confirm_password: "",
-  });
+
 
   useEffect(() => {
     if (state?.errors.length) {
@@ -39,37 +36,9 @@ export function PasswordConfig() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state]);
 
-  const updatePassword = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-
-    const formData = new FormData(e.currentTarget);
-
-    if (passwords.senha.length < 6) {
-      toast.error("A senha deve ter pelo menos 6 caracteres.");
-      return;
-    }
-
-    if (!passwords.senha) {
-      toast.error("Senha é obrigatória.");
-      return;
-    }
-
-    if (!passwords.confirm_password) {
-      toast.error("Confirmação de senha é obrigatória.");
-      return;
-    }
-
-    if (passwords.senha !== passwords.confirm_password) {
-      toast.error("As senhas não coincidem.");
-      return;
-    }
-
-    formAction(formData);
-  };
-
   useEffect(() => {
     openGlobalModal(
-      <Form.Root onSubmit={updatePassword}>
+      <Form.Root action={formAction}>
         <Form.Section
           title="Definir Senha"
           className="text-primary-50 flex flex-col"
@@ -83,33 +52,19 @@ export function PasswordConfig() {
             type="password"
             inputId="senha"
             name="senha"
-            value={passwords.senha}
-            onChange={(e) =>
-              setPasswords({
-                ...passwords,
-                senha: (e.target as HTMLInputElement).value,
-              })
-            }
           />
           <Form.InputText
             label="Confirmar Senha"
             type="password"
             inputId="confirm_password"
             name="confirm_password"
-            value={passwords.confirm_password}
-            onChange={(e) =>
-              setPasswords({
-                ...passwords,
-                confirm_password: (e.target as HTMLInputElement).value,
-              })
-            }
           />
           <Form.InputText
             label="Primeiro Acesso"
             type="text"
             inputId="primeiro_acesso"
             name="primeiro_acesso"
-            value="Não"
+            value={user?.usuario.primeiro_acesso ? "Sim" : "Não"}
             className="hidden"
             readOnly
           />
