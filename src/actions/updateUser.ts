@@ -86,17 +86,6 @@ export async function updateUser(
 
     const errors: string[] = [];
 
-    if(!senha && !confirm_password){
-      if(!senha) errors.push("Senha deve ser preenchida.");
-      if(!confirm_password) errors.push("Confirmar Senha deve ser preenchida.");
-      return { errors, msg_success: "", success: false };
-    }
-
-    if(senha !== confirm_password){
-      errors.push("As senhas devem ser iguais.");
-      return { errors, msg_success: "", success: false };
-    }
-
     if (!tipoUsuario) {
       errors.push("Tipo de usuário é obrigatório.");
       return { errors, msg_success: "", success: false };
