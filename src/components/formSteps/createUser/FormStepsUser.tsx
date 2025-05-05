@@ -9,7 +9,6 @@ import {
   Check,
   ChevronLeft,
   ChevronRight,
-  KeyRound,
   MailIcon,
   Phone,
   UserCircle,

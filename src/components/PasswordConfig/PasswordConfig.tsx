@@ -90,6 +90,7 @@ export function PasswordConfig() {
         <Form.InputSubmit>Atualizar Senha</Form.InputSubmit>
       </Form.Root>,
     );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
 
   return <div></div>;
