@@ -5,7 +5,6 @@ import { revalidateTag } from "next/cache";
 
 // Suponha que você crie essa função
 import { PUT_USUARIO } from "@/functions/api";
-import { redirect } from "next/dist/server/api-utils";
 
 type PermissaoCRUD = {
   permissao_id: string;

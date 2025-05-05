@@ -3,7 +3,6 @@
 import { redirect } from "next/navigation";
 import getUser from "@/actions/getUser";
 import { PermissaoCompletaData } from "@/types/api/apiTypes";
-import { use } from "react";
 
 export async function validateScreenAccess(screenName: string): Promise<void> {
   const normalizedScreen = screenName.trim().toLowerCase();

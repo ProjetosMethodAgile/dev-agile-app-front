@@ -1,10 +1,8 @@
 import { useGlobalContext } from "@/context/globalContext";
-import { useUser } from "@/context/userContext";
 import { User } from "@/types/api/apiTypes";
-import { Check, Lock, Puzzle, RotateCcw, Send, X } from "lucide-react";
+import {Lock, Puzzle, Send, X } from "lucide-react";
 import SectionTitle from "../titles/SectionTitle";
-import { Form } from "../form";
-import { Button } from "@material-tailwind/react";
+
 import RedirectButton from "../ui/button/RedirectButton";
 
 export default function ActionsMenuUserCard({ user }: { user: User }) {

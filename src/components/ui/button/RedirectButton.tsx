@@ -1,6 +1,5 @@
 "use client";
 
-import { PlusCircle } from "lucide-react";
 import { redirect } from "next/navigation";
 
 type AddButtonProps = React.ComponentProps<"button"> & {
