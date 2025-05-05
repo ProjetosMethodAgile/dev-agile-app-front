@@ -105,6 +105,7 @@ export type User = {
   status: "Ativo" | "Inativo";
   empresa?: EmpresaData[];
   usuario_roles: RoleData[];
+  primeiro_acesso?: boolean;
   permissoes: PermissaoCompletaData[];
   createdAt?: string;
   updatedAt?: string;

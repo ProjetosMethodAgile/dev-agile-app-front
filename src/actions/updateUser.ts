@@ -5,6 +5,7 @@ import { revalidateTag } from "next/cache";
 
 // Suponha que você crie essa função
 import { PUT_USUARIO } from "@/functions/api";
+import { redirect } from "next/dist/server/api-utils";
 
 type PermissaoCRUD = {
   permissao_id: string;
@@ -40,6 +41,7 @@ export async function updateUser(
     const contato = formData.get("contato") as string;
     const email = formData.get("email") as string;
     const senha = formData.get("senha") as string;
+    const confirm_password = formData.get("confirm_password") as string;
     const status = formData.get("status") as string;
     const tipoUsuario = formData.get("tipo_usuario") as string;
     const primeiro_acesso = formData.get("primeiro_acesso") as string;
@@ -84,6 +86,20 @@ export async function updateUser(
 
     const errors: string[] = [];
 
+    if (primeiro_acesso === "Sim") {
+      if (!senha && !confirm_password) {
+        if (!senha) errors.push("Senha deve ser preenchida.");
+        if (!confirm_password)
+          errors.push("Confirmar Senha deve ser preenchida.");
+        return { errors, msg_success: "", success: false };
+      }
+
+      if (senha !== confirm_password) {
+        errors.push("As senhas devem ser iguais.");
+        return { errors, msg_success: "", success: false };
+      }
+    }
+
     if (!tipoUsuario) {
       errors.push("Tipo de usuário é obrigatório.");
       return { errors, msg_success: "", success: false };
@@ -102,19 +118,20 @@ export async function updateUser(
         success: false,
       };
     }
-
     const payload: UpdateUserPayload = {
-      primeiro_acesso: primeiro_acesso === "Não" ? false : true,
+      primeiro_acesso: primeiro_acesso === 'Não' ? true : false,
     };
-
+    console.log(payload);
+    
     if (senha) payload.senha = senha;
     if (nome) payload.nome = nome;
     if (email) payload.email = email;
     if (contato) payload.contato = contato;
     if (status) payload.status = capitalize(status);
     if (tipoUsuario) payload.roles_id = [tipoUsuario];
-    if (permissionsComplete.length > 0) payload.permissoesCRUD = permissionsComplete;
-
+    if (permissionsComplete.length > 0)
+      payload.permissoesCRUD = permissionsComplete;
+    
     const { url } = PUT_USUARIO(id);
     const response = await fetch(url, {
       method: "PUT",
