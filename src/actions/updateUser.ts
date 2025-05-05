@@ -145,6 +145,12 @@ export async function updateUser(
     if (response.ok) {
       const data = await response.json();
       revalidateTag("update-user");
+      if(primeiro_acesso === "Não") {
+      (await cookies()).set("first-acess", 'false', {
+        httpOnly: true,
+        secure: true,
+      });
+    }
       return {
         success: true,
         errors: [],

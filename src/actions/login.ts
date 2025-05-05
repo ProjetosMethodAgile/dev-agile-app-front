@@ -33,7 +33,6 @@ export async function setLogin(formData: FormData): Promise<void> {
     }
 
     const login = await response.json();
-   
 
     if (login.token) {
       (await cookies()).set("token", login.token, {
@@ -42,11 +41,18 @@ export async function setLogin(formData: FormData): Promise<void> {
         maxAge: 60 * 60 * 24 * 7, // 7 dias
       });
 
-      if(login.primeiroAcesso){
-        console.log(login)
+      if (login.primeiroAcesso) {
+        (await cookies()).set("first-acess", login.primeiroAcesso, {
+          httpOnly: true,
+          secure: true,
+        });
         redirect(`/${empresaTag}/protect/criar-senha`);
       }
 
+      (await cookies()).set("first-acess", 'false', {
+        httpOnly: true,
+        secure: true,
+      });
       redirect(`/${empresaTag}/protect/home`);
     } else {
       console.error("Erro: Token de login não recebido");
