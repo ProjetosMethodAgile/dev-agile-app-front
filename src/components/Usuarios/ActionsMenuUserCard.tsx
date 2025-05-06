@@ -1,14 +1,11 @@
 import { useGlobalContext } from "@/context/globalContext";
 import { User } from "@/types/api/apiTypes";
-import { Lock, Puzzle, Send, X } from "lucide-react";
+import { Lock, Puzzle, X } from "lucide-react";
 import SectionTitle from "../titles/SectionTitle";
-
-import RedirectButton from "../ui/button/RedirectButton";
 import { Form } from "../form";
 import { putResetPassword } from "@/actions/putResetPassword";
 import { useActionState, useEffect } from "react";
-import { Input } from "@material-tailwind/react";
-import { useUser } from "@/context/userContext";
+
 import { redirect } from "next/navigation";
 import { toast } from "react-toastify";
 

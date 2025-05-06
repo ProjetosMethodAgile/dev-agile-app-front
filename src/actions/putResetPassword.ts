@@ -5,7 +5,6 @@ import { revalidateTag } from "next/cache";
 
 // Suponha que você crie essa função
 import { PUT_PASSWORD_RESET } from "@/functions/api";
-import { redirect } from "next/dist/server/api-utils";
 
 type updatePasswordPayload = {
   id?: string;
@@ -25,12 +24,6 @@ export async function putResetPassword(
     const email = formData.get("email") as string;
     const empresa_id = formData.get("empresa_id") as string;
     const primeiro_acesso = formData.get("primeiro_acesso") as string;
-
-
-    function capitalize(str: string) {
-      if (!str) return "";
-      return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
-    }
 
     const errors: string[] = [];
 

@@ -207,30 +207,27 @@ export function DELETE_ATTENDENT_HELPDESK(id: string) {
 }
 export function ATIVA_ATTENDENT_HELPDESK(id: string) {
   return {
-
-    url: API_URL + `/helpdesk/atendentes/${id}`
-  }
+    url: API_URL + `/helpdesk/atendentes/${id}`,
+  };
 }
-export function DESATIVA_ATTENDENT_SETOR_HELPDESK(id:string){
+export function DESATIVA_ATTENDENT_SETOR_HELPDESK(id: string) {
   return {
     url: API_URL + `/helpdesk/atendentes/ativo/${id}`,
   };
 }
 
+
 export function ATIVA_ATTENDENT_SETOR_HELPDESK(id:string){
+
   return {
-    url: API_URL + `/helpdesk/atendentes/ativo/${id}`
-};
+    url: API_URL + `/helpdesk/atendentes/ativo/${id}`,
+  };
+}
 
 export function PEGA_TODOS_ATENDNETES(empresa_id: string) {
   return {
-
-    url: API_URL + `/helpdesk/atendentes/setor/ativo/${empresa_id}`
-};
-
-    url: API_URL + `/helpdesk/atendentes/all/${empresa_id}`,
+    url: API_URL + `/helpdesk/atendentes/setor/ativo/${empresa_id}`,
   };
-
 }
 
 //=================USUARIOS=====================================/

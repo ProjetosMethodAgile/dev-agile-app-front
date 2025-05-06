@@ -5,7 +5,7 @@ import { ativaAtendenteHelpdesk } from "@/actions/HelpDesk/ativaAtendenteHelpDes
 import { inativaAtendenteHelpdesk } from "@/actions/HelpDesk/deleteAtendenteHelpdesk";
 import { HelpDeskSetoresPorAtendenteAtivos } from "@/types/api/apiTypes";
 import iconsMap from "@/utils/iconsMap";
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import { toast } from "react-toastify";
 import GerenciarAtendenteSetor from './GerenciarAtendenteSetor';
 
