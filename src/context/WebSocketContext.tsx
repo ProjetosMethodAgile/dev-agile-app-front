@@ -9,10 +9,10 @@ import React, {
   useState,
 } from "react";
 
-// const SOCKET_URL = "wss://devagile.com.br/socket/";
-const SOCKET_URL = "ws://localhost:3001/socket";
+// URL do WebSocket definida em .env (ex.: SOCKET_URL=ws://localhost:3001/socket)
+const SOCKET_URL = process.env.SOCKET_URL;
 
-const INACTIVITY_LIMIT = 10 * 60 * 1000; // opcional, mantém se quiser
+const INACTIVITY_LIMIT = 10 * 60 * 1000; // mantém conexão por até 10 minutos de inatividade
 const CHECK_INTERVAL = 10 * 1000;
 
 interface IWebSocketContext {
@@ -37,6 +37,15 @@ export const WebSocketProvider: React.FC<{ children: React.ReactNode }> = ({
   const manualDisconnectRef = useRef<boolean>(false);
 
   const connect = useCallback(() => {
+    // Garante que SOCKET_URL está definida
+    if (!SOCKET_URL) {
+      console.error(
+        "WebSocketProvider: variável SOCKET_URL não definida. Abortando conexão.",
+      );
+      return;
+    }
+
+    // Não reconecta se já estiver CONNECTING ou OPEN
     if (
       wsRef.current &&
       (wsRef.current.readyState === WebSocket.CONNECTING ||
@@ -45,6 +54,7 @@ export const WebSocketProvider: React.FC<{ children: React.ReactNode }> = ({
       return;
     }
     manualDisconnectRef.current = false;
+
     const socket = new WebSocket(SOCKET_URL);
 
     socket.onopen = () => {
@@ -72,7 +82,7 @@ export const WebSocketProvider: React.FC<{ children: React.ReactNode }> = ({
         manualDisconnectRef.current = false;
       }
     };
-  }, []);
+  }, [SOCKET_URL]);
 
   const disconnect = useCallback(() => {
     if (wsRef.current) {
@@ -90,7 +100,7 @@ export const WebSocketProvider: React.FC<{ children: React.ReactNode }> = ({
   const handleActivity = useCallback(() => {
     lastActivityRef.current = Date.now();
 
-    // Se o WS estiver fechado (ou nunca conectado), tenta reconectar
+    // Se WS estiver fechado, tenta reconectar
     if (
       (!wsRef.current || wsRef.current.readyState === WebSocket.CLOSED) &&
       !manualDisconnectRef.current
@@ -104,11 +114,11 @@ export const WebSocketProvider: React.FC<{ children: React.ReactNode }> = ({
     // conexão inicial
     connect();
 
-    // eventos de atividade + foco
+    // adiciona listeners de atividade e foco
     const events = ["mousemove", "keydown", "scroll", "touchstart", "focus"];
     events.forEach((e) => window.addEventListener(e, handleActivity));
 
-    // checagem de inatividade (opcional)
+    // verifica inatividade
     const inactivityTimer = setInterval(() => {
       const elapsed = Date.now() - lastActivityRef.current;
       if (
@@ -120,7 +130,7 @@ export const WebSocketProvider: React.FC<{ children: React.ReactNode }> = ({
       }
     }, CHECK_INTERVAL);
 
-    // desconecta no unload
+    // desconecta ao sair da página
     const handleUnload = () => disconnect();
     window.addEventListener("beforeunload", handleUnload);
 
@@ -128,7 +138,7 @@ export const WebSocketProvider: React.FC<{ children: React.ReactNode }> = ({
       events.forEach((e) => window.removeEventListener(e, handleActivity));
       clearInterval(inactivityTimer);
       window.removeEventListener("beforeunload", handleUnload);
-      // não desconecta aqui para manter vivo em HMR/navegação interna
+      // não desconectar aqui para manter conexão durante HMR/navegação interna
     };
   }, [connect, disconnect, handleActivity]);
 
