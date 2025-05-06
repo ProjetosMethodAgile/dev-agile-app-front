@@ -1,3 +1,5 @@
+import { changeStatusCard } from "@/actions/HelpDesk/AcoesColuna/postChangeStatusCard";
+import { postEnviaEmailHelpDesk } from "@/actions/HelpDesk/AcoesColuna/postEnviaEmailHelpDesk";
 import { ColumnsHelpDesk } from "@/types/api/apiTypes";
 
 type identificaAcaoProps = {
@@ -6,22 +8,32 @@ type identificaAcaoProps = {
   cardId: string;
 };
 
-// async function enviaEmail() {}
-
 const acoesHelpDesk = [
   {
     nome: "nenhuma",
-    funcao: (column: ColumnsHelpDesk, cardId: string) =>
+    funcao: async (column: ColumnsHelpDesk, cardId: string) =>
       console.log(column, cardId),
   },
   {
     nome: "envia e-mail",
-    funcao: (column: ColumnsHelpDesk, cardId: string) => {
-      console.log("cardId");
-      console.log(cardId);
-      console.log(column.id);
-      console.log(column.nome);
+    funcao: async (column: ColumnsHelpDesk, cardId: string) => {
+      await postEnviaEmailHelpDesk(cardId, column.nome);
     },
+  },
+  {
+    nome: "muda status card para - em aberto",
+    funcao: async (_column: ColumnsHelpDesk, cardId: string) =>
+      await changeStatusCard(cardId, "Em Aberto"),
+  },
+  {
+    nome: "muda status card para - em andamento",
+    funcao: async (_column: ColumnsHelpDesk, cardId: string) =>
+      await changeStatusCard(cardId, "Em Andamento"),
+  },
+  {
+    nome: "muda status card para - encerrado",
+    funcao: async (_column: ColumnsHelpDesk, cardId: string) =>
+      await changeStatusCard(cardId, "Encerrado"),
   },
 ];
 
@@ -43,5 +55,3 @@ export async function identificaAcao({
     return;
   }
 }
-
-console.log(acoesHelpDesk);

@@ -6,6 +6,28 @@ import { revalidateTag } from "next/cache";
 // Suponha que você crie essa função
 import { PUT_USUARIO } from "@/functions/api";
 
+type PermissaoCRUD = {
+  permissao_id: string;
+  acessos: {
+    can_read: boolean;
+    can_create: boolean;
+    can_update: boolean;
+    can_delete: boolean;
+  };
+  acoes: string[];
+};
+
+type UpdateUserPayload = {
+  primeiro_acesso: boolean;
+  senha?: string;
+  nome?: string;
+  email?: string;
+  contato?: string;
+  status?: string;
+  roles_id?: string[];
+  permissoesCRUD?: PermissaoCRUD[];
+};
+
 export async function updateUser(
   state:
     | { errors: string[]; msg_success: string; success: boolean }
@@ -18,8 +40,10 @@ export async function updateUser(
     const contato = formData.get("contato") as string;
     const email = formData.get("email") as string;
     const senha = formData.get("senha") as string;
+    const confirm_password = formData.get("confirm_password") as string;
     const status = formData.get("status") as string;
     const tipoUsuario = formData.get("tipo_usuario") as string;
+    const primeiro_acesso = formData.get("primeiro_acesso") as string;
     const permissionsCheckbox = formData.getAll("checkbox[]") as string[];
 
     function capitalize(str: string) {
@@ -61,6 +85,20 @@ export async function updateUser(
 
     const errors: string[] = [];
 
+    if (primeiro_acesso === "Sim") {
+      if (!senha && !confirm_password) {
+        if (!senha) errors.push("Senha deve ser preenchida.");
+        if (!confirm_password)
+          errors.push("Confirmar Senha deve ser preenchida.");
+        return { errors, msg_success: "", success: false };
+      }
+
+      if (senha !== confirm_password) {
+        errors.push("As senhas devem ser iguais.");
+        return { errors, msg_success: "", success: false };
+      }
+    }
+
     if (!tipoUsuario) {
       errors.push("Tipo de usuário é obrigatório.");
       return { errors, msg_success: "", success: false };
@@ -79,6 +117,18 @@ export async function updateUser(
         success: false,
       };
     }
+    const payload: UpdateUserPayload = {
+      primeiro_acesso: primeiro_acesso === "Não" ? true : false,
+    };
+
+    if (senha) payload.senha = senha;
+    if (nome) payload.nome = nome;
+    if (email) payload.email = email;
+    if (contato) payload.contato = contato;
+    if (status) payload.status = capitalize(status);
+    if (tipoUsuario) payload.roles_id = [tipoUsuario];
+    if (permissionsComplete.length > 0)
+      payload.permissoesCRUD = permissionsComplete;
 
     const { url } = PUT_USUARIO(id);
     const response = await fetch(url, {
@@ -87,29 +137,28 @@ export async function updateUser(
         Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({
-        nome,
-        email,
-        contato,
-        senha,
-        status: capitalize(status),
-        roles_id: [tipoUsuario],
-        permissoesCRUD: permissionsComplete,
-      }),
+      body: JSON.stringify(payload),
     });
 
     if (response.ok) {
       const data = await response.json();
       revalidateTag("update-user");
+      revalidateTag("new-user");
+      revalidateTag("user-permission");
+      if (primeiro_acesso === "Não") {
+        (await cookies()).set("first-acess", "false", {
+          httpOnly: true,
+          secure: true,
+        });
+      }
       return {
         success: true,
         errors: [],
-        msg_success: data.message
-          ? data.message
-          : "Usuário atualizado com sucesso.",
+        msg_success: data.message ? data.message : "Atualizado com sucesso.",
       };
     } else {
       errors.push("Erro ao atualizar, contate o administrador do sistema.");
+      console.log(await response.json());
       return { success: false, errors, msg_success: "" };
     }
   } catch (error) {

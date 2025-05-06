@@ -20,7 +20,6 @@ export async function setLogin(formData: FormData): Promise<void> {
     }
 
     const { url } = POST_LOGIN();
-console.log(url);
 
     const response = await fetch(url, {
       headers: { "Content-Type": "application/json" },
@@ -42,6 +41,18 @@ console.log(url);
         maxAge: 60 * 60 * 24 * 7, // 7 dias
       });
 
+      if (login.primeiroAcesso) {
+        (await cookies()).set("first-acess", login.primeiroAcesso, {
+          httpOnly: true,
+          secure: true,
+        });
+        redirect(`/${empresaTag}/protect/criar-senha`);
+      }
+
+      (await cookies()).set("first-acess", 'false', {
+        httpOnly: true,
+        secure: true,
+      });
       redirect(`/${empresaTag}/protect/home`);
     } else {
       console.error("Erro: Token de login não recebido");

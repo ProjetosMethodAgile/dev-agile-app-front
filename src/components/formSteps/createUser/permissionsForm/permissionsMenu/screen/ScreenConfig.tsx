@@ -10,6 +10,7 @@ type ScreenConfigProps = {
   handleToggleCrud: (
     screen_id: string,
     screenName: string,
+    parent_id: string | null,
     crudType: "create" | "update" | "delete" | "access",
   ) => void;
 };
@@ -43,7 +44,7 @@ export default function ScreeConfig({
                   label="Acessar"
                   checked={screenActions.access}
                   onChange={() =>
-                    handleToggleCrud(screen.id, screen.nome, "access")
+                    handleToggleCrud(screen.id, screen.nome,screen.parent_id, "access")
                   }
                   id={screen.id}
                   name="checkbox[]"
@@ -53,7 +54,7 @@ export default function ScreeConfig({
                   label="Criar"
                   checked={screenActions.crud.create}
                   onChange={() =>
-                    handleToggleCrud(screen.id, screen.nome, "create")
+                    handleToggleCrud(screen.id, screen.nome,screen.parent_id, "create")
                   }
                   id={`${screen.id}-create`}
                   disabled={!screenActions.access}
@@ -62,7 +63,7 @@ export default function ScreeConfig({
                   label="Atualizar"
                   checked={screenActions.crud.update}
                   onChange={() =>
-                    handleToggleCrud(screen.id, screen.nome, "update")
+                    handleToggleCrud(screen.id, screen.nome,screen.parent_id, "update")
                   }
                   id={`${screen.id}-update`}
                   disabled={!screenActions.access}
@@ -71,7 +72,7 @@ export default function ScreeConfig({
                   label="Deletar"
                   checked={screenActions.crud.delete}
                   onChange={() =>
-                    handleToggleCrud(screen.id, screen.nome, "delete")
+                    handleToggleCrud(screen.id, screen.nome,screen.parent_id, "delete")
                   }
                   id={`${screen.id}-delete`}
                   disabled={!screenActions.access}

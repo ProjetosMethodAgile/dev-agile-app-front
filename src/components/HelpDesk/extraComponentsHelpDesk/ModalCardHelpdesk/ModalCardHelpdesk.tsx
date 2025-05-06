@@ -1,7 +1,11 @@
 "use client";
 import getCardHelpDeskId from "@/actions/HelpDesk/getCardHelpDeskId";
 import { Form } from "@/components/form";
-import { CardHelpDesk, CardHelpDeskSessao } from "@/types/api/apiTypes";
+import {
+  CardHelpDesk,
+  CardHelpDeskSessao,
+  ColumnsHelpDesk,
+} from "@/types/api/apiTypes";
 import iconsMap from "@/utils/iconsMap";
 import { useEffect, useRef, useState, useCallback } from "react";
 import formatDateSimple from "@/utils/formatDateSimple";
@@ -12,15 +16,20 @@ import { useWebSocket } from "@/context/WebSocketContext";
 import { postVinculaAtendenteToCardHelpdesk } from "@/actions/HelpDesk/postVinculaAtendenteToCardHelpdesk";
 import { toast } from "react-toastify";
 import getIniciaisNome from "@/utils/getIniciaisNome";
+import MoveCardHelpdeskCotainer from "./MoveCardHelpdeskCotainer";
 
 export type ModalCardHelpdeskProps = React.ComponentProps<"form"> & {
   currentCard: CardHelpDesk;
+  currentSetor: string;
+  currentColumn: ColumnsHelpDesk;
   closeModal: () => void;
 };
 
 export default function ModalCardHelpdesk({
   currentCard,
   closeModal,
+  currentSetor,
+  currentColumn,
   ...props
 }: ModalCardHelpdeskProps) {
   const Voltar = iconsMap["voltar"];
@@ -30,6 +39,7 @@ export default function ModalCardHelpdesk({
   const [loading, setLoading] = useState(false);
   const [card, setCard] = useState<CardHelpDeskSessao | null>(null);
   const [message, setMessage] = useState("");
+  const [moveCard, setMoveCard] = useState(false);
   // Ref para o final da lista de mensagens
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
   const { ws } = useWebSocket();
@@ -48,9 +58,6 @@ export default function ModalCardHelpdesk({
     setLoading(false);
   }, [currentCard.id]);
 
-  useEffect(() => {
-    console.log(card);
-  }, [card]);
   async function handleAddAtendente(sessao_id: string) {
     const response = await postVinculaAtendenteToCardHelpdesk(sessao_id);
     if (response.message && response.error) {
@@ -227,37 +234,53 @@ export default function ModalCardHelpdesk({
               )}
             </div>
           )}
-          {loading ? (
-            <div className="h-11 w-full animate-pulse rounded-xl bg-gray-300" />
-          ) : (
-            <button className="flex h-11 w-full cursor-pointer items-center justify-center rounded-xl bg-green-500 p-2 text-2xl font-bold text-white hover:bg-green-600 active:scale-95">
-              Mover Card
-            </button>
-          )}
-          <div className="flex flex-wrap gap-2 sm:flex-nowrap">
-            {loading ? (
-              <>
-                <div className="h-11 w-full animate-pulse rounded-xl bg-gray-300 sm:w-1/3" />
-                <div className="h-11 w-full animate-pulse rounded-xl bg-gray-300 sm:w-2/3" />
-              </>
-            ) : (
-              <>
-                <div className="text-1xl flex h-11 w-full cursor-pointer items-center justify-center rounded-xl bg-gray-500 p-2 font-bold text-white hover:bg-green-600 active:scale-95 sm:w-1/3">
-                  <Paperclip />
-                  Anexos
+          {!moveCard && (
+            <div className="">
+              {loading ? (
+                <div className="mb-1 h-11 w-full animate-pulse rounded-xl bg-gray-300" />
+              ) : (
+                <div
+                  onClick={() => setMoveCard((c) => !c)}
+                  className="mb-1 flex h-11 w-full cursor-pointer items-center justify-center rounded-xl bg-green-500 p-2 text-2xl font-bold text-white hover:bg-green-600 active:scale-95"
+                >
+                  Mover Card
                 </div>
-                {card?.CardSessao && (
-                  <div
-                    onClick={() => handleAddAtendente(card?.CardSessao.id)}
-                    className="text-1xl hover:bg-primary-100 flex h-11 w-full cursor-pointer items-center justify-center gap-2 rounded-xl bg-blue-600 p-2 font-bold text-white active:scale-95 sm:w-2/3"
-                  >
-                    <Ingressar />
-                    Ingressar
-                  </div>
+              )}
+              <div className="flex flex-wrap gap-2 sm:flex-nowrap">
+                {loading ? (
+                  <>
+                    <div className="h-11 w-full animate-pulse rounded-xl bg-gray-300 sm:w-1/3" />
+                    <div className="h-11 w-full animate-pulse rounded-xl bg-gray-300 sm:w-2/3" />
+                  </>
+                ) : (
+                  <>
+                    <div className="text-1xl flex h-11 w-full cursor-pointer items-center justify-center rounded-xl bg-gray-500 p-2 font-bold text-white hover:bg-green-600 active:scale-95 sm:w-1/3">
+                      <Paperclip />
+                      Anexos
+                    </div>
+                    {card?.CardSessao && (
+                      <div
+                        onClick={() => handleAddAtendente(card?.CardSessao.id)}
+                        className="text-1xl hover:bg-primary-100 flex h-11 w-full cursor-pointer items-center justify-center gap-2 rounded-xl bg-blue-600 p-2 font-bold text-white active:scale-95 sm:w-2/3"
+                      >
+                        <Ingressar />
+                        Ingressar
+                      </div>
+                    )}
+                  </>
                 )}
-              </>
-            )}
-          </div>
+              </div>
+            </div>
+          )}
+          {moveCard && (
+            <MoveCardHelpdeskCotainer
+              setMoveCard={setMoveCard}
+              setorAtual={currentSetor}
+              colunaAtual={currentColumn.id}
+              cardId={card?.id}
+              acoesColuna={currentColumn.ColumnAcoes}
+            />
+          )}
         </div>
       </div>
     </Form.Root>

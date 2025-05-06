@@ -1,4 +1,3 @@
-// src/app/KanbanColumn.tsx
 "use client";
 import putPosicaoCardColumnid from "@/actions/HelpDesk/putPosicaoCardColumnid";
 import { useGlobalContext } from "@/context/globalContext";
@@ -12,7 +11,7 @@ export type KanbanColumnProps = React.ComponentProps<"div"> & {
   title: string;
   column: ColumnsHelpDesk;
   children: React.ReactNode;
-  // Novo prop para atualizar o estado do card ao soltar
+  currentSetor: string;
   onCardDrop?: (cardId: string, newColumnId: string) => void;
 };
 
@@ -20,6 +19,7 @@ export default function KanbanColumn({
   children,
   title,
   column,
+  currentSetor,
   onCardDrop,
   ...props
 }: KanbanColumnProps) {
@@ -32,32 +32,41 @@ export default function KanbanColumn({
     dragCounter.current = 0;
     e.currentTarget.classList.remove("bg-primary-500");
 
-    if (card) {
-      const cardId = card.getAttribute("data-card-id");
-      if (cardId) {
-        // Atualiza a posição do card no backend
-        const result = await putPosicaoCardColumnid(cardId, column.id);
-        if (!result.ok) {
-          toast.error(
-            "Erro ao atualizar posição do card, contate o administrador do sistema",
-          );
-        } else {
-          if (onCardDrop) {
-            if (column.ColumnAcoes.length) {
-              const nomeAcoes = column.ColumnAcoes.map((a) => a.nome);
-              console.log(nomeAcoes);
-              await identificaAcao({
-                nomeAcoes: nomeAcoes,
-                column,
-                cardId,
-              });
-            }
-            onCardDrop(cardId, column.id);
+    if (!card) return;
+    const cardId = card.getAttribute("data-card-id");
+    const originalColumn = card.getAttribute("data-original-column");
+
+    // se não mudou de coluna, sai sem chamar o backend
+    if (originalColumn === column.id) {
+      setCard(null);
+      return;
+    }
+
+    if (cardId) {
+      const result = await putPosicaoCardColumnid(
+        cardId,
+        column.id,
+        currentSetor,
+      );
+      if (!result.ok) {
+        toast.error(
+          "Erro ao atualizar posição do card, contate o administrador do sistema",
+        );
+      } else {
+        // atualiza o atributo para nova coluna
+        card.setAttribute("data-original-column", column.id);
+
+        if (onCardDrop) {
+          if (column.ColumnAcoes.length) {
+            const nomeAcoes = column.ColumnAcoes.map((a) => a.nome);
+            await identificaAcao({ nomeAcoes, column, cardId });
           }
+          onCardDrop(cardId, column.id);
         }
       }
-      setCard(null);
     }
+
+    setCard(null);
   }
 
   function dragHoverStart(e: React.DragEvent<HTMLDivElement>) {

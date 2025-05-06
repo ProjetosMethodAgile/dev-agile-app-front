@@ -1,12 +1,12 @@
-"use server"
+"use server";
 
-import { GET_ACOES_KANBAN } from "@/functions/api";
+import { POST_CHANGE_STATUS_CARD } from "@/functions/api";
 import apiError from "@/functions/api-error";
-import { AcaoColuna, TokenData } from "@/types/api/apiTypes";
+import { TokenData } from "@/types/api/apiTypes";
 import jwt from "jsonwebtoken";
 import { cookies } from "next/headers";
 
-export async function BUSCA_ACOES_COLUNA() {
+export async function changeStatusCard(cardId: string, nome_status: string) {
   try {
     // Obtém o token dos cookies
     const token = (await cookies()).get("token")?.value;
@@ -18,24 +18,26 @@ export async function BUSCA_ACOES_COLUNA() {
       throw new Error("Token inválido.");
     }
 
-    
-    const { url } = await GET_ACOES_KANBAN(usuarioData.empresa.id);
+    const { url } = POST_CHANGE_STATUS_CARD();
 
     const response = await fetch(url, {
-      method: "GET",
+      method: "POST",
       headers: {
-        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + token,
       },
+      body: JSON.stringify({
+        card_id: cardId,
+        nome_status: nome_status,
+      }),
     });
 
     if (!response.ok) {
       throw new Error(`Erro ao buscar ações`);
     }
 
-    const acaoColuna: AcaoColuna = await response.json();
-    
     return {
-      data: acaoColuna,
+      data: "status alterado com sucesso",
       ok: true,
       error: "",
     };

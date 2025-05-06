@@ -7,12 +7,14 @@ import { twMerge } from "tailwind-merge";
 export type KanbanColumnGerenciarProps = React.ComponentProps<"div"> & {
   title: string;
   children: React.ReactNode;
+  checkoutTrash: boolean;
 };
 
 export default function KanbanColumnGerenciar({
   children,
   title,
   className,
+  checkoutTrash,
   ...props
 }: KanbanColumnGerenciarProps) {
   const { card, setCard } = useGlobalContext();
@@ -71,7 +73,11 @@ export default function KanbanColumnGerenciar({
       >
         <h2>{title}</h2>
         <button id="add-card" className="cursor-pointer">
-          <Plus className="bg-primary-500 active:bg-primary-500/50 rounded-lg" />
+          {checkoutTrash ? (
+            <input type="checkbox" className="border size-5 "/>
+          ) : (
+            <Plus className="bg-primary-500 active:bg-primary-500/50 rounded-lg" />
+          )}
         </button>
       </div>
       <div

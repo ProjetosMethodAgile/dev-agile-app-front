@@ -9,7 +9,6 @@ import {
   Check,
   ChevronLeft,
   ChevronRight,
-  KeyRound,
   MailIcon,
   Phone,
   UserCircle,
@@ -42,7 +41,6 @@ type FormStepsUser = {
     contato: string;
     email: string;
     status: "Ativo" | "Inativo";
-    senha?: string;
     role: string;
     permissoes: PermissaoCompletaData[];
   };
@@ -57,16 +55,15 @@ export default function FormStepsUser({
   const [currentRoles, setCurrentRoles] = React.useState<RoleData[] | []>(
     rolesData ? rolesData : [],
   );
+
   const { closeGlobalModal } = useGlobalContext();
   const [usersData, setUsersData] = React.useState({
     id: defaultValues?.id || "",
     nome: defaultValues?.nome || "",
     contato: defaultValues?.contato || "",
     email: defaultValues?.email || "",
-    status: defaultValues?.status === 'Ativo' ? "Ativo" : "Inativo",
+    status: defaultValues?.status === "Ativo" ? "Ativo" : "Inativo",
     permissoes: defaultValues?.permissoes || [],
-    senha: "",
-    confirmar_senha: "",
   });
   const [permissoesData, setPermissoesData] = useState<PermissoesRole[] | []>(
     [],
@@ -95,16 +92,6 @@ export default function FormStepsUser({
     if (!usersData.nome || !usersData.email) {
       if (!usersData.nome) toast.error("Nome é obrigatório.");
       if (!usersData.email) toast.error("Email é obrigatório.");
-      return false;
-    }
-
-    if (!isEditMode && !usersData.senha) {
-      toast.error("Senha é obrigatória.");
-      return false;
-    }
-
-    if (usersData.senha !== usersData.confirmar_senha) {
-      toast.error("As senhas não coincidem");
       return false;
     }
 
@@ -198,45 +185,19 @@ export default function FormStepsUser({
                 })
               }
             />
-            <Form.InputText
-              icon={KeyRound}
-              inputId="senha"
-              type="password"
-              name="senha"
-              label="Senha"
-              defaultValue={usersData.senha}
-              onChange={(e) =>
-                setUsersData({
-                  ...usersData,
-                  senha: (e.target as HTMLInputElement).value,
-                })
-              }
-            />
-            <Form.InputText
-              icon={KeyRound}
-              inputId="confirmar_senha"
-              type="password"
-              name="senha"
-              label="Confirmar Senha"
-              defaultValue={usersData.confirmar_senha}
-              onChange={(e) =>
-                setUsersData({
-                  ...usersData,
-                  confirmar_senha: (e.target as HTMLInputElement).value,
-                })
-              }
-            />
 
-            {isEditMode && <Form.InputSelect
-              options={[
-                { id: "ativo", nome: "Ativo" },
-                { id: "inativo", nome: "Inativo" },
-              ]}
-              label="Status"
-              id="status"
-              name="status"
-              value={usersData.status.toLowerCase()}
-            />}
+            {isEditMode && (
+              <Form.InputSelect
+                options={[
+                  { id: "ativo", nome: "Ativo" },
+                  { id: "inativo", nome: "Inativo" },
+                ]}
+                label="Status"
+                id="status"
+                name="status"
+                value={usersData.status.toLowerCase()}
+              />
+            )}
           </Form.Section>
           <Form.ButtonNext
             type="submit"
