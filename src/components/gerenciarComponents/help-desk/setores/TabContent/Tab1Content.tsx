@@ -30,7 +30,7 @@ function Tab1Content({ setorProps }: { setorProps: SetorHelpDesk }) {
   // Estados para os inputs do cadastro da coluna
   const [nomeColuna, setNomeColuna] = useState("");
   const [acaoSelecionada, setAcaoSelecionada] = useState("");
-
+ const [disableBtn, setDisableBtn] = useState<boolean>(false)
   const handleDragStart = (
     e: React.DragEvent<HTMLDivElement>,
     index: number,
@@ -99,7 +99,10 @@ function Tab1Content({ setorProps }: { setorProps: SetorHelpDesk }) {
       toast.error("Por favor, preencha todos os campos.");
       return;
     }
-
+    if (disableBtn) {
+      return;
+    }
+    setDisableBtn(true);
     try {
       const response = await postColumnHelpdesk(nome, setor_id, id_acao);
       console.log(response);
@@ -116,13 +119,21 @@ function Tab1Content({ setorProps }: { setorProps: SetorHelpDesk }) {
             parseInt(a.posicao) - parseInt(b.posicao),
         );
         setColumns(sortedColumns);
+        setTimeout(()=>{
+          setDisableBtn(false)
+          setDisableBtn(true)
+        },3000)
       } else {
         toast.error("Erro ao cadastrar a coluna.");
       }
     } catch (error) {
       console.error(error);
       toast.error("Ocorreu um erro inesperado ao cadastrar a coluna.");
+    }finally {
+    
+      setTimeout(() => setDisableBtn(false), 3500);
     }
+   
   }
 
   const handleAddKanbanSetor = () => {
@@ -228,7 +239,7 @@ function Tab1Content({ setorProps }: { setorProps: SetorHelpDesk }) {
                 placeholder="Digite o nome da coluna"
                 value={nomeColuna}
                 onChange={(e) => setNomeColuna(e.target.value)}
-                className="flex w-[90%] focus:border-none focus:outline-none"
+                className="flex w-[90%] focus:border-none focus:outline-none "
               />
               <FolderPen
                 className="hover:text-custom-green-100 cursor-pointer text-amber-200 hover:scale-105"
@@ -276,9 +287,10 @@ function Tab1Content({ setorProps }: { setorProps: SetorHelpDesk }) {
               onClick={() =>
                 handleCadastraColuna(nomeColuna, setorProps.id, acaoSelecionada)
               }
+              disabled={disableBtn}
               type="button"
               value={"Cadastrar"}
-              className="bg-primary-300 flex w-[100%] rounded-[10px] border border-amber-50 p-1 text-center"
+              className={`${disableBtn?"bg-primary-900":"bg-primary-300"} flex w-[100%] rounded-[10px] border border-amber-50 p-1 text-center`}
             />
           </div>
         ) : (
