@@ -1,5 +1,8 @@
-export const API_URL = "https://devagile.com.br/api";
-// export const API_URL = "http://localhost:3001/api";
+export const API_URL = process.env.API_URL;
+
+// export const API_URL = "https://devagile.com.br/api";
+//export const API_URL = "http://localhost:3001/api";
+
 
 export function GET_PERMISSIONS_ALL() {
   return {
@@ -200,6 +203,7 @@ export function DELETE_ATTENDENT_HELPDESK(id: string) {
   return {
     url: API_URL + `/helpdesk/atendentes/${id}`,
   };
+
 }
 export function ATIVA_ATTENDENT_HELPDESK(id: string) {
   return {
@@ -211,7 +215,10 @@ export function DESATIVA_ATTENDENT_SETOR_HELPDESK(id: string) {
     url: API_URL + `/helpdesk/atendentes/ativo/${id}`,
   };
 }
-export function ATIVA_ATTENDENT_SETOR_HELPDESK(id: string) {
+
+
+export function ATIVA_ATTENDENT_SETOR_HELPDESK(id:string){
+
   return {
     url: API_URL + `/helpdesk/atendentes/ativo/${id}`,
   };
