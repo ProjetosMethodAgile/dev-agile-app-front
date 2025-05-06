@@ -20,7 +20,7 @@ export default function FormInputText({
   ...props
 }: FormInputTextProps) {
   return (
-    <div className={twMerge("flex flex-col gap-1", className)}>
+    <div className={twMerge("flex flex-col gap-1 w-full", className)}>
       {label && (
         <label
           htmlFor={props.id as string}
