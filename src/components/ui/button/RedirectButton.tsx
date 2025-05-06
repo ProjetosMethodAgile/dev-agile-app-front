@@ -26,7 +26,7 @@ export default function RedirectButton({
       onClick={() => redirect(route)}
       className={`${secondary ? secondaryStyles : primaryStyles} flex scale-101 cursor-pointer items-center justify-between gap-1 self-start rounded-xl px-4 py-2 font-semibold shadow-md transition-all`}
     >
-      {Icon && <Icon className="size-5" />}
+      {Icon && <Icon className="size-4" />}
       {text}
     </button>
   );

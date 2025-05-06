@@ -120,8 +120,7 @@ export async function updateUser(
     const payload: UpdateUserPayload = {
       primeiro_acesso: primeiro_acesso === 'Não' ? true : false,
     };
-    console.log(payload);
-    
+ 
     if (senha) payload.senha = senha;
     if (nome) payload.nome = nome;
     if (email) payload.email = email;
