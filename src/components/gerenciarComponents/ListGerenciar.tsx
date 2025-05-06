@@ -20,10 +20,14 @@ export default function ListGerenciar({
   // Filtra as subtelas com base no ID e no valor de busca (usando lowercase para comparação)
   const accessibleSubScreens = permissions?.filter(
     (screen: PermissaoCompletaData) =>
-      screen.parent_id === process.env.NEXT_PUBLIC_ID_SCRENN_GEREN_SIST &&
+      screen.user_permissions_access?.length &&
+      screen.parent_id !== null &&
       screen.nome.toLowerCase().includes(search.toLowerCase()),
   );
 
+  if (!permissions) {
+    return null; // Ou um loading spinner
+  }
   return (
     <ul {...props} className="flex flex-wrap gap-4">
       {accessibleSubScreens.map((screen) => {

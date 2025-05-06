@@ -5,7 +5,7 @@ import { Form } from "../form";
 import ScreenTitle from "../titles/ScreenTitle";
 import UsuariosCards from "./UsuariosCards";
 import iconsMap from "@/utils/iconsMap";
-import { Filter, Search, XIcon } from "lucide-react";
+import { Filter, PlusCircle, Search, XIcon } from "lucide-react";
 import AddButton from "@/components/ui/button/RedirectButton";
 import React from "react";
 
@@ -123,7 +123,7 @@ export default function UsuariosContainer({ data }: { data: User[] }) {
               )}
             </div>
           </div>
-          <AddButton route="usuarios-do-sistema/criar" />
+          <AddButton text="Criar" icon={PlusCircle} route="usuarios-do-sistema/criar" />
         </header>
 
         <UsuariosCards
