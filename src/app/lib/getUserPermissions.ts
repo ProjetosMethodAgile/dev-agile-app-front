@@ -25,6 +25,7 @@ export async function getUserPermissions(
       },
       next: {
         revalidate: 60,
+        tags: ["user-permission"],
       },
     });
 

@@ -56,13 +56,17 @@ export default function NavigationMenu() {
   }
 
   const accessibleScreens = permissions?.filter(
-    (screen: PermissaoCompletaData) => !screen.parent_id,
+    (screen: PermissaoCompletaData) =>
+      screen.user_permissions_access?.length && !screen.parent_id,
   );
 
   const toggleSidebar = () => {
     setIsExpanded((prev) => !prev);
   };
 
+  if (!user || !permissions) {
+    return null; // Ou um loading spinner
+  }
   return (
     <nav
       ref={navRef}

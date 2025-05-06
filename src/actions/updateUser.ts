@@ -118,10 +118,10 @@ export async function updateUser(
       };
     }
     const payload: UpdateUserPayload = {
-      primeiro_acesso: primeiro_acesso === 'Não' ? true : false,
+      primeiro_acesso: primeiro_acesso === "Não" ? true : false,
     };
     console.log(payload);
-    
+
     if (senha) payload.senha = senha;
     if (nome) payload.nome = nome;
     if (email) payload.email = email;
@@ -130,7 +130,7 @@ export async function updateUser(
     if (tipoUsuario) payload.roles_id = [tipoUsuario];
     if (permissionsComplete.length > 0)
       payload.permissoesCRUD = permissionsComplete;
-    
+
     const { url } = PUT_USUARIO(id);
     const response = await fetch(url, {
       method: "PUT",
@@ -144,12 +144,14 @@ export async function updateUser(
     if (response.ok) {
       const data = await response.json();
       revalidateTag("update-user");
-      if(primeiro_acesso === "Não") {
-      (await cookies()).set("first-acess", 'false', {
-        httpOnly: true,
-        secure: true,
-      });
-    }
+      revalidateTag("new-user");
+      revalidateTag("user-permission");
+      if (primeiro_acesso === "Não") {
+        (await cookies()).set("first-acess", "false", {
+          httpOnly: true,
+          secure: true,
+        });
+      }
       return {
         success: true,
         errors: [],
