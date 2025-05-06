@@ -5,13 +5,15 @@ import { ativaAtendenteHelpdesk } from "@/actions/HelpDesk/ativaAtendenteHelpDes
 import { inativaAtendenteHelpdesk } from "@/actions/HelpDesk/deleteAtendenteHelpdesk";
 import { HelpDeskSetoresPorAtendenteAtivos } from "@/types/api/apiTypes";
 import iconsMap from "@/utils/iconsMap";
-import { Dispatch, SetStateAction } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { toast } from "react-toastify";
+import GerenciarAtendenteSetor from './GerenciarAtendenteSetor';
 
 type AtendenteEditProps = {
   atendentes: HelpDeskSetoresPorAtendenteAtivos[];
   setAtendentes: Dispatch<SetStateAction<HelpDeskSetoresPorAtendenteAtivos[]>>;
   setModalAtendenteEdit: (open: boolean) => void;
+  
 };
 
 export default function AtendenteEdit({
@@ -20,16 +22,20 @@ export default function AtendenteEdit({
   setModalAtendenteEdit,
 }: AtendenteEditProps) {
   const Voltar = iconsMap.voltar;
+  
+  const [ativaGerenciarAtendente,setAtivaGerenciarAtendente]= useState<boolean>(false)  
+  const [dataAtendente, setDataAtendente] = useState<HelpDeskSetoresPorAtendenteAtivos[]>([]);
+
 
   async function refreshAtendentes() {
     try {
       const res = await pegaTodosAtendente();
 
-  
       if (
         res &&
         "data" in res &&
         Array.isArray(res.data)
+        
       ) {
         setAtendentes(res.data);
       } else {
@@ -72,34 +78,53 @@ export default function AtendenteEdit({
       toast.error("Erro ao alterar status. Tente novamente.");
     }
   }
+function handleGerenciaAtendente(item: HelpDeskSetoresPorAtendenteAtivos){
+  setAtivaGerenciarAtendente(true)
 
+  
+  setDataAtendente([item]);
+ 
+  
+}
+  function handleBackPage(){    
+    setAtivaGerenciarAtendente(false)
+    setModalAtendenteEdit(false)
+  }
   return (
     <div className="min-w-[37rem] p-4">
       {/* Botão fechar */}
-
+    
       <div className="flex justify-between">
 
       <button
         aria-label="Fechar Modal"
         className="flex h-10 w-10 items-center justify-center rounded-full hover:bg-gray-200 active:scale-95"
-        onClick={() => setModalAtendenteEdit(false)}
+        onClick={handleBackPage}
         >
         <Voltar className="h-6 w-6 text-gray-700" />
       </button>
-
-      <button className="bg-primary-100 p-2 rounded-2xl ">Gerenciar</button>
         </div>
-
+        {!ativaGerenciarAtendente?
+      <>
+      
       <ul className="mt-4 space-y-2">
         {atendentes.map(item => (
           <li
             key={item.id}
             className="flex items-center justify-between rounded-md border border-primary-100/35 p-3 hover:bg-primary-200/50 transition"
           >
-            <div>
-              <p className="font-semibold">{item.UsuarioAtendente.nome}</p>
+            <div className="w-50">
+              <p className="font-semibold">{
+              item.UsuarioAtendente.nome.length>40?
+              item.UsuarioAtendente.nome.slice(0,40) + "...":
+              item.UsuarioAtendente.nome
+              }</p>
               <p className="text-sm text-gray-500">
-                {item.UsuarioAtendente.email}
+                {
+                item.UsuarioAtendente.email.length>40?
+                item.UsuarioAtendente.email.slice(0, 40) + "…":
+                item.UsuarioAtendente.email
+                }
               </p>
               <p className="mt-1 text-sm">
                 Status:{" "}
@@ -112,6 +137,7 @@ export default function AtendenteEdit({
                 </span>
               </p>
             </div>
+            <button className="bg-primary-100 p-2 rounded-2xl " onClick={()=>handleGerenciaAtendente(item)}>Gerenciar</button>
 
             {/* Toggle */}
             <div
@@ -131,6 +157,11 @@ export default function AtendenteEdit({
           </li>
         ))}
       </ul>
+      </>
+:<GerenciarAtendenteSetor dataAtendente={dataAtendente}/>
+ }
     </div>
   );
+
 }
+

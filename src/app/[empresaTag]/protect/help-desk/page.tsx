@@ -9,7 +9,8 @@ export default async function EmpresaHomePage() {
   await validateScreenAccess("Help Desk");
 
   const { data } = await getSetoresHelpDeskForUser();
-
+  console.log(data);
+  
   if (!data) return <h1>Nenhum setor cadastrado para você no momento</h1>;
 
   return (

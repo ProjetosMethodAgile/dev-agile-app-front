@@ -233,6 +233,14 @@ export type HelpDeskSetoresPorAtendenteAtivos = {
     id: string;
     nome: string;
     empresa_id: string;
+    kanban_atendente_setores: {
+      id: string;
+      atendente_id: string;
+      setor_id: string;
+      status: boolean;
+      createdAt: string;
+      updatedAt: string;
+    };
   }[];
   UsuarioAtendente: {
     id: string;
