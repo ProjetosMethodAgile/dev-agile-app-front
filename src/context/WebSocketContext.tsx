@@ -9,8 +9,8 @@ import React, {
   useState,
 } from "react";
 
-const SOCKET_URL = "wss://devagile.com.br/socket/";
-// const SOCKET_URL = "ws://localhost:3001/socket";
+// const SOCKET_URL = "wss://devagile.com.br/socket/";
+const SOCKET_URL = "ws://localhost:3001/socket";
 
 const INACTIVITY_LIMIT = 10 * 60 * 1000; // opcional, mantém se quiser
 const CHECK_INTERVAL = 10 * 1000;
