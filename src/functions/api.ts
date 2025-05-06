@@ -3,6 +3,7 @@ export const API_URL = process.env.API_URL;
 // export const API_URL = "https://devagile.com.br/api";
 //export const API_URL = "http://localhost:3001/api";
 
+
 export function GET_PERMISSIONS_ALL() {
   return {
     url: API_URL + "/permissoes",
@@ -202,16 +203,34 @@ export function DELETE_ATTENDENT_HELPDESK(id: string) {
   return {
     url: API_URL + `/helpdesk/atendentes/${id}`,
   };
+
 }
 export function ATIVA_ATTENDENT_HELPDESK(id: string) {
+  return {
+
+    url: API_URL + `/helpdesk/atendentes/${id}`
+  }
+}
+export function DESATIVA_ATTENDENT_SETOR_HELPDESK(id:string){
   return {
     url: API_URL + `/helpdesk/atendentes/ativo/${id}`,
   };
 }
+
+export function ATIVA_ATTENDENT_SETOR_HELPDESK(id:string){
+  return {
+    url: API_URL + `/helpdesk/atendentes/ativo/${id}`
+};
+
 export function PEGA_TODOS_ATENDNETES(empresa_id: string) {
   return {
+
+    url: API_URL + `/helpdesk/atendentes/setor/ativo/${empresa_id}`
+};
+
     url: API_URL + `/helpdesk/atendentes/all/${empresa_id}`,
   };
+
 }
 
 //=================USUARIOS=====================================/
@@ -219,6 +238,12 @@ export function PEGA_TODOS_ATENDNETES(empresa_id: string) {
 export function POST_USUARIO() {
   return {
     url: API_URL + "/usuario/register",
+  };
+}
+
+export function PUT_PASSWORD_RESET(id: string) {
+  return {
+    url: API_URL + `/usuario/reset-password/${id}`,
   };
 }
 

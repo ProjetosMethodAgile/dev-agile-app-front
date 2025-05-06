@@ -1,32 +1,85 @@
 import { useGlobalContext } from "@/context/globalContext";
 import { User } from "@/types/api/apiTypes";
-import {Lock, Puzzle, Send, X } from "lucide-react";
+import { Lock, Puzzle, Send, X } from "lucide-react";
 import SectionTitle from "../titles/SectionTitle";
 
 import RedirectButton from "../ui/button/RedirectButton";
+import { Form } from "../form";
+import { putResetPassword } from "@/actions/putResetPassword";
+import { useActionState, useEffect } from "react";
+import { Input } from "@material-tailwind/react";
+import { useUser } from "@/context/userContext";
+import { redirect } from "next/navigation";
+import { toast } from "react-toastify";
 
 export default function ActionsMenuUserCard({ user }: { user: User }) {
-  const { openGlobalModal } = useGlobalContext();
+  const { openGlobalModal, closeGlobalModal } = useGlobalContext();
+
+  const [state, formAction] = useActionState(putResetPassword, {
+    errors: [],
+    msg_success: "",
+    success: false,
+  });
+
+  useEffect(() => {
+    if (state?.errors.length) {
+      state.errors.forEach((erro: string) => {
+        toast.error(erro);
+      });
+    }
+    if (state?.success) {
+      toast.success(state.msg_success);
+      closeGlobalModal();
+      redirect("/devagile/protect/gerenciar-sistema/usuarios-do-sistema");
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [state]);
 
   const showRedefinePasswordModal = () => {
     openGlobalModal(
-      <div className="mirror-container flex flex-col gap-2 p-4">
-        <SectionTitle title="Redefinir Senha" className="mb-2" />
+      <Form.Root
+        action={formAction}
+        className="mirror-container flex flex-col gap-2 p-4"
+      >
+        <div className="flex items-center justify-between">
+          <SectionTitle title="Redefinir Senha" className="mb-1" />
+          <X onClick={closeGlobalModal} className="cursor-pointer" />
+        </div>
         <p className="flex flex-col items-center gap-2">
           Ao redefinir a senha deste usuario, uma nova senha será enviada para o
           email:{" "}
-          <span className="bg-primary-600 rounded-2xl p-2 text-2xl font-bold">
-            {user.email}
-          </span>
+          <Form.InputText
+            inputId="email"
+            name="email"
+            readOnly
+            value={user.email}
+          />
         </p>
-        <div className="flex flex-col gap-2">
-          <p className="text-50">Deseja mesmo redefinir a senha?</p>
-          <div className="flex items-center justify-between gap-2">
-            <RedirectButton icon={Send} text="Enviar Senha" route="/" />
-            <RedirectButton icon={X} text="Cancelar" secondary route="/" />
-          </div>
+        <Form.InputText
+          readOnly
+          hidden
+          inputId="id"
+          name="id"
+          className="hidden"
+          value={user.id}
+        />
+        <Form.InputText
+          readOnly
+          inputId="empresa_id"
+          name="empresa_id"
+          value={user.empresa?.[0]?.id ?? ""}
+          className="hidden"
+          hidden
+        />
+
+        <div className="mt-4 flex items-center justify-between gap-2">
+          <p className="text-50">Deseja mesmo criar uma nova senha?</p>
+          <Form.ButtonNext type="submit" direction="Salvar">
+            {" "}
+            Enviar Nova Senha{" "}
+          </Form.ButtonNext>
         </div>
-      </div>,
+      </Form.Root>,
     );
   };
 

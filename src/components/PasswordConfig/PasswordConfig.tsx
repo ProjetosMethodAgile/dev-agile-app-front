@@ -44,7 +44,7 @@ export function PasswordConfig() {
           className="text-primary-50 flex flex-col"
         >
           <p>
-            Este é o seu primeiro acesso! Por favor defina uma nova senha para
+            Voce está utilizando uma senha temporaria! Por favor defina uma nova senha para
             acessar o sistema.
           </p>
           <Form.InputText

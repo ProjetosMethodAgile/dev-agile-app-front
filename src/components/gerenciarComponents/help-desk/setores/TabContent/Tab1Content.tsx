@@ -16,6 +16,7 @@ function Tab1Content({ setorProps }: { setorProps: SetorHelpDesk }) {
   const IconDelete = iconsMap["delete"];
   const IconEdit = iconsMap["editBtn"];
   const AddSetorBtn = iconsMap["add"];
+  const Voltar = iconsMap["voltar"];
 
   const [columns, setColumns] = useState<KanbanColumn[]>([]);
   const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
@@ -30,7 +31,9 @@ function Tab1Content({ setorProps }: { setorProps: SetorHelpDesk }) {
   // Estados para os inputs do cadastro da coluna
   const [nomeColuna, setNomeColuna] = useState("");
   const [acaoSelecionada, setAcaoSelecionada] = useState("");
-
+ const [disableBtn, setDisableBtn] = useState<boolean>(false)
+ const [checkoutTrash , setCheckoutTrash ] = useState<boolean>(false)
+ const [hiddenBtn , setHiddenBtn ] = useState<boolean>(false)
   const handleDragStart = (
     e: React.DragEvent<HTMLDivElement>,
     index: number,
@@ -99,7 +102,10 @@ function Tab1Content({ setorProps }: { setorProps: SetorHelpDesk }) {
       toast.error("Por favor, preencha todos os campos.");
       return;
     }
-
+    if (disableBtn) {
+      return;
+    }
+    setDisableBtn(true);
     try {
       const response = await postColumnHelpdesk(nome, setor_id, id_acao);
       console.log(response);
@@ -116,18 +122,29 @@ function Tab1Content({ setorProps }: { setorProps: SetorHelpDesk }) {
             parseInt(a.posicao) - parseInt(b.posicao),
         );
         setColumns(sortedColumns);
+        setTimeout(()=>{
+          setDisableBtn(false)
+          setDisableBtn(true)
+        },3000)
       } else {
         toast.error("Erro ao cadastrar a coluna.");
       }
     } catch (error) {
       console.error(error);
       toast.error("Ocorreu um erro inesperado ao cadastrar a coluna.");
+    }finally {
+    
+      setTimeout(() => setDisableBtn(false), 3500);
     }
+   
   }
 
   const handleAddKanbanSetor = () => {
+    setIsEditing(false)
+    setHiddenBtn(true)
     setFormsModal(!formsModal);
   };
+
 
   const onMouseEventPanne = (data: string) => {
     const SELECT_MESSAGE =
@@ -192,21 +209,33 @@ function Tab1Content({ setorProps }: { setorProps: SetorHelpDesk }) {
       </div>
       <div>
         <div className="mb-3 flex justify-between">
-          <h1 className="text-2xl">Colunas do Kanban</h1>
+          <h1 className="text-2xl">{checkoutTrash?"Selecione um card":"Colunas do Kanban"}</h1>
           <div className="flex gap-2">
-            <div className="cursor-pointer rounded-xl bg-red-500 p-2 text-white hover:bg-red-700 active:scale-95">
-              <IconDelete />
+            {
+              !hiddenBtn &&
+            <div className="cursor-pointer rounded-xl bg-red-500 p-2 text-white hover:bg-red-700 active:scale-95" onClick={()=>{
+              setCheckoutTrash(!checkoutTrash)
+              setIsEditing(false);
+            }}>
+              <IconDelete  />
             </div>
-            <div
+          }
+            {  !hiddenBtn &&<div
               onClick={() => {
-                if (!isEditing) setIsEditing(true);
+                setIsEditing(!isEditing);
+                setCheckoutTrash(false)
               }}
               className={`cursor-pointer rounded-xl p-2 text-white hover:bg-blue-600 active:scale-95 ${
                 isEditing ? "bg-blue-600" : "bg-primary-100"
               }`}
             >
               <IconEdit />
-            </div>
+            </div>}
+                {formsModal&& <div className="cursor-pointer rounded-xl bg-red-500 p-2 text-white hover:bg-green-600 active:scale-95" onClick={()=>  setFormsModal(false)}>
+                  <Voltar/>
+                </div>
+                }
+
             <div
               className="cursor-pointer rounded-xl bg-green-500 p-2 text-white hover:bg-green-600 active:scale-95"
               onClick={handleAddKanbanSetor}
@@ -228,7 +257,7 @@ function Tab1Content({ setorProps }: { setorProps: SetorHelpDesk }) {
                 placeholder="Digite o nome da coluna"
                 value={nomeColuna}
                 onChange={(e) => setNomeColuna(e.target.value)}
-                className="flex w-[90%] focus:border-none focus:outline-none"
+                className="flex w-[90%]  focus:border-none focus:outline-none "
               />
               <FolderPen
                 className="hover:text-custom-green-100 cursor-pointer text-amber-200 hover:scale-105"
@@ -276,9 +305,10 @@ function Tab1Content({ setorProps }: { setorProps: SetorHelpDesk }) {
               onClick={() =>
                 handleCadastraColuna(nomeColuna, setorProps.id, acaoSelecionada)
               }
+              disabled={disableBtn}
               type="button"
               value={"Cadastrar"}
-              className="bg-primary-300 flex w-[100%] rounded-[10px] border border-amber-50 p-1 text-center"
+              className={`${disableBtn?"bg-primary-900":"bg-primary-300"} flex w-[100%] rounded-[10px] border border-amber-50 p-1 text-center`}
             />
           </div>
         ) : (
@@ -298,7 +328,7 @@ function Tab1Content({ setorProps }: { setorProps: SetorHelpDesk }) {
                     onDrop={isEditing ? (e) => handleDrop(e, index) : undefined}
                     onDragEnd={isEditing ? handleDragEnd : undefined}
                   >
-                    <KanbanColumnGerenciar title={col.nome}>
+                    <KanbanColumnGerenciar title={col.nome} checkoutTrash={checkoutTrash} >
                       <KanbanCardGerenciar titleCard="card" />
                       <KanbanCardGerenciar titleCard="card" />
                     </KanbanColumnGerenciar>

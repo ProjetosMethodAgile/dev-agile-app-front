@@ -95,6 +95,7 @@ export type PermissaoCompletaData = {
   tipo_permissao?: TipoPermissaoData;
   createdAt?: string;
   updatedAt?: string;
+  user_permissions_access?: PermissoesData[];
 };
 
 export type User = {
@@ -199,7 +200,7 @@ export type AtendentesHelpDesk = {
   id: string;
   usuario_id: string;
   empresa_id: string;
-  status:boolean;
+  status: boolean;
   createdAt: string;
   updatedAt: string;
   Setores: SetorHelpDesk[];
@@ -208,7 +209,7 @@ export type AtendentesHelpDesk = {
     nome: string;
     email: string;
     contato: string;
-    status:string;
+    status: string;
   };
 };
 
@@ -229,11 +230,19 @@ export type HelpDeskSetoresPorAtendente = {
 
 export type HelpDeskSetoresPorAtendenteAtivos = {
   id: string;
-  status:boolean;
+  status: boolean;
   Setores: {
     id: string;
     nome: string;
     empresa_id: string;
+    kanban_atendente_setores: {
+      id: string;
+      atendente_id: string;
+      setor_id: string;
+      status: boolean;
+      createdAt: string;
+      updatedAt: string;
+    };
   }[];
   UsuarioAtendente: {
     id: string;

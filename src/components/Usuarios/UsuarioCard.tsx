@@ -1,13 +1,14 @@
 "use client";
 
 import { User } from "@/types/api/apiTypes";
-import { EllipsisVertical, User2 } from "lucide-react";
+import { EllipsisVertical, User2, X } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import ActionsMenuUserCard from "./ActionsMenuUserCard";
 
 export default function UsuarioCard({ user }: { user: User }) {
   const [showTooltip, setShowTooltip] = useState(false);
+  const [showActionsMenu, setShowActionsMenu] = useState(false);
   const router = useRouter();
 
   return (
@@ -37,11 +38,21 @@ export default function UsuarioCard({ user }: { user: User }) {
           </div>
         </div>
         <div className="relative">
-          <ActionsMenuUserCard user={user} />
-          <EllipsisVertical
-            className="bg-primary-600 hover:bg-primary-600/70 relative flex min-w-5 cursor-pointer self-start rounded-full p-1"
-            size={22}
-          />
+          {showActionsMenu && <ActionsMenuUserCard user={user} />}
+          {showActionsMenu && (
+            <X
+              size={27}
+              onClick={() => setShowActionsMenu(!showActionsMenu)}
+              className="bg-primary-600 hover:bg-primary-600/70 relative flex min-w-5 cursor-pointer self-start rounded-full p-1"
+            />
+          )}
+          {!showActionsMenu && (
+            <EllipsisVertical
+              className="bg-primary-600 hover:bg-primary-600/70 relative flex min-w-5 cursor-pointer self-start rounded-full p-1"
+              size={22}
+              onClick={() => setShowActionsMenu(!showActionsMenu)}
+            />
+          )}
         </div>
       </div>
       <div className="mt-2 flex items-center justify-between">
