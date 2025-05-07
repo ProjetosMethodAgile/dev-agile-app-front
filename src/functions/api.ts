@@ -228,7 +228,7 @@ export function ATIVA_ATTENDENT_SETOR_HELPDESK(id:string){
 
 export function PEGA_TODOS_ATENDNETES(empresa_id: string) {
   return {
-    url: API_URL + `/helpdesk/atendentes/setor/ativo/${empresa_id}`,
+    url: API_URL + `/helpdesk/atendentes/all/${empresa_id}`,
   };
 }
 

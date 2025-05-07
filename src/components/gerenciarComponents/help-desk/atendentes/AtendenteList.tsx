@@ -21,11 +21,11 @@ export default function AtendenteList({
 }: AtendenteListProps) {
   const [atendentes, setAtendentes] = useState<HelpDeskSetoresPorAtendenteAtivos[]>([]);
 
-
-
   useEffect(() => {
     async function fetchAtendentes() {
       const response = await pegaTodosAtendente();
+      console.log(response);
+      
       if (response.ok && response.data) {
         setAtendentes(response.data);   
         console.log(response.data);

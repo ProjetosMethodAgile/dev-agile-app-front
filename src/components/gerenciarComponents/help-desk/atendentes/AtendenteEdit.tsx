@@ -5,17 +5,17 @@ import { ativaAtendenteHelpdesk } from "@/actions/HelpDesk/ativaAtendenteHelpDes
 import { inativaAtendenteHelpdesk } from "@/actions/HelpDesk/deleteAtendenteHelpdesk";
 import { HelpDeskSetoresPorAtendenteAtivos } from "@/types/api/apiTypes";
 import iconsMap from "@/utils/iconsMap";
-import { Dispatch, SetStateAction, useState } from "react";
+import { Dispatch, SetStateAction, useState, useEffect } from "react";
 import { toast } from "react-toastify";
 
+
+import GerenciarAtendenteSetor from "./GerenciarAtendenteSetor";
 import ModalGerenciar from "./ModalGerenciar";
-import GerenciarAtendenteSetor from './GerenciarAtendenteSetor';
 
 type AtendenteEditProps = {
   atendentes: HelpDeskSetoresPorAtendenteAtivos[];
   setAtendentes: Dispatch<SetStateAction<HelpDeskSetoresPorAtendenteAtivos[]>>;
   setModalAtendenteEdit: (open: boolean) => void;
-  
 };
 
 export default function AtendenteEdit({
@@ -25,28 +25,40 @@ export default function AtendenteEdit({
 }: AtendenteEditProps) {
   const Voltar = iconsMap.voltar;
 
- const [ativaModalGerenciar , setAtivaModalGerenciar]  = useState<boolean>(false)
-  const [ativaGerenciarAtendente,setAtivaGerenciarAtendente]= useState<boolean>(false)  
-  const [dataAtendente, setDataAtendente] = useState<HelpDeskSetoresPorAtendenteAtivos[]>([]);
+  // Estado único para controlar o modal e o atendente selecionado
+  const [ativaModalGerenciar, setAtivaModalGerenciar] = useState(false);
+  const [dataAtendente, setDataAtendente] = useState<
+    HelpDeskSetoresPorAtendenteAtivos | null
+  >(null);
 
+
+useEffect(()=>{
+    console.log("aaaa",dataAtendente);
+    
+},[])
+  // Função para recarregar a lista após alterações
   async function refreshAtendentes() {
     try {
       const res = await pegaTodosAtendente();
-
+  
+      
       if (res && "data" in res && Array.isArray(res.data)) {
-
         setAtendentes(res.data);
       } else {
         toast.error(res.error || "Resposta inesperada da API");
       }
     } catch (e) {
-      toast.error(e + "Falha ao buscar atendentes.");
+      toast.error("Falha ao buscar atendentes.");
     }
   }
 
+  // Toggle de status ativa/inativa
   async function handleToggleStatus(id: string, currentStatus: boolean) {
+    // Atualização otimista
     setAtendentes((prev) =>
-      prev.map((at) => (at.id === id ? { ...at, status: !currentStatus } : at)),
+      prev.map((at) =>
+        at.id === id ? { ...at, status: !currentStatus } : at
+      )
     );
 
     try {
@@ -59,41 +71,52 @@ export default function AtendenteEdit({
       }
       await refreshAtendentes();
     } catch {
-      // rollback
+      // Rollback em caso de erro
       setAtendentes((prev) =>
         prev.map((at) =>
-          at.id === id ? { ...at, status: currentStatus } : at,
-        ),
+          at.id === id ? { ...at, status: currentStatus } : at
+        )
       );
       toast.error("Erro ao alterar status. Tente novamente.");
     }
   }
 
-if (!ativaModalGerenciar) 
-
-function handleGerenciaAtendente(item: HelpDeskSetoresPorAtendenteAtivos){
-  setAtivaGerenciarAtendente(true)
-
-  
-  setDataAtendente([item]);
- 
-  
-}
-  function handleBackPage(){    
-    setAtivaGerenciarAtendente(false)
-    setModalAtendenteEdit(false)
+  // Ao clicar em Gerenciar: guarda o item e abre o modal
+  function handleGerenciaAtendente(item: HelpDeskSetoresPorAtendenteAtivos) {
+    setDataAtendente(item);
+    setAtivaModalGerenciar(true);
   }
 
+  // Fecha o modal
+  function handleCloseModal() {
+    setAtivaModalGerenciar(false);
+    setDataAtendente(null);
+  }
+
+  // Fecha todo o componente de edição de atendentes
+  function handleBackPage() {
+    setAtivaModalGerenciar(false);
+    setModalAtendenteEdit(false);
+  }
+
+  // Se estiver com modal aberto e atendente selecionado, renderiza o modal
+  if (ativaModalGerenciar && dataAtendente) {
+    return (
+      <ModalGerenciar onClose={handleCloseModal}>
+        <GerenciarAtendenteSetor dataAtendente={[dataAtendente]} />
+      </ModalGerenciar>
+    );
+  }
+
+  // Caso contrário, exibe a lista de atendentes
   return (
     <div className="min-w-[37rem] p-4">
       {/* Botão fechar */}
-    
       <div className="flex justify-between">
-
         <button
           aria-label="Fechar Modal"
           className="flex h-10 w-10 items-center justify-center rounded-full hover:bg-gray-200 active:scale-95"
-          onClick={() => setModalAtendenteEdit(false)}
+          onClick={handleBackPage}
         >
           <Voltar className="h-6 w-6 text-gray-700" />
         </button>
@@ -106,19 +129,15 @@ function handleGerenciaAtendente(item: HelpDeskSetoresPorAtendenteAtivos){
             className="border-primary-100/35 hover:bg-primary-200/50 flex items-center justify-between rounded-md border p-3 transition"
           >
             <div className="w-50">
-
-              <p className="font-semibold">{
-              item.UsuarioAtendente.nome.length>40?
-              item.UsuarioAtendente.nome.slice(0,40) + "...":
-              item.UsuarioAtendente.nome
-              }</p>
-
+              <p className="font-semibold">
+                {item.UsuarioAtendente.nome.length > 40
+                  ? `${item.UsuarioAtendente.nome.slice(0, 40)}...`
+                  : item.UsuarioAtendente.nome}
+              </p>
               <p className="text-sm text-gray-500">
-                {
-                item.UsuarioAtendente.email.length>40?
-                item.UsuarioAtendente.email.slice(0, 40) + "…":
-                item.UsuarioAtendente.email
-                }
+                {item.UsuarioAtendente.email.length > 40
+                  ? `${item.UsuarioAtendente.email.slice(0, 40)}…`
+                  : item.UsuarioAtendente.email}
               </p>
               <p className="mt-1 text-sm">
                 Status:{" "}
@@ -129,14 +148,14 @@ function handleGerenciaAtendente(item: HelpDeskSetoresPorAtendenteAtivos){
                 </span>
               </p>
             </div>
-            <button className="bg-primary-100 p-2 rounded-2xl " onClick={()=>handleGerenciaAtendente(item)}>Gerenciar</button>
 
-            {/* Toggle */}
-           
-              <button className="bg-primary-100 rounded-2xl p-2" onClick={()=> setAtivaModalGerenciar(true)}>
-                Gerenciar
-              </button>
-         
+            <button
+              className="bg-primary-100 p-2 rounded-2xl"
+              onClick={() => handleGerenciaAtendente(item)}
+            >
+              Gerenciar
+            </button>
+
             <div
               onClick={() => handleToggleStatus(item.id, item.status)}
               className={`relative inline-flex h-6 w-12 cursor-pointer items-center rounded-full transition-colors ${
@@ -152,17 +171,6 @@ function handleGerenciaAtendente(item: HelpDeskSetoresPorAtendenteAtivos){
           </li>
         ))}
       </ul>
-      </>
-:<GerenciarAtendenteSetor dataAtendente={dataAtendente}/>
- }
     </div>
   );
-
-if (ativaModalGerenciar) 
-  return(
-    <ModalGerenciar/>
-  )
-
-
 }
-
