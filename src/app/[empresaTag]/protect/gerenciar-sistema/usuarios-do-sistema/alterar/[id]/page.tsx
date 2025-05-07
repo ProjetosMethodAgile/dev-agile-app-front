@@ -6,12 +6,15 @@ import { UserCheck } from "lucide-react";
 import React from "react";
 
 type AtualizarUsuariosProps = {
-  params: Promise<{ id: string }>;
+  params: Promise<{ id: string; empresaTag: string }>;
 };
 
 const AtualizarUsuarioPage = async ({ params }: AtualizarUsuariosProps) => {
   const roles = await getRolesAll();
+  const { empresaTag } = await params;
+
   const { data } = await getUserById((await params).id);
+
   if (!data) throw new Error("Usuário não encontrado");
   const userData = data.usuario;
 
@@ -32,6 +35,7 @@ const AtualizarUsuarioPage = async ({ params }: AtualizarUsuariosProps) => {
           role: userData.usuario_roles[0].id,
           permissoes: userData.permissoes,
         }}
+        empresaTag={empresaTag}
       />
     </div>
   );

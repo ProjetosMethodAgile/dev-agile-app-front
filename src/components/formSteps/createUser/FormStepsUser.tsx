@@ -44,12 +44,14 @@ type FormStepsUser = {
     role: string;
     permissoes: PermissaoCompletaData[];
   };
+  empresaTag: string;
 };
 
 export default function FormStepsUser({
   rolesData,
   defaultValues,
   isEditMode = false,
+  empresaTag,
 }: FormStepsUser) {
   const [activeTab, setActiveTab] = React.useState("informacoes");
   const [currentRoles, setCurrentRoles] = React.useState<RoleData[] | []>(
@@ -117,7 +119,7 @@ export default function FormStepsUser({
     if (state?.success) {
       toast.success(state.msg_success);
       closeGlobalModal();
-      redirect("/devagile/protect/gerenciar-sistema/usuarios-do-sistema");
+      redirect(`/${empresaTag}/protect/gerenciar-sistema/usuarios-do-sistema`);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state]);
