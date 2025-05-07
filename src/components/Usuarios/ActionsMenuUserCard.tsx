@@ -6,12 +6,13 @@ import { Form } from "../form";
 import { putResetPassword } from "@/actions/putResetPassword";
 import { useActionState, useEffect } from "react";
 
-import { redirect } from "next/navigation";
+import { useRouter, useParams } from "next/navigation";
 import { toast } from "react-toastify";
 
 export default function ActionsMenuUserCard({ user }: { user: User }) {
   const { openGlobalModal, closeGlobalModal } = useGlobalContext();
-
+  const { empresaTag } = useParams<{ empresaTag: string }>();
+  const router = useRouter();
   const [state, formAction] = useActionState(putResetPassword, {
     errors: [],
     msg_success: "",
@@ -27,7 +28,9 @@ export default function ActionsMenuUserCard({ user }: { user: User }) {
     if (state?.success) {
       toast.success(state.msg_success);
       closeGlobalModal();
-      redirect("/devagile/protect/gerenciar-sistema/usuarios-do-sistema");
+      router.push(
+        `/${empresaTag}/protect/gerenciar-sistema/usuarios-do-sistema`,
+      );
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state]);
