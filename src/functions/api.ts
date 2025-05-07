@@ -231,6 +231,11 @@ export function PEGA_TODOS_ATENDNETES(empresa_id: string) {
     url: API_URL + `/helpdesk/atendentes/all/${empresa_id}`,
   };
 }
+export function PEGA_USUARIO(id:string,empresa_id: string) {
+  return {
+    url: API_URL + `/helpdesk/atendentes/${id}/empresa/${empresa_id}`,
+  };
+}
 
 //=================USUARIOS=====================================/
 

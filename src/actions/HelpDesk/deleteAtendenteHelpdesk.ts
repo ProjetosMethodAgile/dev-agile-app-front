@@ -32,8 +32,6 @@ export async function inativaAtendenteHelpdesk(id: string) {
           },
         });
 
-   
-
 
         
     if (!response.ok) {

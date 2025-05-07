@@ -9,7 +9,10 @@ interface ModalGerenciarProps {
 export default function ModalGerenciar({
   children,
   onClose,
-}: ModalGerenciarProps) {
+}: ModalGerenciarProps) 
+
+
+{
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
       {/* Backdrop */}
@@ -52,7 +55,6 @@ export default function ModalGerenciar({
             type="text"
             className="
               w-full           
-               
               rounded 
               p-2 
               focus:outline-none 

@@ -52,15 +52,7 @@ useEffect(()=>{
     }
   }
 
-  // Toggle de status ativa/inativa
   async function handleToggleStatus(id: string, currentStatus: boolean) {
-    // Atualização otimista
-    setAtendentes((prev) =>
-      prev.map((at) =>
-        at.id === id ? { ...at, status: !currentStatus } : at
-      )
-    );
-
     try {
       if (currentStatus) {
         await inativaAtendenteHelpdesk(id);
@@ -69,18 +61,18 @@ useEffect(()=>{
         await ativaAtendenteHelpdesk(id);
         toast.success("Usuário ativado");
       }
-      await refreshAtendentes();
-    } catch {
-      // Rollback em caso de erro
+  
+      // Atualizar estado APÓS sucesso da requisição
       setAtendentes((prev) =>
         prev.map((at) =>
-          at.id === id ? { ...at, status: currentStatus } : at
+          at.id === id ? { ...at, status: !currentStatus } : at
         )
       );
+    } catch {
       toast.error("Erro ao alterar status. Tente novamente.");
     }
   }
-
+  
   // Ao clicar em Gerenciar: guarda o item e abre o modal
   function handleGerenciaAtendente(item: HelpDeskSetoresPorAtendenteAtivos) {
     setDataAtendente(item);
