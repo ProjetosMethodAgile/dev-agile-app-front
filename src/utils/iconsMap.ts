@@ -13,6 +13,7 @@ import {
   CircleX,
   Paperclip,
   UserRoundPlus,
+  ChartColumnBig,
 } from "lucide-react";
 
 // Mapeia o slug da tela com o ícone correspondente.
@@ -35,6 +36,7 @@ const iconsMap: { [key: string]: React.ElementType } = {
   "configurar-help-desk": Handshake,
   Paperclip: Paperclip,
   UserRoundPlus: UserRoundPlus,
+  Dash: ChartColumnBig,
 
   // Adicione outros mapeamentos conforme necessário
 };

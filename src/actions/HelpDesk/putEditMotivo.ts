@@ -1,12 +1,16 @@
-"use server"
+"use server";
 import { PUT_MOTIVO } from "@/functions/api";
 import { revalidateTag } from "next/cache";
 import { cookies } from "next/headers";
 
-
-export async function atualizamotivoPorID(nomeMotivoSelecionado: string, id: string,urlMotivo:string) {
+export async function atualizamotivoPorID(
+  nomeMotivoSelecionado: string,
+  id: string,
+  urlMotivo: string,
+  slaMinutes: number,
+) {
   try {
-    if (!nomeMotivoSelecionado || !id) {
+    if (!nomeMotivoSelecionado || !id || slaMinutes <= 0) {
       return { msg_success: "erro", success: false, status: 400 };
     }
     const token = (await cookies()).get("token")?.value;
@@ -19,12 +23,11 @@ export async function atualizamotivoPorID(nomeMotivoSelecionado: string, id: str
         Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
       },
-      
       body: JSON.stringify({
         descricao: nomeMotivoSelecionado,
-        src_img:urlMotivo
-        
-      })
+        src_img: urlMotivo,
+        sla_minute: slaMinutes,
+      }),
     });
     revalidateTag("helpdesk-Motivos");
 
@@ -32,9 +35,9 @@ export async function atualizamotivoPorID(nomeMotivoSelecionado: string, id: str
       return { msg_success: "erro", success: false, status: response.status };
     }
 
-    return { msg_success: "Motivo deletado com sucesso", success: true };
+    return { msg_success: "Motivo atualizado com sucesso", success: true };
   } catch (err) {
-    console.error("Erro ao deletar motivo:", err);
+    console.error("Erro ao editar motivo:", err);
     return { msg_success: "erro", success: false };
   }
 }

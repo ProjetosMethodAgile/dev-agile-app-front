@@ -32,6 +32,8 @@ export const useViewChatSuspenso = () => {
     countdown,
     setCountdown,
     setMotivo,
+    motivoID,
+    setMotivoID,
     motivoImage,
     setMotivoImage,
     setorHelpDesk,
@@ -139,7 +141,6 @@ export const useViewChatSuspenso = () => {
 
         if (motivoObject && typeof motivoObject === "object") {
           setMotivo(motivoObject); // Atualiza o motivo selecionado no contexto
-
         }
         return;
       }
@@ -147,12 +148,16 @@ export const useViewChatSuspenso = () => {
 
     if (etapaAtual === 2 && e) {
       const motivoEscolhido = e.currentTarget.value;
+      console.log(motivoID);
       setMotivoselecionado(motivoEscolhido);
       const motivoObject = await chatController.pegaMotivo(
         setorHelpDesk,
         motivoEscolhido,
       );
-      if(motivoObject) setMotivoImage(motivoObject.src_img);
+      if (motivoObject) {
+        setMotivoID(motivoObject.id);
+        setMotivoImage(motivoObject.src_img);
+      }
     }
 
     // 2) Ação de "voltar"
@@ -211,6 +216,7 @@ export const useViewChatSuspenso = () => {
         `${chamado.getTitulo()} - ${chamadoLogin.getNome()}`,
         chamado.getDescricao(),
         chamado.getStatus(),
+        motivoID || "",
       );
 
       sendMessage(
