@@ -201,15 +201,17 @@ export function GET_USUARIOS_NAO_ATENDENTE_HELPDESK(id: string) {
     url: API_URL + `/helpdesk/atendentes/usuario/empresa/${id}`,
   };
 }
+
+//  desativa como atendente 
 export function DELETE_ATTENDENT_HELPDESK(id: string) {
   return {
-    url: API_URL + `/helpdesk/atendentes/${id}`,
+    url: API_URL + `/helpdesk/atendentes${id}`,
   };
 
 }
 export function ATIVA_ATTENDENT_HELPDESK(id: string) {
   return {
-    url: API_URL + `/helpdesk/atendentes/${id}`,
+    url: API_URL + `/helpdesk/atendentes/ativo/${id}`,
   };
 }
 export function DESATIVA_ATTENDENT_SETOR_HELPDESK(id: string) {

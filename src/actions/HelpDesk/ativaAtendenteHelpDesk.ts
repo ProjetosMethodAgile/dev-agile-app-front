@@ -30,6 +30,7 @@ export async function ativaAtendenteHelpdesk(id: string) {
         "Content-Type": "application/json",
       },
     });
+   
 
     
     if (!response.ok) {
