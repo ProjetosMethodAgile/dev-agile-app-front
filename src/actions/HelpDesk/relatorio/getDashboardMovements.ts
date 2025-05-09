@@ -1,31 +1,25 @@
-// src/actions/dashboard/getDashboardMovements.ts
+// src/actions/HelpDesk/relatorio/getDashboardMovements.ts
 "use server";
 
 import { cookies } from "next/headers";
-import jwt from "jsonwebtoken";
+
 import { GET_DASHBOARD_MOVEMENTS } from "@/functions/api";
-import { ApiResult, Movement, TokenData } from "@/types/api/apiTypes";
+import { ApiResult, MovementsResponse } from "@/types/api/apiTypes";
 
 export default async function getDashboardMovements(
   query: URLSearchParams,
-): Promise<ApiResult<Movement[]>> {
+): Promise<ApiResult<MovementsResponse>> {
   const token = (await cookies()).get("token")?.value;
-  if (!token) return { ok: false, error: "Token not found.", statusCode: 401 };
-
-  let user: TokenData;
-  try {
-    user = jwt.verify(token, process.env.JWT_SECRET!) as TokenData;
-  } catch {
-    return { ok: false, error: "Invalid token.", statusCode: 401 };
-  }
+  if (!token) throw new Error("Token não encontrado.");
 
   const { url } = GET_DASHBOARD_MOVEMENTS(query);
   const res = await fetch(url, {
     headers: { Authorization: `Bearer ${token}` },
+    next: { revalidate: 60, tags: ["dash-helpdesk"] },
   });
   if (!res.ok) {
     return { ok: false, error: `HTTP ${res.status}`, statusCode: res.status };
   }
-  const data = (await res.json()) as Movement[];
+  const data = (await res.json()) as MovementsResponse;
   return { ok: true, data };
 }

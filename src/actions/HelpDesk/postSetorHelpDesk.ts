@@ -50,6 +50,8 @@ export async function postSetorHelpDesk(
     });
     if (response.ok) {
       revalidateTag("setor-helpdesk");
+      revalidateTag("dash-helpdesk");
+
       return {
         success: true,
         errors: [],

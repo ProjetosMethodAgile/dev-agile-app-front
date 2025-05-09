@@ -9,21 +9,22 @@ interface Props {
 }
 
 export default function FiltersSidebar({ data }: Props) {
-  const sectors = Array.from(new Set(data.map((h) => h.previous_column)));
+  // garante sempre array de strings
+  const sectors = Array.from(
+    new Set(
+      data.map((h) => h.previous_column).filter((s): s is string => Boolean(s)),
+    ),
+  );
   const attendants = Array.from(
-    new Set(data.map((h) => h.changed_by).filter(Boolean)),
-  ) as string[];
+    new Set(data.map((h) => h.who).filter((w): w is string => Boolean(w))),
+  );
 
   const total = data.length;
   const inProgress = data.filter(
     (h) => h.column_atual === "Em Andamento",
   ).length;
   const done = data.filter((h) => h.column_atual === "Encerrado").length;
-  const late = data.filter((h) => {
-    const created = new Date(h.created_at).getTime();
-    // placeholder: se quiser comparar com sla aqui, substitua:
-    return false;
-  }).length;
+  const late = data.filter(() => false).length;
 
   return (
     <aside className="mirror-container w-full rounded-2xl p-6 shadow-lg md:w-64">
@@ -31,7 +32,7 @@ export default function FiltersSidebar({ data }: Props) {
 
       <label className="mb-2 block">Setor</label>
       <select className="mb-4 w-full rounded bg-[#223057] p-2">
-        <option>Todos os setores</option>
+        <option key="all">Todos os setores</option>
         {sectors.map((s) => (
           <option key={s}>{s}</option>
         ))}
@@ -39,7 +40,7 @@ export default function FiltersSidebar({ data }: Props) {
 
       <label className="mb-2 block">Atendente</label>
       <select className="mb-6 w-full rounded bg-[#223057] p-2">
-        <option>Todos os atendentes</option>
+        <option key="all">Todos os atendentes</option>
         {attendants.map((a) => (
           <option key={a}>{a}</option>
         ))}

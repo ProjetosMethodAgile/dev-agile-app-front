@@ -2,9 +2,8 @@
 "use server";
 
 import { cookies } from "next/headers";
-import jwt from "jsonwebtoken";
 import { GET_DASHBOARD_CHARTS } from "@/functions/api";
-import { ApiResult, ChartsData, TokenData } from "@/types/api/apiTypes";
+import { ApiResult, ChartsData } from "@/types/api/apiTypes";
 
 export default async function getDashboardCharts(
   query: URLSearchParams,
@@ -12,16 +11,15 @@ export default async function getDashboardCharts(
   const token = (await cookies()).get("token")?.value;
   if (!token) return { ok: false, error: "Token not found.", statusCode: 401 };
 
-  let user: TokenData;
-  try {
-    user = jwt.verify(token, process.env.JWT_SECRET!) as TokenData;
-  } catch {
-    return { ok: false, error: "Invalid token.", statusCode: 401 };
-  }
+  if (!token) throw new Error("Token não encontrado");
 
   const { url } = GET_DASHBOARD_CHARTS(query);
   const res = await fetch(url, {
     headers: { Authorization: `Bearer ${token}` },
+    next: {
+      revalidate: 60,
+      tags: ["dash-helpdesk"],
+    },
   });
   if (!res.ok) {
     return { ok: false, error: `HTTP ${res.status}`, statusCode: res.status };

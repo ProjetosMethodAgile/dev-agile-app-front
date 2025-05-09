@@ -10,11 +10,11 @@ interface Props {
 
 export default function KpiGrid({ summary }: Props) {
   const {
-    total,
+    // total,
     open,
-    inProgress,
+    // inProgress,
     done,
-    late,
+    // late,
     avgResolutionTime,
     slaRate,
     avgInteractions,

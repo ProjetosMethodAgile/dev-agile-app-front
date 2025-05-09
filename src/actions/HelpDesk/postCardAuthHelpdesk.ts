@@ -49,6 +49,7 @@ export async function postCardAuthHelpdesk(
     });
     revalidateTag("helpdesk-columns");
     revalidateTag("helpdesk-cards");
+    revalidateTag("dash-helpdesk");
 
     if (!response.ok) {
       return { msg_success: "erro", success: false, status: response.status };

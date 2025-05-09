@@ -406,11 +406,19 @@ export type ApiResult<T> =
 export type Movement = {
   id: string;
   card_id: string;
+  title?: string;
   action: string;
   previous_column: string | null;
   column_atual: string | null;
   who: string;
   created_at: string;
+};
+
+export type MovementsResponse = {
+  total: number;
+  page: number;
+  pageSize: number;
+  movements: Movement[];
 };
 
 // -------------------------------------
@@ -436,3 +444,27 @@ export type Summary = {
   slaRate: number;
   avgInteractions: number;
 };
+
+export type CreatedCard = {
+  /** ID do histórico (status_history) */
+  id: string;
+  /** ID do card */
+  cardId: string;
+  /** Título do chamado */
+  title: string;
+  /** Data/hora de criação (ISO string) */
+  createdAt: string;
+  /** Nome do setor */
+  setor: string;
+  /** Nome do cliente */
+  cliente: string;
+  /** Motivo (se houver) */
+  motivo?: string;
+};
+
+export interface HeatmapEntry {
+  /** data no formato YYYY-MM-DD */
+  date: string;
+  /** quantidade de chamados criados nesse dia */
+  count: number;
+}

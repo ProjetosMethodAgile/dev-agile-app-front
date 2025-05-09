@@ -39,6 +39,7 @@ export async function postMotivoKanbanHelpdesk(
     });
 
     revalidateTag("helpdesk-Motivos");
+    revalidateTag("dash-helpdesk");
 
     if (!response.ok) {
       return {

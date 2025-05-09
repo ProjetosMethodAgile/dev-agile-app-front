@@ -2,10 +2,9 @@
 "use client";
 
 import React from "react";
-import { OverdueCard } from "@/types/api/apiTypes";
-
+//ARRUMAR
 interface Props {
-  data: OverdueCard[];
+  data: { created_at: string; card_id: string; delayMinutes: string }[];
 }
 
 export default function SlaDelayedTable({ data }: Props) {

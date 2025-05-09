@@ -30,6 +30,7 @@ export async function atualizamotivoPorID(
       }),
     });
     revalidateTag("helpdesk-Motivos");
+    revalidateTag("dash-helpdesk");
 
     if (!response.ok) {
       return { msg_success: "erro", success: false, status: response.status };

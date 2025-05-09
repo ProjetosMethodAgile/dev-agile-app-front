@@ -1,4 +1,3 @@
-// src/components/HelpDesk/relatorio/ChartsGrid.tsx
 "use client";
 
 import React from "react";
@@ -18,18 +17,25 @@ import {
   Legend,
 } from "recharts";
 import { ChartsData } from "@/types/api/apiTypes";
+import CreatedCalendar from "@/components/HelpDesk/relatorio/CreatedCalendar";
 
 interface Props {
-  data: ChartsData;
+  data?: ChartsData;
+}
+
+function getRandomColor() {
+  return `#${Math.floor(Math.random() * 0xffffff)
+    .toString(16)
+    .padStart(6, "0")}`;
 }
 
 export default function ChartsGrid({ data }: Props) {
   const {
-    resolutionOverTime,
-    volumeByAttendant,
-    statusDistribution,
-    calendarHeatmap,
-  } = data;
+    resolutionOverTime = [],
+    volumeByAttendant = [],
+    statusDistribution = [],
+  } = data || {};
+
   const COLORS = ["#8884d8", "#82ca9d", "#ffc658", "#ff8042", "#8dd1e1"];
 
   return (
@@ -57,9 +63,16 @@ export default function ChartsGrid({ data }: Props) {
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis dataKey="name" />
             <YAxis />
-            <Tooltip />
+            <Tooltip
+              labelFormatter={(label) => `Atendente: ${label}`}
+              formatter={(value) => [`${value}`, "Chamados"]}
+            />
             <Legend />
-            <Bar dataKey="value" name="Chamados" />
+            <Bar dataKey="value" name="Chamados">
+              {volumeByAttendant.map((_, idx) => (
+                <Cell key={idx} fill={getRandomColor()} />
+              ))}
+            </Bar>
           </BarChart>
         </ResponsiveContainer>
       </div>
@@ -67,7 +80,7 @@ export default function ChartsGrid({ data }: Props) {
       {/* Distribuição de Status */}
       <div className="chart-box mirror-container rounded-2xl p-4 shadow-lg">
         <h3 className="mb-2">Distribuição de Chamados por Status</h3>
-        <ResponsiveContainer width="100%" height={200}>
+        <ResponsiveContainer width="100%" height={300}>
           <PieChart>
             <Pie
               data={statusDistribution}
@@ -75,7 +88,7 @@ export default function ChartsGrid({ data }: Props) {
               nameKey="name"
               cx="50%"
               cy="50%"
-              outerRadius={60}
+              outerRadius={110}
               label
             >
               {statusDistribution.map((_, idx) => (
@@ -88,29 +101,10 @@ export default function ChartsGrid({ data }: Props) {
         </ResponsiveContainer>
       </div>
 
-      {/* Calendário */}
+      {/* Calendário de Chamados Criados */}
       <div className="chart-box mirror-container rounded-2xl p-4 shadow-lg">
         <h3 className="mb-2">Calendário de Chamados Criados</h3>
-        <div className="flex flex-wrap gap-1">
-          {calendarHeatmap.map((c) => (
-            <div
-              key={c.date}
-              className="flex h-6 w-6 items-center justify-center rounded text-xs"
-              style={{
-                background:
-                  COLORS[
-                    Math.floor(
-                      (c.count /
-                        Math.max(...calendarHeatmap.map((m) => m.count))) *
-                        COLORS.length,
-                    )
-                  ],
-              }}
-            >
-              {new Date(c.date).getDate()}
-            </div>
-          ))}
-        </div>
+        <CreatedCalendar />
       </div>
     </section>
   );

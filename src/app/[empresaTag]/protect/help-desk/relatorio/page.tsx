@@ -1,54 +1,74 @@
-// src/app/dashboard/page.tsx
-import getDashboardCharts from "@/actions/HelpDesk/relatorio/getDashboardCharts";
-import getDashboardMovements from "@/actions/HelpDesk/relatorio/getDashboardMovements";
-import getDashboardSummary from "@/actions/HelpDesk/relatorio/getDashboardSummary";
-import ChartsGrid from "@/components/HelpDesk/relatorio/ChartsGrid";
+// src/app/[empresaTag]/protect/help-desk/relatorio/page.tsx
+import React from "react";
 import FiltersSidebar from "@/components/HelpDesk/relatorio/FiltersSidebar";
 import KpiGrid from "@/components/HelpDesk/relatorio/KpiGrid";
-import MovementsTable from "@/components/HelpDesk/relatorio/MovementsTable";
-import SlaDelayedTable from "@/components/HelpDesk/relatorio/SlaDelayedTable";
-import TopInteractionsTable from "@/components/HelpDesk/relatorio/TopInteractionsTable";
-import { Suspense } from "react";
+import ChartsGrid from "@/components/HelpDesk/relatorio/ChartsGrid";
+import MovementsSection from "@/components/HelpDesk/relatorio/MovementsSection";
+
+import getDashboardSummary from "@/actions/HelpDesk/relatorio/getDashboardSummary";
+import getDashboardCharts from "@/actions/HelpDesk/relatorio/getDashboardCharts";
+import getDashboardMovements from "@/actions/HelpDesk/relatorio/getDashboardMovements";
+
+import { Summary, ChartsData } from "@/types/api/apiTypes";
 
 export default async function DashboardPage({
   searchParams,
 }: {
-  searchParams: { setores?: string[]; de?: string; ate?: string };
+  searchParams: Promise<{
+    de?: string;
+    ate?: string;
+    setores?: string | string[];
+  }>;
 }) {
-  const query = new URLSearchParams();
-  (searchParams.setores || []).forEach((s) => query.append("setores[]", s));
-  if (searchParams.de) query.set("de", searchParams.de);
-  if (searchParams.ate) query.set("ate", searchParams.ate);
+  const { de = "", ate = "", setores } = await searchParams;
 
-  const summaryRes = await getDashboardSummary(query);
-  const chartsRes = await getDashboardCharts(query);
-  const movesRes = await getDashboardMovements(query);
-
-  if (!summaryRes.ok || !chartsRes.ok || !movesRes.ok) {
-    const error = summaryRes.error || chartsRes.error || movesRes.error;
-    return <div className="p-6 text-red-600">Erro: {error}</div>;
+  const baseQuery = new URLSearchParams();
+  if (de) baseQuery.set("de", de);
+  if (ate) baseQuery.set("ate", ate);
+  if (setores) {
+    const arr = Array.isArray(setores) ? setores : [setores];
+    arr.forEach((s) => baseQuery.append("setores", s));
   }
 
-  const summary = summaryRes.data;
-  const charts = chartsRes.data;
-  const movements = movesRes.data;
+  const sumR = await getDashboardSummary(baseQuery);
+  const chR = await getDashboardCharts(baseQuery);
+  const mvR = await getDashboardMovements(baseQuery);
+
+  const summary: Summary = sumR.ok
+    ? sumR.data
+    : {
+        total: 0,
+        open: 0,
+        inProgress: 0,
+        done: 0,
+        late: 0,
+        avgResolutionTime: 0,
+        slaRate: 0,
+        avgInteractions: 0,
+      };
+
+  const charts: ChartsData = chR.ok
+    ? chR.data
+    : {
+        resolutionOverTime: [],
+        volumeByAttendant: [],
+        statusDistribution: [],
+        calendarHeatmap: [],
+      };
+
+  // só passa array puro pro sidebar
+  const movementsArray = mvR.ok ? mvR.data.movements : [];
 
   return (
     <div className="min-h-screen p-6">
       <h1 className="mb-6 text-3xl font-bold">📊 Painel SLA & KPI</h1>
       <div className="flex flex-col gap-6 md:flex-row">
-        <FiltersSidebar data={movements} summary={summary} />
+        <FiltersSidebar data={movementsArray} />
 
         <main className="flex flex-1 flex-col gap-6">
           <KpiGrid summary={summary} />
           <ChartsGrid data={charts} />
-          <Suspense fallback={<p>Carregando tabelas…</p>}>
-            <MovementsTable data={movements} />
-            <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-              <SlaDelayedTable data={summary.lateList} />
-              <TopInteractionsTable data={summary.topInteractions} />
-            </div>
-          </Suspense>
+          <MovementsSection baseQuery={baseQuery} />
         </main>
       </div>
     </div>

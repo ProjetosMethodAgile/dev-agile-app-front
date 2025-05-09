@@ -2,10 +2,14 @@
 "use client";
 
 import React from "react";
-import { InteractionCard } from "@/types/api/apiTypes";
+// import { InteractionCard } from "@/types/api/apiTypes";
 
 interface Props {
-  data: InteractionCard[];
+  // data: InteractionCard[];
+  data: {
+    card_id: string;
+    interactions: string;
+  }[];
 }
 
 export default function TopInteractionsTable({ data }: Props) {
