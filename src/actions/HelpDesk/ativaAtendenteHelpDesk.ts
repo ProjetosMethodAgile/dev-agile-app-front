@@ -30,6 +30,7 @@ export async function ativaAtendenteHelpdesk(id: string) {
         "Content-Type": "application/json",
       },
     });
+   
 
     
     if (!response.ok) {
@@ -38,7 +39,9 @@ export async function ativaAtendenteHelpdesk(id: string) {
 
     revalidateTag("atendente-helpdesk");
     revalidateTag("setor-helpdesk");
-   
+    revalidateTag("helpdesk-columns");
+    revalidateTag("helpdesk-kanban");
+
  
     return await response.json();
   } catch (err) {

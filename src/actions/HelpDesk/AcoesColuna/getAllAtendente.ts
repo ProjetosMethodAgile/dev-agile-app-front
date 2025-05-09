@@ -24,14 +24,14 @@ export async function pegaTodosAtendente() {
 
           
           const endpoint: string = result.url;
-          console.log(endpoint);
+         
         const response = await fetch(endpoint, {
           method: "GET",
           headers: {
             Authorization: "Bearer " + token,
           },
           next: {
-            revalidate: 60,
+           
             tags: ["atendente-helpdesk","setor-helpdesk"],
           },
         });
