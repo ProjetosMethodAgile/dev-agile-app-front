@@ -172,7 +172,8 @@ export type MotivoHelpDesk = {
   id: string;
   setor_id: string;
   descricao: string;
-  src_img: string;
+  src_img: string | null;
+  sla_minutes: number;
   createdAt: string;
   updatedAt: string;
 } & React.SetStateAction<string[] | null>;
@@ -383,3 +384,13 @@ export type CardHelpDeskSessao = {
 };
 
 export type GetUserResult = GetUserSuccess | GetUserError;
+
+export type KanbanHistory = {
+  id: string;
+  card_id: string;
+  action_type: string;
+  previous_column: string;
+  column_atual: string;
+  changed_by: string | null;
+  created_at: string;
+};

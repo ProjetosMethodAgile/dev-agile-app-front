@@ -59,14 +59,11 @@ type IGlobalContext = {
   numChamado: string | null;
   setNumChamado: React.Dispatch<React.SetStateAction<string | null>>;
   setMotivoselecionado: React.Dispatch<React.SetStateAction<string>>;
-  motivoselecionado:string | null; 
+  motivoselecionado: string | null;
   currentSetor: string;
   setCurrentSetor: React.Dispatch<React.SetStateAction<string>>;
-  messagesLogado:Message[];
+  messagesLogado: Message[];
   setMessagesLogado: React.Dispatch<React.SetStateAction<Message[]>>;
-  
-  
-  
 };
 
 const GlobalContext = React.createContext<IGlobalContext | null>(null);
@@ -119,7 +116,6 @@ export function GlobalContextProvider({
     },
   ]);
 
-
   const [etapaAtual, setEtapaAtual] = useState<number>(0);
   const [messageUser, setMessageUser] = useState("");
 
@@ -168,14 +164,16 @@ export function GlobalContextProvider({
         SetSetorHelpdesk,
         currentSetor,
         setCurrentSetor,
-        motivoID, 
+        motivoID,
         setMotivoID,
         motivoImage,
         setMotivoImage,
-        motivoselecionado, 
+        motivoselecionado,
         setMotivoselecionado,
-        numChamado, setNumChamado,
-        messagesLogado, setMessagesLogado
+        numChamado,
+        setNumChamado,
+        messagesLogado,
+        setMessagesLogado,
       }}
     >
       {children}

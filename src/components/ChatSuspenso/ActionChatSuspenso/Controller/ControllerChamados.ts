@@ -26,6 +26,7 @@ export class ControllerChamados {
     titulo: string,
     descricao: string,
     status: string,
+    motivo_id: string,
   ): Promise<void> {
     const response = await postCardAuthHelpdesk(
       setorID,
@@ -33,6 +34,7 @@ export class ControllerChamados {
       titulo,
       status,
       descricao,
+      motivo_id,
     );
     return response;
   }
