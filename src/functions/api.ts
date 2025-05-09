@@ -189,6 +189,16 @@ export function ATIVA_ATTENDENT_HELPDESK(id:string){
     url: API_URL + `/helpdesk/atendentes/ativo/${id}`
 };
 }
+export function DESATIVA_ATTENDENT_HELPDESK_POR_SETOR_E_ID(atendente_id:string,setor_kanban_id:string){
+  return {
+    url: API_URL + `/helpdesk/atendentes/setor/desativa/${atendente_id}/setor/${setor_kanban_id}`
+};
+}
+export function ATIVA_ATTENDENT_HELPDESK_POR_SETOR_E_ID(atendente_id:string,setor_kanban_id:string){
+  return {
+    url: API_URL + `/helpdesk/atendentes/setor/ativa/${atendente_id}/setor/${setor_kanban_id}`
+};
+}
 export function PEGA_TODOS_ATENDNETES(empresa_id:string){
   return {
     url: API_URL + `/helpdesk/atendentes/all/${empresa_id}`
