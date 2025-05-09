@@ -1,14 +1,15 @@
-// components/MovementsTable.tsx
+// src/components/HelpDesk/relatorio/MovementsTable.tsx
+"use client";
 
-import { KanbanHistory } from "@/types/api/apiTypes";
 import React from "react";
+import { Movement } from "@/types/api/apiTypes";
 
 interface Props {
-  data: KanbanHistory[];
+  data: Movement[];
 }
 
 export default function MovementsTable({ data }: Props) {
-  const recent = data.slice(-5);
+  const recent = data.slice(0, 5);
 
   return (
     <div className="mirror-container table-box">
@@ -19,7 +20,7 @@ export default function MovementsTable({ data }: Props) {
             <th className="py-2">Data</th>
             <th className="py-2">Card ID</th>
             <th className="py-2">Ação</th>
-            <th className="py-2">De→Para</th>
+            <th className="py-2">De → Para</th>
             <th className="py-2">Quem</th>
           </tr>
         </thead>
@@ -30,7 +31,7 @@ export default function MovementsTable({ data }: Props) {
                 {new Date(h.created_at).toLocaleString()}
               </td>
               <td className="w-32 truncate py-2 text-blue-400">{h.card_id}</td>
-              <td className="py-2">{h.action_type}</td>
+              <td className="py-2">{h.action}</td>
               <td className="py-2">
                 {h.previous_column} → {h.column_atual}
               </td>

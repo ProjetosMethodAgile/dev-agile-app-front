@@ -1,43 +1,49 @@
+// src/components/HelpDesk/relatorio/KpiGrid.tsx
+"use client";
+
 import React from "react";
-import { KanbanHistory } from "@/types/api/apiTypes";
+import { Summary } from "@/types/api/apiTypes";
 
 interface Props {
-  data: KanbanHistory[];
+  summary: Summary;
 }
 
-export default function KpiGrid({ data }: Props) {
-  console.log(data);
-
-  const avgTime = "08:42";
-  const slaRate = "94.3%";
-  const open = 42,
-    closed = 189;
-  const interactions = "4.7";
+export default function KpiGrid({ summary }: Props) {
+  const {
+    total,
+    open,
+    inProgress,
+    done,
+    late,
+    avgResolutionTime,
+    slaRate,
+    avgInteractions,
+  } = summary;
 
   const items = [
     {
       icon: "fa-clock",
-      title: "Tempo Médio de Resolução",
-      value: avgTime,
-      note: "↓ 12% vs mês anterior",
+      title: "Tempo Médio de Resolução (min)",
+      value: `${avgResolutionTime.toFixed(0)}`,
+      note: "",
     },
     {
       icon: "fa-shield-alt",
-      title: "Taxa de SLA Cumprido",
-      value: slaRate,
-      note: "↑ 3.2% vs meta",
+      title: "Taxa de SLA Cumprido (%)",
+      value: `${slaRate.toFixed(2)}%`,
+      note: "",
     },
     {
       icon: "fa-tasks",
       title: "Abertos x Fechados",
-      value: `${open} / ${closed}`,
-      note: "81.8% resolução",
+      value: `${open} / ${done}`,
+      note: "",
     },
     {
       icon: "fa-comments",
       title: "Interações / Chamado",
-      value: interactions,
-      note: "↑ 0.5 acima da média",
+      value: `${avgInteractions.toFixed(2)}`,
+      note: "",
     },
   ];
 

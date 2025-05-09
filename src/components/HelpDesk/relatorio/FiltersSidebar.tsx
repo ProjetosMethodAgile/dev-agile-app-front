@@ -1,9 +1,11 @@
+// src/components/HelpDesk/relatorio/FiltersSidebar.tsx
 "use client";
+
 import React from "react";
-import { KanbanHistory } from "@/types/api/apiTypes";
+import { Movement } from "@/types/api/apiTypes";
 
 interface Props {
-  data: KanbanHistory[];
+  data: Movement[];
 }
 
 export default function FiltersSidebar({ data }: Props) {
@@ -13,9 +15,15 @@ export default function FiltersSidebar({ data }: Props) {
   ) as string[];
 
   const total = data.length;
-  const inProgress = data.filter((h) => h.column_atual === "Doing").length;
-  const done = data.filter((h) => h.column_atual === "Done").length;
-  const late = 16; // placeholder
+  const inProgress = data.filter(
+    (h) => h.column_atual === "Em Andamento",
+  ).length;
+  const done = data.filter((h) => h.column_atual === "Encerrado").length;
+  const late = data.filter((h) => {
+    const created = new Date(h.created_at).getTime();
+    // placeholder: se quiser comparar com sla aqui, substitua:
+    return false;
+  }).length;
 
   return (
     <aside className="mirror-container w-full rounded-2xl p-6 shadow-lg md:w-64">

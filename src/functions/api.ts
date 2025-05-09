@@ -228,10 +228,16 @@ export function PEGA_TODOS_ATENDNETES(empresa_id: string) {
 
 //=================HELPDESK-RELATORIO=====================================/
 
-export function GET_KANBAN_STATUS_HISTORIES(empresa_id: string) {
-  return {
-    url: API_URL + `/helpdesk/${empresa_id}`,
-  };
+export function GET_DASHBOARD_SUMMARY(query: URLSearchParams) {
+  return { url: API_URL + `/api/dashboard/summary?${query}` };
+}
+
+export function GET_DASHBOARD_CHARTS(query: URLSearchParams) {
+  return { url: API_URL + `/api/dashboard/charts?${query}` };
+}
+
+export function GET_DASHBOARD_MOVEMENTS(query: URLSearchParams) {
+  return { url: API_URL + `/api/dashboard/movements?${query}` };
 }
 
 //=================USUARIOS=====================================/

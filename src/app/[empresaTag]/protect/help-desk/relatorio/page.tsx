@@ -1,53 +1,52 @@
-import { Suspense } from "react";
-import { KanbanHistory } from "@/types/api/apiTypes";
+// src/app/dashboard/page.tsx
+import getDashboardCharts from "@/actions/HelpDesk/relatorio/getDashboardCharts";
+import getDashboardMovements from "@/actions/HelpDesk/relatorio/getDashboardMovements";
+import getDashboardSummary from "@/actions/HelpDesk/relatorio/getDashboardSummary";
+import ChartsGrid from "@/components/HelpDesk/relatorio/ChartsGrid";
 import FiltersSidebar from "@/components/HelpDesk/relatorio/FiltersSidebar";
 import KpiGrid from "@/components/HelpDesk/relatorio/KpiGrid";
-import ChartsGrid from "@/components/HelpDesk/relatorio/ChartsGrid";
 import MovementsTable from "@/components/HelpDesk/relatorio/MovementsTable";
 import SlaDelayedTable from "@/components/HelpDesk/relatorio/SlaDelayedTable";
 import TopInteractionsTable from "@/components/HelpDesk/relatorio/TopInteractionsTable";
-import getKanbanStatusHistories from "@/actions/HelpDesk/relatorio/getKanbanStatusHistories";
+import { Suspense } from "react";
 
-export const metadata = {
-  title: "Painel SLA & KPI – Central de Chamados",
-};
+export default async function DashboardPage({
+  searchParams,
+}: {
+  searchParams: { setores?: string[]; de?: string; ate?: string };
+}) {
+  const query = new URLSearchParams();
+  (searchParams.setores || []).forEach((s) => query.append("setores[]", s));
+  if (searchParams.de) query.set("de", searchParams.de);
+  if (searchParams.ate) query.set("ate", searchParams.ate);
 
-export default async function RelatorioHelpDeskPage() {
-  const result = await getKanbanStatusHistories();
-  let histories: KanbanHistory[] = [];
-  let errorMessage: string | null = null;
+  const summaryRes = await getDashboardSummary(query);
+  const chartsRes = await getDashboardCharts(query);
+  const movesRes = await getDashboardMovements(query);
 
-  if (result.ok) {
-    histories = result.data;
-  } else {
-    errorMessage = result.error;
+  if (!summaryRes.ok || !chartsRes.ok || !movesRes.ok) {
+    const error = summaryRes.error || chartsRes.error || movesRes.error;
+    return <div className="p-6 text-red-600">Erro: {error}</div>;
   }
+
+  const summary = summaryRes.data;
+  const charts = chartsRes.data;
+  const movements = movesRes.data;
 
   return (
     <div className="min-h-screen p-6">
-      <header className="mb-6">
-        <h1 className="text-3xl font-bold">
-          📊 Painel SLA & KPI – Central de Chamados
-        </h1>
-      </header>
-
-      {errorMessage && (
-        <div className="mb-4 rounded bg-red-600 p-3 text-white">
-          Erro ao carregar dados: {errorMessage}
-        </div>
-      )}
-
+      <h1 className="mb-6 text-3xl font-bold">📊 Painel SLA & KPI</h1>
       <div className="flex flex-col gap-6 md:flex-row">
-        <FiltersSidebar data={histories} />
+        <FiltersSidebar data={movements} summary={summary} />
 
         <main className="flex flex-1 flex-col gap-6">
-          <KpiGrid data={histories} />
-          <ChartsGrid data={histories} />
-          <Suspense fallback={<p>Carregando tabelas...</p>}>
-            <MovementsTable data={histories} />
+          <KpiGrid summary={summary} />
+          <ChartsGrid data={charts} />
+          <Suspense fallback={<p>Carregando tabelas…</p>}>
+            <MovementsTable data={movements} />
             <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-              <SlaDelayedTable data={histories} />
-              <TopInteractionsTable data={histories} />
+              <SlaDelayedTable data={summary.lateList} />
+              <TopInteractionsTable data={summary.topInteractions} />
             </div>
           </Suspense>
         </main>

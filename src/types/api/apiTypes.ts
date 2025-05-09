@@ -394,3 +394,45 @@ export type KanbanHistory = {
   changed_by: string | null;
   created_at: string;
 };
+
+// resultado genérico
+export type ApiResult<T> =
+  | { data: T; ok: true }
+  | { ok: false; error: string; statusCode?: number };
+
+// -------------------------------------
+// 1) Movements
+// -------------------------------------
+export type Movement = {
+  id: string;
+  card_id: string;
+  action: string;
+  previous_column: string | null;
+  column_atual: string | null;
+  who: string;
+  created_at: string;
+};
+
+// -------------------------------------
+// 2) Charts
+// -------------------------------------
+export type ChartsData = {
+  resolutionOverTime: { name: string; value: number }[];
+  volumeByAttendant: { name: string; value: number }[];
+  statusDistribution: { name: string; value: number }[];
+  calendarHeatmap: { date: string; count: number }[];
+};
+
+// -------------------------------------
+// 3) Summary
+// -------------------------------------
+export type Summary = {
+  total: number;
+  open: number;
+  inProgress: number;
+  done: number;
+  late: number;
+  avgResolutionTime: number;
+  slaRate: number;
+  avgInteractions: number;
+};
