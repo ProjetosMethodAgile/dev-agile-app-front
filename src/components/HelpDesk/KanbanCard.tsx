@@ -20,6 +20,9 @@ export default function KanbanCard({
   const cardRef = React.useRef<HTMLDivElement>(null);
   const { setCard } = useGlobalContext();
 
+  // pega a lista de atendentes, ou array vazio se não existir sessão
+  const atendentes = card.CardSessao?.atendentesVinculados ?? [];
+
   function dragCardStart(cardElement: HTMLDivElement) {
     cardElement.classList.add("opacity-10");
   }
@@ -31,7 +34,7 @@ export default function KanbanCard({
   return (
     <div
       data-card-id={cardId}
-      data-original-column={card.column_id} // <-- adiciona aqui
+      data-original-column={card.column_id}
       className="bg-primary-300 mr-2 flex flex-col gap-2 rounded-2xl p-2 shadow-2xl"
       ref={cardRef}
       draggable
@@ -70,13 +73,13 @@ export default function KanbanCard({
           </div>
         </div>
         <div className="flex max-w-[90px] overflow-x-auto">
-          {card.CardSessao.atendentesVinculados.map((atendente) => (
+          {atendentes.map((atendente) => (
             <p
               key={atendente.KanbanSessoesAtendentes.atenden}
               className="rounded-full bg-gray-600 p-1 font-bold hover:bg-gray-500"
               title={atendente.UsuarioAtendente?.nome}
             >
-              {getIniciaisNome(atendente?.UsuarioAtendente?.nome)}
+              {getIniciaisNome(atendente.UsuarioAtendente?.nome)}
             </p>
           ))}
         </div>

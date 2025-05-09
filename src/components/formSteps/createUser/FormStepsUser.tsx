@@ -44,7 +44,7 @@ type FormStepsUser = {
     role: string;
     permissoes: PermissaoCompletaData[];
   };
-  empresaTag: string;
+  empresaTag?: string;
 };
 
 export default function FormStepsUser({

@@ -12,17 +12,17 @@ export async function postCardAuthHelpdesk(
   titulo_chamado: string,
   status: string,
   descricao: string,
+  motivo_id: string, // <-- adicionado
 ) {
   const token = (await cookies()).get("token")?.value;
   if (!token) throw new Error("Token não encontrado.");
 
-  // Decodifica o token e espera que ele contenha o objeto 'empresa'
   const usuarioData = jwt.decode(token) as TokenData;
   if (!usuarioData || !usuarioData.id || !usuarioData.empresa)
     throw new Error("Token inválido");
 
   const { url } = POST_AUTH_CHAMADO_KANBAN_COLUNA();
-  if (!url || !url) {
+  if (!url) {
     return { msg_success: "erro", success: false };
   }
 
@@ -43,6 +43,7 @@ export async function postCardAuthHelpdesk(
         titulo_chamado,
         status,
         descricao,
+        motivo_id, // <-- incluído no payload
         usuario_id: usuarioData.id,
       }),
     });

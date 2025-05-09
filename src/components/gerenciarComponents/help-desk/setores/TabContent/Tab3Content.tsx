@@ -1,4 +1,5 @@
 "use client";
+import React, { useEffect, useState } from "react";
 import getMotivoSetor from "@/actions/getMotivoSetor";
 import { deletaMotivoKanban } from "@/actions/HelpDesk/deleteMotivoKanbam";
 import { postMotivoKanbanHelpdesk } from "@/actions/HelpDesk/postKanbanMotivos";
@@ -7,274 +8,277 @@ import { Form } from "@/components/form";
 import Modal from "@/components/modal/Modal";
 import { MotivoHelpDesk, SetorHelpDesk } from "@/types/api/apiTypes";
 import iconsMap from "@/utils/iconsMap";
-import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
-function Tab3Content({ setorProps }: { setorProps: SetorHelpDesk }) {
+interface Tab3ContentProps {
+  setorProps: SetorHelpDesk;
+}
+
+export default function Tab3Content({ setorProps }: Tab3ContentProps) {
   const Delete = iconsMap["delete"];
   const Edit = iconsMap["editBtn"];
   const More = iconsMap["add"];
-  const [motivosKanbanEdit, setMotivosKanbanEdit] = useState<MotivoHelpDesk[]>([]);
-  const [activeMenu, setActiveMenu] = useState("edit");
+
+  const [motivosKanban, setMotivosKanban] = useState<MotivoHelpDesk[]>([]);
+  const [activeMenu, setActiveMenu] = useState<"add" | "edit">("edit");
   const [tituloMotivo, setTituloMotivo] = useState<string>("");
   const [urlMotivo, setUrlMotivo] = useState<string>("");
-  const [popUp, setPopUp] = useState({
-    message: "",
-  });
-  const [motivoSelecionado, setIdMotivoSelecionado] = useState<string>("");
-  const [nomeMotivoSelecionado, setnomeMotivoSelecionado] =
-    useState<string>("");
+  const [slaMinutes, setSlaMinutes] = useState<number>(0);
 
+  const [popUp, setPopUp] = useState<"" | "modalDelet" | "modalEdit">("");
+  const [motivoSelecionado, setMotivoSelecionado] =
+    useState<MotivoHelpDesk | null>(null);
+
+  // busca motivos para este setor
   useEffect(() => {
-    async function pegaMotivoSetorID() {
-      const response = await getMotivoSetor(setorProps.id);
-      if (response.data) {
-        setMotivosKanbanEdit(response.data);
-      }
+    async function load() {
+      const resp = await getMotivoSetor(setorProps.id);
+      if (resp.data) setMotivosKanban(resp.data);
     }
-    pegaMotivoSetorID();
+    load();
   }, [setorProps.id]);
 
-  async function handleRegisterMotivo(
-    e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
-  ) {
-    e.preventDefault();
-    await postMotivoKanbanHelpdesk(setorProps.id, tituloMotivo, urlMotivo);
-
-    getMotivoSetor(setorProps.id);
-    setUrlMotivo("");
-    setTituloMotivo("");
-    setActiveMenu("edit");
-    toast.success("Motivo cadastrado com sucesso");
-  }
-
-  async function handleConfirmDelete(motivoId: string) {
-    const response = await deletaMotivoKanban(motivoId);
-    await getMotivoSetor(setorProps.id);
-    if (response.success) {
-      setPopUp({ message: "" });
-      toast.success(`Motivo ${nomeMotivoSelecionado} foi excluido com sucesso`);
+  // cadastrar novo motivo
+  async function handleRegisterMotivo() {
+    const resp = await postMotivoKanbanHelpdesk(
+      setorProps.id,
+      tituloMotivo,
+      urlMotivo,
+      slaMinutes,
+    );
+    if (resp.success) {
+      toast.success("Motivo cadastrado com sucesso");
+      setTituloMotivo("");
+      setUrlMotivo("");
+      setSlaMinutes(0);
+      setActiveMenu("edit");
+      const fresh = await getMotivoSetor(setorProps.id);
+      if (fresh.data) setMotivosKanban(fresh.data);
+    } else {
+      toast.error(resp.message || "Erro ao cadastrar motivo");
     }
   }
 
-  async function handleEditaMotivo(
-    nomeMotivoSelecionado: string,
-    motivoSelecionado: string,
-    urlMotivo: string,
-  ) {
-    const response = await atualizamotivoPorID(
-      nomeMotivoSelecionado,
-      motivoSelecionado,
+  // confirmar exclusão
+  async function handleConfirmDelete() {
+    if (!motivoSelecionado) return;
+    const resp = await deletaMotivoKanban(motivoSelecionado.id);
+    if (resp.success) {
+      toast.success(`Motivo "${motivoSelecionado.descricao}" excluído`);
+      setPopUp("");
+      const fresh = await getMotivoSetor(setorProps.id);
+      if (fresh.data) setMotivosKanban(fresh.data);
+    } else {
+      toast.error("Erro ao excluir");
+    }
+  }
+
+  // salvar edição
+  async function handleEditMotivo() {
+    if (!motivoSelecionado) return;
+    const resp = await atualizamotivoPorID(
+      tituloMotivo,
+      motivoSelecionado.id,
       urlMotivo,
+      slaMinutes,
     );
-    if (response.success) {
-      await getMotivoSetor(setorProps.id);
-      setPopUp({ message: "" });
-      toast.success(`Motivo ${nomeMotivoSelecionado} foi alterado com sucesso`);
+    if (resp.success) {
+      toast.success(`Motivo "${tituloMotivo}" atualizado`);
+      setPopUp("");
+      const fresh = await getMotivoSetor(setorProps.id);
+      if (fresh.data) setMotivosKanban(fresh.data);
+    } else {
+      toast.error("Erro ao editar");
     }
   }
 
   return (
-    <div className="animate-move-left-to-right relative min-h-90 min-w-130">
+    <div className="animate-move-left-to-right relative min-h-[22rem] min-w-[32rem]">
       {activeMenu === "add" ? (
-        <>
-          <Form.Root className={`flex flex-col gap-5`}>
-            <div className="flex justify-between gap-3">
-              <h1 className="p-1 text-2xl">Motivo</h1>
-              <div className="flex gap-3">
-                <div
-                  className="flex size-10 cursor-pointer items-center justify-center rounded-[5px] rounded-xl bg-green-500 p-2 text-white hover:bg-green-600 active:scale-95"
-                  onClick={() => setActiveMenu("add")}
-                >
-                  <More />
-                </div>
-
-                <div
-                  className="bg-primary-300 hover:bg-primary-300/70 flex size-10 cursor-pointer items-center justify-center rounded-xl active:scale-95"
-                  onClick={() => setActiveMenu("edit")}
-                >
-                  <Edit />
-                </div>
-              </div>
-            </div>
-            <p className="w-100 pb-2 pl-1 text-[15px] text-gray-500">
-              Aqui você cadastra os motivos pelos quais os setores podem entrar
-              em contato com o seu time.
-            </p>
-            <Form.InputText
-              className="focus:outline-none"
-              type="text"
-              placeholder="Titulo do motivo"
-              value={tituloMotivo}
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                setTituloMotivo(e.target.value)
-              }
-            />
-            <Form.InputText
-              type="text"
-              placeholder="URL da imagem"
-              className="focus:outline-none"
-              value={urlMotivo}
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                setUrlMotivo(e.target.value)
-              }
-            />
-            <Form.InputSubmit
-              className={`hover:bg-primary-300 text-white ${tituloMotivo.length <= 0 || urlMotivo.length <= 0 ? "active:bg-primary-200/50 bg-primary-200/50 hover:bg-primary-200/50 cursor-no-drop" : ""}`}
-              onClick={(e) => {
-                e.preventDefault();
-                handleRegisterMotivo(e);
-              }}
-              disabled={tituloMotivo.length <= 0 || urlMotivo.length <= 0}
+        <Form.Root className="flex flex-col gap-5">
+          <div className="flex items-center justify-between">
+            <h1 className="text-2xl">Novo Motivo</h1>
+            <button
+              className="rounded bg-gray-700 p-2 hover:bg-gray-600"
+              onClick={() => setActiveMenu("edit")}
             >
-              Cadastar
-            </Form.InputSubmit>
-          </Form.Root>
-        </>
-      ) : activeMenu === "edit" ? (
-        <div className="h-80 overflow-y-auto pr-5">
-          <div className="flex justify-between gap-3">
-            <h1 className="p-1 text-2xl">{popUp.message==="modalDelet"?"Deletar Motivo":popUp.message==="modalEdit"?"Editar motivo":"Motivos cadastrado"}</h1>
-            <div className="flex gap-3">
-              <div
-                className="flex size-10 cursor-pointer items-center justify-center rounded-[5px] rounded-xl bg-green-500 p-2 text-white hover:bg-green-600 active:scale-95"
-                onClick={() => setActiveMenu("add")}
-              >
-                <More />
-              </div>
-            </div>
+              Voltar
+            </button>
+          </div>
+          <p className="text-[15px] text-gray-500">
+            Cadastre o motivo e defina o SLA em minutos.
+          </p>
+          <Form.InputText
+            placeholder="Título do motivo"
+            value={tituloMotivo}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+              setTituloMotivo(e.target.value)
+            }
+            className="focus:outline-none"
+          />
+          <Form.InputText
+            placeholder="URL da imagem"
+            value={urlMotivo}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+              setUrlMotivo(e.target.value)
+            }
+            className="focus:outline-none"
+          />
+          <Form.InputText
+            placeholder="SLA (minutos)"
+            type="number"
+            value={slaMinutes.toString()}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+              setSlaMinutes(Number(e.target.value))
+            }
+            className="focus:outline-none"
+          />
+          <Form.InputSubmit
+            disabled={!tituloMotivo || !urlMotivo || slaMinutes <= 0}
+            className="rounded bg-green-500 text-white hover:bg-green-600 disabled:opacity-50"
+            onClick={(e) => {
+              e.preventDefault();
+              handleRegisterMotivo();
+            }}
+          >
+            Cadastrar
+          </Form.InputSubmit>
+        </Form.Root>
+      ) : (
+        <div className="h-[20rem] overflow-y-auto pr-4">
+          <div className="mb-2 flex items-center justify-between">
+            <h1 className="text-2xl">
+              {popUp === "modalDelet"
+                ? "Confirmar Exclusão"
+                : popUp === "modalEdit"
+                  ? "Editar Motivo"
+                  : "Motivos Cadastrados"}
+            </h1>
+            <button
+              className="rounded bg-green-500 p-2 text-white hover:bg-green-600"
+              onClick={() => setActiveMenu("add")}
+            >
+              <More />
+            </button>
           </div>
 
-          <p className="w-100 pb-2 text-[15px] text-gray-500">
-            Aqui você pode editar ou excluir os motivos cadastrados. Eles são
-            exibidos quando alguém abre um chamado
-          </p>
-            {popUp.message === "modalDelet"|| popUp.message ==="modalEdit"? 
-            <div  className="dark:bg-primary-600 bg-primary-500 sticky top-0 flex rounded-md text-white">
-                <p className="min-w-50 m-auto">Uma vez editado ou removido não podera retornar os valores</p>
-            </div>
-            
-            :
-          <ul className="dark:bg-primary-600 bg-primary-500 sticky top-0 flex rounded-md text-white">
-            <li className="min-w-50 text-center">Descrição</li>
-            <li className="min-w-50 text-center">Ações</li>
-          </ul>
-          }
-          <ul>
-          {popUp.message === "modalDelet" ? (
-              <Modal className="p-5" >
-                <div className="">
-                  <div>
-                    <p className="flex flex-col p-1 text-[1rem]">
-                      Deseja realmente deletar o motivo {nomeMotivoSelecionado}?
-                      Esta ação <strong>não poderá ser desfeita.</strong>
+          {popUp && (
+            <Modal>
+              <div className="p-5">
+                {popUp === "modalDelet" ? (
+                  <>
+                    <p>
+                      Deseja realmente deletar o motivo{" "}
+                      <strong>{motivoSelecionado?.descricao}</strong>?
                     </p>
-                    <div className="popup-buttons mt-5 flex gap-5">
+                    <div className="mt-4 flex gap-3">
                       <button
-                        onClick={() => handleConfirmDelete(motivoSelecionado)}
-                        className="w-30 rounded-[5px] bg-green-500 p-2"
+                        className="rounded bg-red-500 px-4 py-2 text-white"
+                        onClick={handleConfirmDelete}
                       >
                         Sim
                       </button>
                       <button
-                        onClick={() => setPopUp({ message: "" })}
-                        className="w-30 rounded-[5px] bg-red-600 p-2"
+                        className="rounded bg-gray-500 px-4 py-2 text-white"
+                        onClick={() => setPopUp("")}
                       >
                         Não
                       </button>
                     </div>
-                  </div>
-                </div>
-              </Modal>
-            ) : popUp.message === "modalEdit" ? (
-              <Modal className="" >
-                  <div className="flex h-full w-full gap-5 mt-5 flex-col">
+                  </>
+                ) : (
+                  <>
                     <Form.InputText
-                      value={nomeMotivoSelecionado}
-                      className=""
-                      onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                        setnomeMotivoSelecionado(e.target.value);
-                      }}
+                      placeholder="Título do motivo"
+                      value={tituloMotivo}
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                        setTituloMotivo(e.target.value)
+                      }
                     />
                     <Form.InputText
+                      placeholder="URL da imagem"
                       value={urlMotivo}
-                      className=""
-                      onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                        setUrlMotivo(e.target.value);
-                      }}
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                        setUrlMotivo(e.target.value)
+                      }
                     />
-                    <div className="flex gap-5">
+                    <Form.InputText
+                      placeholder="SLA (minutos)"
+                      type="number"
+                      value={slaMinutes.toString()}
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                        setSlaMinutes(Number(e.target.value))
+                      }
+                    />
+                    <div className="mt-4 flex gap-3">
                       <button
-                        onClick={() =>
-                          handleEditaMotivo(
-                            nomeMotivoSelecionado,
-                            motivoSelecionado,
-                            urlMotivo,
-                          )
-                        }
-                        className="w-30 rounded-[5px] bg-green-500 p-2"
+                        className="rounded bg-green-500 px-4 py-2 text-white"
+                        onClick={handleEditMotivo}
                       >
-                        Alterar
+                        Salvar
                       </button>
                       <button
-                        onClick={() => setPopUp({ message: "" })}
-                        className="w-30 rounded-[5px] bg-red-600 p-2"
+                        className="rounded bg-gray-500 px-4 py-2 text-white"
+                        onClick={() => setPopUp("")}
                       >
-                        Fechar
+                        Cancelar
                       </button>
                     </div>
+                  </>
+                )}
+              </div>
+            </Modal>
+          )}
+
+          {!popUp && (
+            <ul className="mb-2 flex rounded bg-gray-700 px-2 py-1 text-white">
+              <li className="flex-1 text-center">Descrição</li>
+              <li className="flex-1 text-center">SLA (min)</li>
+              <li className="w-32 text-center">Ações</li>
+            </ul>
+          )}
+
+          {!popUp &&
+            motivosKanban.map((mot) => (
+              <div
+                key={mot.id}
+                className="flex items-center justify-between border-b border-gray-600 py-2"
+              >
+                <div className="flex-1 truncate">{mot.descricao}</div>
+                <div className="flex-1 text-center">{mot.sla_minutes}</div>
+                <div className="flex gap-2">
+                  <button
+                    className="rounded bg-blue-500 p-1 text-white"
+                    onClick={() => {
+                      setPopUp("modalEdit");
+                      setMotivoSelecionado(mot);
+                      setTituloMotivo(mot.descricao);
+                      setUrlMotivo(mot.src_img ?? "");
+                      setSlaMinutes(mot.sla_minutes ?? 0);
+                    }}
+                  >
+                    <Edit />
+                  </button>
+                  <button
+                    className="rounded bg-red-500 p-1 text-white"
+                    onClick={() => {
+                      setPopUp("modalDelet");
+                      setMotivoSelecionado(mot);
+                    }}
+                  >
+                    <Delete />
+                  </button>
                 </div>
-                
-              </Modal>
-            ) : (
-              ""
-            )}
-        
-            {motivosKanbanEdit.length && !popUp.message.length ? (
-              motivosKanbanEdit.map((item) => (
-                <div
-                  key={item.id}
-                  className="dark:border-primary-600/70 border-primary-300 hover:bg-primary-200/50 my-1 flex h-16 items-center rounded-md border p-2 transition-all"
-                >
-                  <li className="min-w-50 text-center">{item.descricao}</li>
-                  <li className="flex min-w-50 justify-center text-center">
-                    <div className="flex flex-row-reverse gap-4">
-                      <div
-                        className="cursor-pointer rounded-xl bg-red-500 p-2 text-white hover:bg-red-700 active:scale-95"
-                        onClick={() => {
-                          setPopUp({ message: "modalDelet" });
-                          setIdMotivoSelecionado(item.id);
-                            setnomeMotivoSelecionado(item.descricao);
-                        }}
-                      >
-                        <Delete />
-                      </div>
-                      <div
-                        className="bg-primary-300 hover:bg-primary-600/70 cursor-pointer rounded-xl p-2 text-white active:scale-95"
-                        onClick={() => {
-                          setPopUp({ message: "modalEdit" });
-                          setIdMotivoSelecionado(item.id);
-                          setnomeMotivoSelecionado(item.descricao);
-                          setUrlMotivo(item.src_img);
-                        }}
-                      >
-                        <Edit />
-                      </div>
-                    </div>
-                  </li>
-                </div>
-              ))
-            ) : (
-              <p className="text-center">{popUp.message ==="modalDelet"|| popUp.message === "modalEdit"?"":"Nenhum motivo cadastrado." }</p>
-            )}
-          </ul>
+              </div>
+            ))}
+
+          {!popUp && motivosKanban.length === 0 && (
+            <p className="text-center text-gray-400">
+              Nenhum motivo cadastrado.
+            </p>
+          )}
         </div>
-      ) : (
-        ""
       )}
-        
     </div>
   );
 }
-
-export default Tab3Content;

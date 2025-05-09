@@ -81,6 +81,7 @@ export const WebSocketProvider: React.FC<{ children: React.ReactNode }> = ({
         manualDisconnectRef.current = false;
       }
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [SOCKET_URL]);
 
   const disconnect = useCallback(() => {
