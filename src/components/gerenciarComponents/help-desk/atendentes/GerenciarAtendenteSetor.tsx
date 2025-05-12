@@ -51,7 +51,7 @@ export default function GerenciarAtendenteSetor({
   };
 
   return (
-    <div className="min-w-[37rem] p-4">
+    <div className="p-4">
       {dataAtendente.map((item) =>
         item.Setores.map((s) => {
           const join = s.kanban_atendente_setores;
@@ -61,7 +61,7 @@ export default function GerenciarAtendenteSetor({
           return (
             <div
               key={key}
-              className="border-primary-100/35 hover:bg-primary-200/50 transition cursor-pointer mb-2 rounded-md border p-3"
+              className="border-primary-100/35 hover:bg-primary-200/50 transition cursor-pointer mb-2 rounded-md border p-3 w-full"
             >
               <div className="flex items-center justify-between">
                 <div className="flex flex-col">

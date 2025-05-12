@@ -1,3 +1,4 @@
+import { getStatusForUserID } from "@/actions/HelpDesk/Atendente/getUserAtendenteforID";
 import { validateScreenAccess } from "@/actions/validateScreenAccess";
 import AtendenteContainer from "@/components/gerenciarComponents/help-desk/atendentes/AtendenteContainer";
 import SetorContainer from "@/components/gerenciarComponents/help-desk/setores/SetorContainer";
@@ -7,7 +8,6 @@ import iconsMap from "@/utils/iconsMap";
 
 export default async function GerenciarUsuariosPage() {
   await validateScreenAccess("Configurar Help Desk");
-
   return (
     <div className="p-5">
       <ScreenTitle

@@ -28,6 +28,7 @@ export async function ativaAtendenteHelpdesk(id: string) {
         "Content-Type": "application/json",
       },
     });
+   
 
     if (!response.ok) {
       return { msg_success: "erro", success: false, status: response.status };
@@ -36,6 +37,10 @@ export async function ativaAtendenteHelpdesk(id: string) {
     revalidateTag("atendente-helpdesk");
     revalidateTag("setor-helpdesk");
     revalidateTag("dash-helpdesk");
+    revalidateTag("helpdesk-columns");
+    revalidateTag("helpdesk-kanban");
+
+ 
 
     return await response.json();
   } catch (err) {
