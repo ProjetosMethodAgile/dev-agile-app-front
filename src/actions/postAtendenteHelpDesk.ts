@@ -58,6 +58,8 @@ export async function postAtendenteHelpDesk(
       console.log(json);
       revalidateTag("setor-helpdesk");
       revalidateTag("atendente-helpdesk");
+      revalidateTag("dash-helpdesk");
+
       return {
         success: true,
         errors: [],

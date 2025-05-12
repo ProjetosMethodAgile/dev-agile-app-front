@@ -360,6 +360,7 @@ export type CardHelpDeskSessao = {
       cliente_id: string;
       system_msg: boolean;
       content_msg: string;
+      htmlBody: string;
       createdAt: string;
       updatedAt: string;
       message_id: string;
@@ -394,3 +395,77 @@ export type KanbanHistory = {
   changed_by: string | null;
   created_at: string;
 };
+
+// resultado genérico
+export type ApiResult<T> =
+  | { data: T; ok: true }
+  | { ok: false; error: string; statusCode?: number };
+
+// -------------------------------------
+// 1) Movements
+// -------------------------------------
+export type Movement = {
+  id: string;
+  card_id: string;
+  title?: string;
+  action: string;
+  previous_column: string | null;
+  column_atual: string | null;
+  who: string;
+  created_at: string;
+};
+
+export type MovementsResponse = {
+  total: number;
+  page: number;
+  pageSize: number;
+  movements: Movement[];
+};
+
+// -------------------------------------
+// 2) Charts
+// -------------------------------------
+export type ChartsData = {
+  resolutionOverTime: { name: string; value: number }[];
+  volumeByAttendant: { name: string; value: number }[];
+  statusDistribution: { name: string; value: number }[];
+  calendarHeatmap: { date: string; count: number }[];
+};
+
+// -------------------------------------
+// 3) Summary
+// -------------------------------------
+export type Summary = {
+  total: number;
+  open: number;
+  inProgress: number;
+  done: number;
+  late: number;
+  avgResolutionTime: number;
+  slaRate: number;
+  avgInteractions: number;
+};
+
+export type CreatedCard = {
+  /** ID do histórico (status_history) */
+  id: string;
+  /** ID do card */
+  cardId: string;
+  /** Título do chamado */
+  title: string;
+  /** Data/hora de criação (ISO string) */
+  createdAt: string;
+  /** Nome do setor */
+  setor: string;
+  /** Nome do cliente */
+  cliente: string;
+  /** Motivo (se houver) */
+  motivo?: string;
+};
+
+export interface HeatmapEntry {
+  /** data no formato YYYY-MM-DD */
+  date: string;
+  /** quantidade de chamados criados nesse dia */
+  count: number;
+}

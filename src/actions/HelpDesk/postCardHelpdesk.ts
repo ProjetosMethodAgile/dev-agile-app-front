@@ -23,10 +23,6 @@ export async function postCardHelpdesk(
       headers: {
         "Content-Type": "application/json",
       },
-      next: {
-        revalidate: 60,
-        tags: ["helpdesk-cards"],
-      },
       body: JSON.stringify({
         setor_id,
         src_img_capa,
@@ -37,6 +33,7 @@ export async function postCardHelpdesk(
     });
     revalidateTag("helpdesk-columns");
     revalidateTag("helpdesk-cards");
+    revalidateTag("dash-helpdesk");
 
     if (!response.ok) {
       return { msg_success: "erro", success: false, status: response.status };

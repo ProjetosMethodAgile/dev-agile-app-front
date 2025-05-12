@@ -236,9 +236,38 @@ export function PEGA_USUARIO(id:string,empresa_id: string) {
 
 //=================HELPDESK-RELATORIO=====================================/
 
-export function GET_KANBAN_STATUS_HISTORIES(empresa_id: string) {
+export function GET_DASHBOARD_SUMMARY(query: URLSearchParams) {
+  return { url: API_URL + `/dashboard/summary?${query}` };
+}
+
+export function GET_DASHBOARD_CHARTS(query: URLSearchParams) {
+  return { url: API_URL + `/dashboard/charts?${query}` };
+}
+
+export function GET_DASHBOARD_MOVEMENTS(q: URLSearchParams) {
+  return { url: `${API_URL}/dashboard/movements?${q.toString()}` };
+}
+
+export function GET_DASHBOARD_CREATED(query: URLSearchParams) {
+  return { url: API_URL + `/dashboard/created?${query}` };
+}
+
+export function GET_DASHBOARD_CALENDAR(
+  raw: URLSearchParams | Record<string, string>,
+) {
+  // normaliza para URLSearchParams
+  const params =
+    raw instanceof URLSearchParams
+      ? raw
+      : new URLSearchParams(Object.entries(raw));
+
+  const de = params.get("de") ?? "";
+  const ate = params.get("ate") ?? de;
+
   return {
-    url: API_URL + `/helpdesk/${empresa_id}`,
+    url: `${API_URL}/dashboard/calendar?de=${encodeURIComponent(
+      de,
+    )}&ate=${encodeURIComponent(ate)}`,
   };
 }
 

@@ -31,7 +31,7 @@ export default async function EmpresaHomePage() {
           icon={iconsMap["help-desk"]}
           className="mb-0 text-2xl"
         />
-        <div className="w-50">
+        <div className="w-50 self-center">
           <InputSelectHelpDesk
             options={
               data?.Setores?.map((setor) => ({
@@ -42,8 +42,12 @@ export default async function EmpresaHomePage() {
             defaultOption={false}
           />
         </div>
-        <Link href="help-desk/relatorio" className="mirror-container">
+        <Link
+          href="help-desk/relatorio"
+          className="animate-move-left-to-right dark:border-primary-600/70 border-primary-300 dark:bg-black/20; flex flex-wrap items-center gap-1 rounded-3xl border-2 bg-transparent px-5 py-3 backdrop-blur-2xl active:scale-95 max-lg:mt-0 max-sm:min-w-full"
+        >
           <IconRelatorio className="size-8" />
+          <p>Relatorios</p>
         </Link>
       </nav>
       <ContainerClientHelpDesk />

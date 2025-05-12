@@ -1,55 +1,88 @@
-import { Suspense } from "react";
-import { KanbanHistory } from "@/types/api/apiTypes";
+// src/app/[empresaTag]/protect/help-desk/relatorio/page.tsx
+import React from "react";
 import FiltersSidebar from "@/components/HelpDesk/relatorio/FiltersSidebar";
 import KpiGrid from "@/components/HelpDesk/relatorio/KpiGrid";
 import ChartsGrid from "@/components/HelpDesk/relatorio/ChartsGrid";
-import MovementsTable from "@/components/HelpDesk/relatorio/MovementsTable";
-import SlaDelayedTable from "@/components/HelpDesk/relatorio/SlaDelayedTable";
-import TopInteractionsTable from "@/components/HelpDesk/relatorio/TopInteractionsTable";
-import getKanbanStatusHistories from "@/actions/HelpDesk/relatorio/getKanbanStatusHistories";
+import MovementsSection from "@/components/HelpDesk/relatorio/MovementsSection";
 
-export const metadata = {
-  title: "Painel SLA & KPI – Central de Chamados",
-};
+import getDashboardSummary from "@/actions/HelpDesk/relatorio/getDashboardSummary";
+import getDashboardCharts from "@/actions/HelpDesk/relatorio/getDashboardCharts";
+import getDashboardMovements from "@/actions/HelpDesk/relatorio/getDashboardMovements";
 
-export default async function RelatorioHelpDeskPage() {
-  const result = await getKanbanStatusHistories();
-  let histories: KanbanHistory[] = [];
-  let errorMessage: string | null = null;
+import { Summary, ChartsData } from "@/types/api/apiTypes";
+import iconsMap from "@/utils/iconsMap";
+import Link from "next/link";
 
-  if (result.ok) {
-    histories = result.data;
-  } else {
-    errorMessage = result.error;
+export default async function DashboardPage({
+  searchParams,
+  params,
+}: {
+  searchParams: Promise<{
+    de?: string;
+    ate?: string;
+    setores?: string | string[];
+  }>;
+  params: Promise<{ empresaTag: string }>;
+}) {
+  const { de = "", ate = "", setores } = await searchParams;
+  const { empresaTag } = await params;
+
+  const baseQuery = new URLSearchParams();
+  if (de) baseQuery.set("de", de);
+  if (ate) baseQuery.set("ate", ate);
+  if (setores) {
+    const arr = Array.isArray(setores) ? setores : [setores];
+    arr.forEach((s) => baseQuery.append("setores", s));
   }
+
+  const sumR = await getDashboardSummary(baseQuery);
+  const chR = await getDashboardCharts(baseQuery);
+  const mvR = await getDashboardMovements(baseQuery);
+
+  const summary: Summary = sumR.ok
+    ? sumR.data
+    : {
+        total: 0,
+        open: 0,
+        inProgress: 0,
+        done: 0,
+        late: 0,
+        avgResolutionTime: 0,
+        slaRate: 0,
+        avgInteractions: 0,
+      };
+
+  const charts: ChartsData = chR.ok
+    ? chR.data
+    : {
+        resolutionOverTime: [],
+        volumeByAttendant: [],
+        statusDistribution: [],
+        calendarHeatmap: [],
+      };
+
+  // só passa array puro pro sidebar
+  const movementsArray = mvR.ok ? mvR.data.movements : [];
+  const Voltar = iconsMap["voltar"];
 
   return (
     <div className="min-h-screen p-6">
-      <header className="mb-6">
-        <h1 className="text-3xl font-bold">
-          📊 Painel SLA & KPI – Central de Chamados
-        </h1>
-      </header>
-
-      {errorMessage && (
-        <div className="mb-4 rounded bg-red-600 p-3 text-white">
-          Erro ao carregar dados: {errorMessage}
-        </div>
-      )}
-
+      <div className="flex gap-3">
+        <Link
+          href={`/${empresaTag}/protect/help-desk/`}
+          aria-label="Voltar para Helpdesk"
+        >
+          <Voltar className="size-10 cursor-pointer active:scale-95" />
+        </Link>
+        <h1 className="mb-6 text-3xl font-bold">📊 Painel SLA & KPI</h1>
+      </div>
       <div className="flex flex-col gap-6 md:flex-row">
-        <FiltersSidebar data={histories} />
+        <FiltersSidebar data={movementsArray} />
 
         <main className="flex flex-1 flex-col gap-6">
-          <KpiGrid data={histories} />
-          <ChartsGrid data={histories} />
-          <Suspense fallback={<p>Carregando tabelas...</p>}>
-            <MovementsTable data={histories} />
-            <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-              <SlaDelayedTable data={histories} />
-              <TopInteractionsTable data={histories} />
-            </div>
-          </Suspense>
+          <KpiGrid summary={summary} />
+          <ChartsGrid data={charts} />
+          <MovementsSection baseQuery={baseQuery} />
         </main>
       </div>
     </div>

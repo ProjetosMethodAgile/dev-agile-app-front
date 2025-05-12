@@ -38,6 +38,7 @@ export default async function putPosicaoCardColumnid(
 
     revalidateTag("helpdesk-columns");
     revalidateTag("helpdesk-cards");
+    revalidateTag("dash-helpdesk");
 
     const data: { message: string } = await response.json();
     return { data: data.message, ok: true, error: "" };

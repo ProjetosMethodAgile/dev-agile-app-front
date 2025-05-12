@@ -30,6 +30,7 @@ export async function postVinculaAtendenteToCardHelpdesk(sessao_id: string) {
       body: JSON.stringify({ usuario_id: usuarioData.id }),
     });
     revalidateTag("helpdesk-cards");
+    revalidateTag("dash-helpdesk");
 
     console.log(response);
 
