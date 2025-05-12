@@ -360,6 +360,7 @@ export type CardHelpDeskSessao = {
       cliente_id: string;
       system_msg: boolean;
       content_msg: string;
+      htmlBody: string;
       createdAt: string;
       updatedAt: string;
       message_id: string;

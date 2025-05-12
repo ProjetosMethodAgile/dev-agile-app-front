@@ -58,6 +58,9 @@ export default function ModalCardHelpdesk({
     setLoading(false);
   }, [currentCard.id]);
 
+  useEffect(() => {
+    console.log(card);
+  }, [card]);
   async function handleAddAtendente(sessao_id: string) {
     const response = await postVinculaAtendenteToCardHelpdesk(sessao_id);
     if (response.message && response.error) {
@@ -171,9 +174,18 @@ export default function ModalCardHelpdesk({
                                 {formatDateSimple(msg.createdAt)}
                               </span>
                             </div>
-                            <p className="mt-1 text-base text-gray-700">
-                              {msg.content_msg}
-                            </p>
+                            {msg.htmlBody ? (
+                              <div
+                                className="m-0 mt-1 text-base leading-tight whitespace-pre-line text-gray-700"
+                                dangerouslySetInnerHTML={{
+                                  __html: msg.htmlBody,
+                                }}
+                              />
+                            ) : (
+                              <p className="m-0 mt-1 text-base leading-tight whitespace-pre-line text-gray-700">
+                                {msg.content_msg}
+                              </p>
+                            )}
                           </div>
                         );
                       })

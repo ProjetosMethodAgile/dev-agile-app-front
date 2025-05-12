@@ -10,17 +10,22 @@ import getDashboardCharts from "@/actions/HelpDesk/relatorio/getDashboardCharts"
 import getDashboardMovements from "@/actions/HelpDesk/relatorio/getDashboardMovements";
 
 import { Summary, ChartsData } from "@/types/api/apiTypes";
+import iconsMap from "@/utils/iconsMap";
+import Link from "next/link";
 
 export default async function DashboardPage({
   searchParams,
+  params,
 }: {
   searchParams: Promise<{
     de?: string;
     ate?: string;
     setores?: string | string[];
   }>;
+  params: Promise<{ empresaTag: string }>;
 }) {
   const { de = "", ate = "", setores } = await searchParams;
+  const { empresaTag } = await params;
 
   const baseQuery = new URLSearchParams();
   if (de) baseQuery.set("de", de);
@@ -58,10 +63,19 @@ export default async function DashboardPage({
 
   // só passa array puro pro sidebar
   const movementsArray = mvR.ok ? mvR.data.movements : [];
+  const Voltar = iconsMap["voltar"];
 
   return (
     <div className="min-h-screen p-6">
-      <h1 className="mb-6 text-3xl font-bold">📊 Painel SLA & KPI</h1>
+      <div className="flex gap-3">
+        <Link
+          href={`/${empresaTag}/protect/help-desk/`}
+          aria-label="Voltar para Helpdesk"
+        >
+          <Voltar className="size-10 cursor-pointer active:scale-95" />
+        </Link>
+        <h1 className="mb-6 text-3xl font-bold">📊 Painel SLA & KPI</h1>
+      </div>
       <div className="flex flex-col gap-6 md:flex-row">
         <FiltersSidebar data={movementsArray} />
 
