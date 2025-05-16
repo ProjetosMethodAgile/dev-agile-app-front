@@ -21,12 +21,14 @@ export default async function DashboardPage({
     de?: string;
     ate?: string;
     setores?: string | string[];
+    atendente?: string;
   }>;
   params: Promise<{ empresaTag: string }>;
 }) {
-  const { de = "", ate = "", setores } = await searchParams;
+  const { de = "", ate = "", setores, atendente = "" } = await searchParams;
   const { empresaTag } = await params;
 
+  // Monta a query com TODOS os filtros
   const baseQuery = new URLSearchParams();
   if (de) baseQuery.set("de", de);
   if (ate) baseQuery.set("ate", ate);
@@ -34,7 +36,11 @@ export default async function DashboardPage({
     const arr = Array.isArray(setores) ? setores : [setores];
     arr.forEach((s) => baseQuery.append("setores", s));
   }
+  if (atendente) {
+    baseQuery.set("atendente", atendente);
+  }
 
+  // Fetch dos dados já filtrados
   const sumR = await getDashboardSummary(baseQuery);
   const chR = await getDashboardCharts(baseQuery);
   const mvR = await getDashboardMovements(baseQuery);
@@ -61,23 +67,26 @@ export default async function DashboardPage({
         calendarHeatmap: [],
       };
 
-  // só passa array puro pro sidebar
   const movementsArray = mvR.ok ? mvR.data.movements : [];
   const Voltar = iconsMap["voltar"];
 
   return (
     <div className="min-h-screen p-6">
-      <div className="flex gap-3">
+      <div className="mb-6 flex gap-3">
         <Link
           href={`/${empresaTag}/protect/help-desk/`}
           aria-label="Voltar para Helpdesk"
         >
           <Voltar className="size-10 cursor-pointer active:scale-95" />
         </Link>
-        <h1 className="mb-6 text-3xl font-bold">📊 Painel SLA & KPI</h1>
+        <h1 className="text-3xl font-bold">📊 Painel SLA & KPI</h1>
       </div>
+
       <div className="flex flex-col gap-6 md:flex-row">
-        <FiltersSidebar data={movementsArray} />
+        {/* Todos os filtros dentro do FiltersSidebar */}
+        <aside className="w-full md:w-64">
+          <FiltersSidebar data={movementsArray} />
+        </aside>
 
         <main className="flex flex-1 flex-col gap-6">
           <KpiGrid summary={summary} />
