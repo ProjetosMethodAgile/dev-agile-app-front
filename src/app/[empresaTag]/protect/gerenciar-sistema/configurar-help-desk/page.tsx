@@ -1,4 +1,3 @@
-import { getStatusForUserID } from "@/actions/HelpDesk/Atendente/getUserAtendenteforID";
 import { validateScreenAccess } from "@/actions/validateScreenAccess";
 import AtendenteContainer from "@/components/gerenciarComponents/help-desk/atendentes/AtendenteContainer";
 import SetorContainer from "@/components/gerenciarComponents/help-desk/setores/SetorContainer";
